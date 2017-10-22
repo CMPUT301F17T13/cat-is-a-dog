@@ -1,14 +1,18 @@
 package cmput301f17t13.com.catisadog.models.user;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class User {
     private String username;
-    private Collection<String> followers;
-    private Collection<String> following;
+    private Map<String, Boolean> followers;
+    private Map<String, Boolean> following;
 
     public User(String username) {
+        this.followers = new HashMap<>();
+        this.following = new HashMap<>();
         this.username = username;
     }
 
@@ -28,19 +32,19 @@ public class User {
         this.username = username;
     }
 
-    public Collection<String> getFollowers() {
+    public Map<String, Boolean> getFollowers() {
         return followers;
     }
 
-    public void setFollowers(Collection<String> followers) {
+    public void setFollowers(Map<String, Boolean> followers) {
         this.followers = followers;
     }
 
-    public Collection<String> getFollowing() {
+    public Map<String, Boolean> getFollowing() {
         return following;
     }
 
-    public void setFollowing(Collection<String> following) {
+    public void setFollowing(Map<String, Boolean> following) {
         this.following = following;
     }
 }

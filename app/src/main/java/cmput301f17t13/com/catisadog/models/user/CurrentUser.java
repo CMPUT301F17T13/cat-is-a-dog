@@ -1,12 +1,13 @@
 package cmput301f17t13.com.catisadog.models.user;
 
 import java.util.Collection;
+import java.util.Map;
 
 public class CurrentUser extends User {
 
     private static CurrentUser instance = null;
 
-    private CurrentUser(String username, Collection<User> followers, Collection<User> following) {
+    private CurrentUser(String username, Map<String, Boolean> followers, Map<String, Boolean> following) {
         super(username);
         setFollowers(followers);
         setFollowing(following);
@@ -16,7 +17,7 @@ public class CurrentUser extends User {
         return instance;
     }
 
-    public static void setUser(String username, Collection<User> followers, Collection<User> following) {
+    public static void setUser(String username, Map<String, Boolean> followers, Map<String, Boolean> following) {
         instance = new CurrentUser(username, followers, following);
     }
 
