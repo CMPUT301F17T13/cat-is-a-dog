@@ -23,9 +23,12 @@ import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 public class FollowingHabitsFragment extends Fragment {
 
     /**
-     * Pressing on an item
-     * @param v
+     * Navigate to the View Habit Activity when the user presses a habit
+     * @param v the button view
+     *
+     * @see cmput301f17t13.com.catisadog.activities.summary.ViewHabitActivity
      */
+
     public void viewHabit(View v) {
 
     }

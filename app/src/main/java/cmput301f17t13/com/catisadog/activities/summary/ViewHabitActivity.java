@@ -18,10 +18,18 @@ import android.view.View;
  */
 public class ViewHabitActivity extends Activity {
 
+    /**
+     * Navigate to edit the habit if it belongs to the current user
+     * @param v the button view
+     */
     public void editHabit(View v) {
 
     }
 
+    /**
+     * Delete the habit if it belongs to the current user
+     * @param v the button view
+     */
     public void deleteHabit(View v) {
 
     }

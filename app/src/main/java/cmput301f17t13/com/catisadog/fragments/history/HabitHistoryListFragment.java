@@ -7,7 +7,12 @@
 package cmput301f17t13.com.catisadog.fragments.history;
 
 import android.app.Fragment;
+import android.view.View;
 
 
-public class AllHabitHistoryFragment extends Fragment {
+public class HabitHistoryListFragment extends Fragment {
+
+    public void editHabitEvent(View v) {
+
+    }
 }

@@ -12,8 +12,10 @@ import android.view.View;
 import java.util.List;
 
 import cmput301f17t13.com.catisadog.models.Habit;
+import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 
 public class HabitSummaryActivity extends Activity {
+    private CurrentUser currentUser;
     private List<Habit> currentUserHabits;
 
 

@@ -12,6 +12,8 @@ import android.app.Fragment;
 import android.view.View;
 
 /**
+ * A screen for seeing habits scheduled for today
+ *
  *
  */
 

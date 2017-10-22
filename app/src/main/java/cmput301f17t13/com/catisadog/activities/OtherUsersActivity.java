@@ -9,6 +9,7 @@
 package cmput301f17t13.com.catisadog.activities;
 
 import android.app.Activity;
+import android.view.View;
 
 /**
  * Activity for finding and following Users
@@ -18,4 +19,21 @@ import android.app.Activity;
  */
 public class OtherUsersActivity extends Activity {
 
+    /**
+     * Accept a follow request
+     *
+     * @see cmput301f17t13.com.catisadog.models.user.FollowRequest
+     */
+    public void acceptRequest() {
+
+    }
+
+    /**
+     * Reject a follow request
+     *
+     * @see cmput301f17t13.com.catisadog.models.user.FollowRequest
+     */
+    public void rejectRequest() {
+
+    }
 }

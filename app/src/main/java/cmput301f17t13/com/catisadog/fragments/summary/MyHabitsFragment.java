@@ -23,10 +23,18 @@ public class MyHabitsFragment extends Fragment {
      * Navigate to the View Habit Activity when the user presses a habit
      * @param v the button view
      *
-     * @see
+     * @see cmput301f17t13.com.catisadog.activities.summary.ViewHabitActivity
      */
 
     public void viewHabit(View v) {
+
+    }
+
+    /**
+     * Navigate to the Add Habit Activity when the user clicks the floating plus icon
+     * @param v the button view
+     */
+    public void addHabit(View v) {
 
     }
 
