@@ -3,37 +3,25 @@ package cmput301f17t13.com.catisadog.models.user;
 import org.joda.time.DateTime;
 
 public class FollowRequest {
-    private User requester;
-    private User requestee;
-    private DateTime requestDate;
+    private String requester;
+    private String requestee;
+    private long request_timestamp;
 
-    public FollowRequest(User requester, User requestee) {
+    public FollowRequest(String requester, String requestee, DateTime createTime) {
         this.requester = requester;
         this.requestee = requestee;
-        this.requestDate = new DateTime();
+        this.request_timestamp = createTime.getMillis();
     }
 
-    public User getRequester() {
+    public String getRequester() {
         return requester;
     }
 
-    public void setRequester(User requester) {
-        this.requester = requester;
-    }
-
-    public User getRequestee() {
+    public String getRequestee() {
         return requestee;
     }
 
-    public void setRequestee(User requestee) {
-        this.requestee = requestee;
-    }
-
-    public DateTime getRequestDate() {
-        return requestDate;
-    }
-
-    public void setRequestDate(DateTime requestDate) {
-        this.requestDate = requestDate;
+    public DateTime getRequestTimestamp() {
+        return new DateTime(this.request_timestamp);
     }
 }
