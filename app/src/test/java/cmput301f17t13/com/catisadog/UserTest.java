@@ -18,6 +18,13 @@ public class UserTest {
         assertEquals(user.getUsername(), "username");
         assertTrue(user.getFollowers().size() == 0);
         assertTrue(user.getFollowing().size() == 0);
+
+        // cannot add a null user
+        try {
+            User user2 = new User(null);
+            assertTrue(false);
+        } catch(Exception e) {
+        }
     }
 
     @Test
@@ -53,5 +60,16 @@ public class UserTest {
 
         assertTrue(user.getFollowers().containsKey("follower1"));
         assertTrue(user.getFollowing().containsKey("following1"));
+        assertFalse(user.getFollowing().containsKey(null));
+
+        HashMap<String, Boolean> nullFollowing = new HashMap<>();
+        nullFollowing.put(null, true);
+
+        // cannot add a null user
+        try {
+            user.setFollowing(nullFollowing);
+            assertTrue(false);
+        } catch(Exception e) {
+        }
     }
 }
