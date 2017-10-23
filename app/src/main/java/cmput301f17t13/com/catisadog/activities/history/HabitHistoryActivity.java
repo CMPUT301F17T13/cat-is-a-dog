@@ -15,7 +15,6 @@ import cmput301f17t13.com.catisadog.models.HabitEvent;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 
 public class HabitHistoryActivity extends Activity {
-    private CurrentUser currentUser;
     private List<HabitEvent> currentUserHabitEvents;
 
     // It is IMPORTANT that these are defined as package-level functions

@@ -32,7 +32,7 @@ public class UserTest {
         HashMap<String, Boolean> followers = new HashMap<>();
         HashMap<String, Boolean> following = new HashMap<>();
 
-        CurrentUser.setUser("username", followers, following);
+        CurrentUser.signIn("username", followers, following);
         CurrentUser user = CurrentUser.getInstance();
 
         assertEquals(user.getUsername(), "username");

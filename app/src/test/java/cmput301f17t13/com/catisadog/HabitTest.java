@@ -1,5 +1,6 @@
 package cmput301f17t13.com.catisadog;
 
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableContainer;
 
 import org.joda.time.DateTime;
@@ -12,18 +13,14 @@ import cmput301f17t13.com.catisadog.models.HabitStatus;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by abidrahman on 2017-10-22.
- */
 public class HabitTest {
-    final static HabitStatus hStatus = HabitStatus.ON_TRACK;
 
     @Test
     public void setTitle() throws Exception {
         DateTime now = new DateTime();
         HashSet<Integer> schedule = new HashSet<>(1,2);
 
-        Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, hStatus);
+        Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
 
         //Checks to see if the new title has been updated
         newHabit.setTitle("SampleTitle");
@@ -40,7 +37,7 @@ public class HabitTest {
         DateTime now = new DateTime();
         HashSet<Integer> schedule = new HashSet<>(1,2);
 
-        Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, hStatus);
+        Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
 
         //Checks to see if the reason has been updated
         newHabit.setReason("SampleReason");
@@ -57,7 +54,7 @@ public class HabitTest {
         DateTime now = new DateTime();
         HashSet<Integer> schedule = new HashSet<>(1,2);
 
-        Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, hStatus);
+        Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
 
         HashSet<Integer> schedule2 = new HashSet<Integer>();
         schedule2.add(2);

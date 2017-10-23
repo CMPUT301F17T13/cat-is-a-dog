@@ -17,8 +17,11 @@ public class CurrentUser extends User {
         return instance;
     }
 
-    public static void setUser(String username, Map<String, Boolean> followers, Map<String, Boolean> following) {
+    public static void signIn(String username, Map<String, Boolean> followers, Map<String, Boolean> following) {
         instance = new CurrentUser(username, followers, following);
     }
 
+    public static void signOut() {
+        instance = null;
+    }
 }

@@ -1,10 +1,9 @@
 package cmput301f17t13.com.catisadog.models;
 
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.DrawableContainer;
 
 public class HabitStatus {
-    public static final HabitStatus ON_TRACK = new HabitStatus("On track", new DrawableContainer());
+    public static final HabitStatus ON_TRACK = new HabitStatus("On track", null);
 
     private String message;
     private Drawable icon; //Resource key
