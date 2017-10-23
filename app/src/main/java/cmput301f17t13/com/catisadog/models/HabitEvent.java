@@ -16,20 +16,25 @@ public class HabitEvent {
     private User user;
     private String id;
 
-    public HabitEvent(String id, Habit habit, String comment, String photoUrl, DateTime eventDate, User user) {
+    public HabitEvent(String id, Habit habit, String comment, String photoUrl, Location location, DateTime eventDate, User user) {
+        this.id = id;
         this.habit = habit;
         this.comment = comment;
         this.photoUrl = photoUrl;
+        this.location = location;
         this.eventDate = eventDate;
         this.user = user;
     }
 
-    public Habit getHabit() {
-        return habit;
+    public HabitEvent(String id, Habit habit, User user) {
+        this.id = id;
+        this.habit = habit;
+        this.user = user;
+        this.eventDate = new DateTime();
     }
 
-    public void setHabit(Habit habit) {
-        this.habit = habit;
+    public Habit getHabit() {
+        return habit;
     }
 
     public String getComment() {

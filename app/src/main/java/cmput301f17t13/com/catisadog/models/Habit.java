@@ -53,14 +53,12 @@ public class Habit implements Schedulable {
     }
 
     @Override
-    public Collection<Integer> getSchedule() {
+    public HashSet<Integer> getSchedule() {
         return schedule;
     }
 
     @Override
-    public void setSchedule(Collection<Integer> days) {
-
-    }
+    public void setSchedule(Collection<Integer> days) { this.schedule = (HashSet)days;  }
 
     @Override
     public boolean isTodo(DateTime date) {
