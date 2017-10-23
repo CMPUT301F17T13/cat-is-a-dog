@@ -25,9 +25,17 @@ public class HabitEventTest {
         Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
         User user = new User("testUser");
 
+        //Check to see if new HabitEvent is linked to the correct habit.
         HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user);
-
         assertTrue(newHabitEvent.getHabit() == newHabit);
+
+        //Adding a habitEvent with a null habit, should not be allowed
+        HabitEvent invalidEvent = new HabitEvent("1", null, user);
+        assertNull(invalidEvent);
+
+        //Adding a habitEvent with a null user, should not be allowed
+        HabitEvent invalidEventUser = new HabitEvent("1", newHabit, null);
+        assertNull(invalidEventUser);
     }
 
     @Test
@@ -78,6 +86,10 @@ public class HabitEventTest {
         newHabitEvent.setPhotoUrl("TestPhotoUrl.com");
 
         assertTrue(newHabitEvent.getPhotoUrl() == "TestPhotoUrl.com");
+
+        //Check adding a non url link to PhotoUrl
+        newHabitEvent.setPhotoUrl("notaURL");
+        assertFalse(newHabitEvent.getPhotoUrl() == "notaURL");
     }
 
 }

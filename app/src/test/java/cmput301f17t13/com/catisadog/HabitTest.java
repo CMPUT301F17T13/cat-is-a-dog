@@ -56,11 +56,24 @@ public class HabitTest {
 
         Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
 
+        //Check for updated schedule.
         HashSet<Integer> schedule2 = new HashSet<Integer>();
         schedule2.add(2);
         schedule2.add(3);
         newHabit.setSchedule(schedule2);
         assertTrue(newHabit.getSchedule() == schedule2);
+
+        //Check for updating schedule with invalid dates (update with error handling)
+        HashSet<Integer> scheduleInvalid = new HashSet<>();
+        scheduleInvalid.add(9);
+        scheduleInvalid.add(21);
+        newHabit.setSchedule(scheduleInvalid);
+        assertFalse(newHabit.getSchedule() == scheduleInvalid);
+
+        //Check for updating schedule with empty schedule
+        HashSet<Integer> scheduleEmpty = new HashSet<>();
+        assertFalse(newHabit.getSchedule() == scheduleEmpty);
+
     }
 
 }
