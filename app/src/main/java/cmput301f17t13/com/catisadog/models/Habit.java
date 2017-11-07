@@ -20,7 +20,8 @@ public class Habit implements Schedulable {
 
     //TODO(#17): How to handle completion metrics
 
-    public Habit(String id, String title, String reason, DateTime startDate, HashSet<Integer> schedule, HabitStatus status) {
+    public Habit(String id, String title, String reason, DateTime startDate,
+                 HashSet<Integer> schedule, HabitStatus status) {
         this.title = title;
         this.reason = reason;
         this.startDate = startDate;
@@ -58,7 +59,10 @@ public class Habit implements Schedulable {
     }
 
     @Override
-    public void setSchedule(Collection<Integer> days) { this.schedule = (HashSet)days;  }
+    public void setSchedule(Collection<Integer> days) {
+        // Fix unchecked cast
+        this.schedule = (HashSet<Integer>)days;
+    }
 
     @Override
     public boolean isTodo(DateTime date) {

@@ -1,6 +1,4 @@
-/**
- * Created by nathan on 22/10/17.
- */
+// Remove JavaDoc issue (dangling comment)
 package cmput301f17t13.com.catisadog;
 
 import org.junit.Test;
@@ -23,7 +21,8 @@ public class UserTest {
         try {
             User user2 = new User(null);
             assertTrue(false);
-        } catch(Exception e) {
+        } catch(Exception e) { // Empty catch block
+            assertTrue(true);
         }
     }
 
@@ -69,7 +68,8 @@ public class UserTest {
         try {
             user.setFollowing(nullFollowing);
             assertTrue(false);
-        } catch(Exception e) {
+        } catch(Exception e) { // Fix empty try/catch
+            assertTrue(true);
         }
     }
 }

@@ -24,7 +24,8 @@ public class HabitTest {
 
         //Checks to see if the new title has been updated
         newHabit.setTitle("SampleTitle");
-        assertTrue(newHabit.getTitle() == "SampleTitle");
+        // Compare string using .equals()
+        assertTrue(newHabit.getTitle().equals("SampleTitle"));
 
         //Checks to see if the invalid title has been accepted
         //Titles should be no more than 20 chars
@@ -41,7 +42,8 @@ public class HabitTest {
 
         //Checks to see if the reason has been updated
         newHabit.setReason("SampleReason");
-        assertTrue(newHabit.getReason() == "SampleReason");
+        // Compare string using .equals()
+        assertTrue(newHabit.getReason().equals("SampleReason"));
 
         //Checks to see if the invalid reason has been accepted
         //Reasons should be no more than 30 chars
@@ -57,7 +59,8 @@ public class HabitTest {
         Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
 
         //Check for updated schedule.
-        HashSet<Integer> schedule2 = new HashSet<Integer>();
+        // Explicit type argument replaced with <>
+        HashSet<Integer> schedule2 = new HashSet<>();
         schedule2.add(2);
         schedule2.add(3);
         newHabit.setSchedule(schedule2);

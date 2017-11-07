@@ -1,6 +1,4 @@
-/**
- * Created by nathan on 22/10/17.
- */
+// Remove JavaDoc issue (dangling comment)
 package cmput301f17t13.com.catisadog;
 
 import org.joda.time.DateTime;

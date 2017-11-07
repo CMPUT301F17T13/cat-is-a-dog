@@ -50,7 +50,8 @@ public class HabitEventTest {
 
         //Checks to see if the comment has been updated
         newHabitEvent.setComment("TestComment");
-        assertTrue(newHabitEvent.getComment() == "TestComment");
+        // Compare string using .equals()
+        assertTrue(newHabitEvent.getComment().equals("TestComment"));
 
         //Checks to see if the invalid comment has been accepted
         //Comments should be no more than 20 chars
@@ -85,11 +86,13 @@ public class HabitEventTest {
         HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user);
         newHabitEvent.setPhotoUrl("TestPhotoUrl.com");
 
-        assertTrue(newHabitEvent.getPhotoUrl() == "TestPhotoUrl.com");
+        // Compare string using .equals()
+        assertTrue(newHabitEvent.getPhotoUrl().equals("TestPhotoUrl.com"));
 
         //Check adding a non url link to PhotoUrl
         newHabitEvent.setPhotoUrl("notaURL");
-        assertFalse(newHabitEvent.getPhotoUrl() == "notaURL");
+        // Compare string using .equals()
+        assertFalse(newHabitEvent.getPhotoUrl().equals("notaURL"));
     }
 
 }
