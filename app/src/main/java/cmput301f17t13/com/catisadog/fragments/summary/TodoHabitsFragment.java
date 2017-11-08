@@ -8,8 +8,14 @@
 
 package cmput301f17t13.com.catisadog.fragments.summary;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+
+import cmput301f17t13.com.catisadog.R;
 
 /**
  * A screen for seeing habits scheduled for today
@@ -18,6 +24,21 @@ import android.view.View;
  */
 
 public class TodoHabitsFragment extends Fragment {
+
+    public TodoHabitsFragment() {
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_todo_habits, container, false);
+    }
 
     public void addHabitEvent(View v) {
 
