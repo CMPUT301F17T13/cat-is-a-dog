@@ -8,14 +8,26 @@
 
 package cmput301f17t13.com.catisadog.fragments.summary;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.activities.summary.AddHabitActivity;
+import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
+import cmput301f17t13.com.catisadog.models.Habit;
+import cmput301f17t13.com.catisadog.utils.IntentConstants;
 
 /**
  * A screen to view all the current users habits
@@ -25,10 +37,8 @@ import cmput301f17t13.com.catisadog.R;
 
 public class MyHabitsFragment extends Fragment {
 
-
-    public MyHabitsFragment() {
-
-    }
+    private ListView habitsListView;
+    private MyHabitsAdapter habitsAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,7 +48,18 @@ public class MyHabitsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_my_habits, container, false);
+        View view = inflater.inflate(R.layout.fragment_my_habits, container, false);
+
+        HabitSummaryActivity habitSummaryActivity = (HabitSummaryActivity) getActivity();
+        habitsListView = (ListView) view.findViewById(R.id.myHabitsListView);
+        habitsAdapter = new MyHabitsAdapter(habitSummaryActivity, habitSummaryActivity.habits);
+        habitsListView.setAdapter(habitsAdapter);
+
+        return view;
+    }
+
+    public void updateListView() {
+        habitsAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -52,12 +73,29 @@ public class MyHabitsFragment extends Fragment {
 
     }
 
-    /**
-     * Navigate to the Add Habit Activity when the user clicks the floating plus icon
-     * @param v the button view
-     */
-    public void addHabit(View v) {
+    private class MyHabitsAdapter extends ArrayAdapter<Habit> {
+        public MyHabitsAdapter(Context context, ArrayList<Habit> habits) {
+            super(context, 0, habits);
+        }
 
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            Habit habit = this.getItem(position);
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_my_habit, parent, false);
+            }
+
+            TextView titleView = (TextView) convertView.findViewById(R.id.myHabitListItemTitle);
+            TextView reasonView = (TextView) convertView.findViewById(R.id.myHabitListItemReason);
+            TextView startDateView = (TextView) convertView.findViewById(R.id.myHabitListItemStartDate);
+            titleView.setText(habit.getTitle());
+            reasonView.setText(habit.getReason());
+            startDateView.setText(habit.getStartDate().toString("d MMM"));
+
+            return convertView;
+        }
     }
 
 }

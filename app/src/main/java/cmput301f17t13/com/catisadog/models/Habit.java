@@ -3,11 +3,13 @@ package cmput301f17t13.com.catisadog.models;
 
 import org.joda.time.DateTime;
 
+import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-public class Habit implements Schedulable {
+public class Habit implements Schedulable, Serializable {
 
     private String title;
     private String reason;
@@ -66,6 +68,11 @@ public class Habit implements Schedulable {
 
     @Override
     public boolean isTodo(DateTime date) {
+        for (Integer day : schedule) {
+            if (day == date.toGregorianCalendar().get(Calendar.DAY_OF_WEEK)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -76,5 +83,10 @@ public class Habit implements Schedulable {
 
     public String getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Habit: " + title;
     }
 }

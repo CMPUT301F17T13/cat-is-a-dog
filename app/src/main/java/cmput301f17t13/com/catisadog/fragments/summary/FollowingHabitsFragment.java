@@ -39,7 +39,7 @@ public class FollowingHabitsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_my_habits, container, false);
+        return inflater.inflate(R.layout.fragment_following_habits, container, false);
     }
 
     /**
