@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "cmput301f17t13.com.catisadog"
         minSdkVersion 21
@@ -19,7 +19,12 @@ android {
     }
 }
 
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -28,5 +33,10 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'joda-time:joda-time:2.9.9'
     compile 'com.jakewharton:butterknife:8.8.1'
+
+    dependencies {
+        compile 'com.github.TouchBoarder:weekdays-buttons-bar:v1.0.2'
+    }
+
     testCompile 'junit:junit:4.12'
 }

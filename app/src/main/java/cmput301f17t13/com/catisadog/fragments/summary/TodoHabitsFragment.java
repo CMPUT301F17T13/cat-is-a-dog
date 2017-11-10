@@ -8,8 +8,25 @@
 
 package cmput301f17t13.com.catisadog.fragments.summary;
 
-import android.app.Fragment;
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+
+import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
+import cmput301f17t13.com.catisadog.models.Habit;
 
 /**
  * A screen for seeing habits scheduled for today
@@ -19,8 +36,64 @@ import android.view.View;
 
 public class TodoHabitsFragment extends Fragment {
 
-    public void addHabitEvent(View v) {
+    private ListView habitsListView;
+    private TodoHabitsAdapter habitsAdapter;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_todo_habits, container, false);
+
+        HabitSummaryActivity habitSummaryActivity = (HabitSummaryActivity) getActivity();
+        habitsListView = (ListView) view.findViewById(R.id.todoHabitsListView);
+        habitsAdapter = new TodoHabitsAdapter(habitSummaryActivity, habitSummaryActivity.todoHabits);
+        habitsListView.setAdapter(habitsAdapter);
+
+        return view;
+    }
+
+    public void updateListView() {
+        habitsAdapter.notifyDataSetChanged();
+    }
+
+    private class TodoHabitsAdapter extends ArrayAdapter<Habit> {
+        public TodoHabitsAdapter(Context context, ArrayList<Habit> habits) {
+            super(context, 0, habits);
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            Habit habit = this.getItem(position);
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_todo_habit, parent, false);
+            }
+
+            TextView titleView = (TextView) convertView.findViewById(R.id.todoHabitListItemTitle);
+            TextView reasonView = (TextView) convertView.findViewById(R.id.todoHabitListItemReason);
+            TextView startDateView = (TextView) convertView.findViewById(R.id.todoHabitListItemStartDate);
+            Button addHabitEventButton = (Button) convertView.findViewById(R.id.todoHabitAddEvent);
+            titleView.setText(habit.getTitle());
+            reasonView.setText(habit.getReason());
+            startDateView.setText(habit.getStartDate().toString("d MMM"));
+
+            View.OnClickListener addHabitEventButtonListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("Event", "Add habit event");
+                }
+            };
+
+            addHabitEventButton.setOnClickListener(addHabitEventButtonListener);
+
+            return convertView;
+        }
     }
 
 }

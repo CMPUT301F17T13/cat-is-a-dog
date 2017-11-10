@@ -8,9 +8,14 @@
 
 package cmput301f17t13.com.catisadog.fragments.summary;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
+import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 
 /**
@@ -21,6 +26,21 @@ import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
  */
 
 public class FollowingHabitsFragment extends Fragment {
+
+    public FollowingHabitsFragment() {
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_following_habits, container, false);
+    }
 
     /**
      * Navigate to the View Habit Activity when the user presses a habit
