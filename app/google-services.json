@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "972295417158",
+    "firebase_url": "https://cat-is-a-dog.firebaseio.com",
+    "project_id": "cat-is-a-dog",
+    "storage_bucket": "cat-is-a-dog.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:972295417158:android:bb5edcc17a3f99f1",
+        "android_client_info": {
+          "package_name": "cmput301f17t13.com.catisadog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "972295417158-ujegb4im0nrnc3qpfv1c46vcovhclkb0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cmput301f17t13.com.catisadog",
+            "certificate_hash": "c251dd64705bf8639002ad09f7808a75e46edbe8"
+          }
+        },
+        {
+          "client_id": "972295417158-u469fho46b7q2jo373abuu3jdv1arfi4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0EGEYQaTAMe3OT3PMmSjd5QpU7hhXCQs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "972295417158-u469fho46b7q2jo373abuu3jdv1arfi4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
