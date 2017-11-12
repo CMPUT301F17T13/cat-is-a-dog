@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Habit Tracker</string>
+    <string name="project_name">Cat is a Dog</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -16,4 +17,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Strings related to Firebase -->
+    <!--<string name="default_web_client_id">972295417158-u469fho46b7q2jo373abuu3jdv1arfi4.apps.googleusercontent.com</string>-->
 </resources>

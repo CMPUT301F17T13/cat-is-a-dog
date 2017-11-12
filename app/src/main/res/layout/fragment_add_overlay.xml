@@ -22,7 +22,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
-            app:srcCompat="@color/cast_expanded_controller_background_color" />
+            app:srcCompat="@android:color/black" />
 
         <ImageView
             android:id="@+id/imageView5"
