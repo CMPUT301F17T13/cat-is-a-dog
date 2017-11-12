@@ -54,6 +54,7 @@ public abstract class Authenticator {
      * If the user is already signed in (non-null), return success
      */
     public void signInIfAuthenticated() {
+        mAuth.signOut();
         if (mAuth.getCurrentUser() != null) {
             onSuccess();
         }
