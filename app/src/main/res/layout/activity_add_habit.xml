@@ -31,7 +31,6 @@
         android:ems="10"
         android:hint="Habit reason (30 chars)"
         android:maxLength="30"
-        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addHabitTitle" />
