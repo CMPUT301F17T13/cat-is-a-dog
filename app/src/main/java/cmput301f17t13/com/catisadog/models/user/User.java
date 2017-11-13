@@ -6,14 +6,20 @@ import java.util.List;
 import java.util.Map;
 
 public class User {
+
+    private String userId;
     private String username;
     private Map<String, Boolean> followers;
     private Map<String, Boolean> following;
 
-    public User(String username) {
+    public User(String userId) {
         this.followers = new HashMap<>();
         this.following = new HashMap<>();
-        this.username = username;
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 
     public String getUsername() {
