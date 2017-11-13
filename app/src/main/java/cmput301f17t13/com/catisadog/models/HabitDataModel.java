@@ -19,6 +19,7 @@ import java.util.List;
 @IgnoreExtraProperties
 public class HabitDataModel {
 
+    private String key;
     private String userId;
 
     private String title;
@@ -32,6 +33,7 @@ public class HabitDataModel {
     public HabitDataModel() {}
 
     public HabitDataModel(Habit habit) {
+        key = habit.getKey();
         userId = habit.getUserId();
         title = habit.getTitle();
         reason = habit.getReason();
@@ -53,14 +55,26 @@ public class HabitDataModel {
             }
         }
 
-        return new Habit(
-                userId,
-                title,
-                reason,
-                new DateTime(startDate),
-                newSchedule,
-                status
-        );
+        Habit habit = new Habit();
+        habit.setKey(key);
+        habit.setUserId(userId);
+        habit.setTitle(title);
+        habit.setReason(reason);
+        habit.setStartDate(new DateTime(startDate));
+        habit.setSchedule(newSchedule);
+        habit.setStatus(status);
+
+        return habit;
+    }
+
+    @Exclude
+    public String getKey() {
+        return key;
+    }
+
+    @Exclude
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getUserId() {
