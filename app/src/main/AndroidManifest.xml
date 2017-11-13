@@ -39,7 +39,8 @@
         </activity>
 
         <!-- Habit Summary Activities -->
-        <activity android:name=".activities.summary.HabitSummaryActivity"/>
+        <activity android:name=".activities.summary.HabitSummaryActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".activities.summary.AddHabitActivity"/>
         <activity android:name=".activities.summary.ViewHabitActivity" />
 
