@@ -3,6 +3,7 @@ package cmput301f17t13.com.catisadog;
 import android.location.Location;
 
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -17,13 +18,20 @@ import static org.junit.Assert.*;
 
 public class HabitEventTest {
 
-    @Test
-    public void getHabit() throws Exception {
+    Habit newHabit;
+    User user;
+
+    @Before
+    public void setUP() {
         DateTime now = new DateTime();
         HashSet<Integer> schedule = new HashSet<>(1,2);
 
-        Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
-        User user = new User("testUser");
+        newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
+        user = new User("testUser");
+    }
+
+    @Test
+    public void getHabit() throws Exception {
 
         //Check to see if new HabitEvent is linked to the correct habit.
         HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user.getUserId());
@@ -40,11 +48,6 @@ public class HabitEventTest {
 
     @Test
     public void setComment() throws Exception {
-        DateTime now = new DateTime();
-        HashSet<Integer> schedule = new HashSet<>(1,2);
-
-        Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
-        User user = new User("testUser");
 
         HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user.getUserId());
 
@@ -62,12 +65,6 @@ public class HabitEventTest {
 
     @Test
     public void setLocation() throws Exception {
-        DateTime now = new DateTime();
-        HashSet<Integer> schedule = new HashSet<>(1,2);
-
-        Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
-        User user = new User("testUser");
-
         Location location = LocationHelper.getLocation();
         HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user.getUserId());
         newHabitEvent.setLocation(location);
@@ -77,13 +74,9 @@ public class HabitEventTest {
 
     @Test
     public void setPhotoUrl() throws Exception {
-        DateTime now = new DateTime();
-        HashSet<Integer> schedule = new HashSet<>(1,2);
-
-        Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
-        User user = new User("testUser");
 
         HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user.getUserId());
+
         newHabitEvent.setPhotoUrl("TestPhotoUrl.com");
 
         // Compare string using .equals()

@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableContainer;
 
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -15,12 +16,19 @@ import static org.junit.Assert.*;
 
 public class HabitTest {
 
-    @Test
-    public void setTitle() throws Exception {
+    Habit newHabit;
+
+    @Before
+    public void setUp() {
         DateTime now = new DateTime();
         HashSet<Integer> schedule = new HashSet<>(1,2);
 
-        Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
+        newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, null);
+
+    }
+
+    @Test
+    public void setTitle() throws Exception {
 
         //Checks to see if the new title has been updated
         newHabit.setTitle("SampleTitle");
@@ -35,10 +43,6 @@ public class HabitTest {
 
     @Test
     public void setReason() throws Exception {
-        DateTime now = new DateTime();
-        HashSet<Integer> schedule = new HashSet<>(1,2);
-
-        Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
 
         //Checks to see if the reason has been updated
         newHabit.setReason("SampleReason");
@@ -53,10 +57,6 @@ public class HabitTest {
 
     @Test
     public void setSchedule() throws Exception {
-        DateTime now = new DateTime();
-        HashSet<Integer> schedule = new HashSet<>(1,2);
-
-        Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
 
         //Check for updated schedule.
         // Explicit type argument replaced with <>
@@ -64,7 +64,7 @@ public class HabitTest {
         schedule2.add(2);
         schedule2.add(3);
         newHabit.setSchedule(schedule2);
-        assertTrue(newHabit.getSchedule() == schedule2);
+        assertTrue(newHabit.getSchedule().equals(schedule2));
 
         //Check for updating schedule with invalid dates (update with error handling)
         HashSet<Integer> scheduleInvalid = new HashSet<>();
