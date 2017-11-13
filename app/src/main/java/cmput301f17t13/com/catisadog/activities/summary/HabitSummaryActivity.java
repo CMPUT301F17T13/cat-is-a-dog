@@ -72,33 +72,18 @@ public class HabitSummaryActivity extends BaseDrawerActivity implements Observer
         myHabitsFragment = (MyHabitsFragment) adapter.getItem(0);
         todoHabitsFragment = (TodoHabitsFragment) adapter.getItem(1);
 
-        habitDataSource = new HabitDataSource(this, CurrentUser.getInstance().getUserId());
+        habitDataSource = new HabitDataSource(CurrentUser.getInstance().getUserId());
         habitDataSource.addObserver(this);
         habits = habitDataSource.getSource();
     }
 
     /**
-     * Navigate to the Add Habit Activity when the user clicks the floating plus icon
+     * Navigate to the Add/Edit Habit Activity when the user clicks the floating plus icon
      * @param v the button view
      */
     public void addHabit(View v) {
-        Intent intent = new Intent(this, AddHabitActivity.class);
-        startActivityForResult(intent, IntentConstants.ADD_HABIT_INTENT_REQUEST);
-    }
-
-    /**
-     * Handle the data returned from worker activities created by this activity
-     * (e.g. AddHabitActivity)
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == IntentConstants.ADD_HABIT_INTENT_RESULT) {
-            Habit habit = (Habit) data.getSerializableExtra(IntentConstants.ADD_HABIT_INTENT_DATA);
-            habitDataSource.add(habit);
-        }
+        Intent intent = new Intent(this, EditHabitActivity.class);
+        startActivity(intent);
     }
 
     @Override

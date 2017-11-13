@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cmput301f17t13.com.catisadog.activities.summary.AddHabitActivity">
-
+    tools:context=
+        "cmput301f17t13.com.catisadog.activities.summary.EditHabitActivity">
     <EditText
-        android:id="@+id/addHabitTitle"
+        android:id="@+id/editHabitTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -22,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/addHabitReason"
+        android:id="@+id/editHabitReason"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -33,20 +34,18 @@
         android:maxLength="30"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addHabitTitle" />
-
+        app:layout_constraintTop_toBottomOf="@+id/editHabitTitle" />
     <TextView
-        android:id="@+id/addHabitStartLabel"
+        android:id="@+id/editHabitStartLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="START"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addHabitReason" />
-
+        app:layout_constraintTop_toBottomOf="@+id/editHabitReason" />
     <TextView
-        android:id="@+id/addHabitStartDate"
+        android:id="@+id/editHabitStartDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -56,20 +55,18 @@
         android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addHabitStartLabel" />
-
+        app:layout_constraintTop_toBottomOf="@+id/editHabitStartLabel" />
     <TextView
-        android:id="@+id/addHabitRepeatsLabel"
+        android:id="@+id/editHabitRepeatsLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="REPEATS WEEKLY ON"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addHabitStartDate" />
-
+        app:layout_constraintTop_toBottomOf="@+id/editHabitStartDate" />
     <ViewStub
-        android:id="@+id/addHabitRepeatWeekdaysStub"
+        android:id="@+id/editHabitRepeatWeekdaysStub"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:layout_marginEnd="16dp"
@@ -78,10 +75,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addHabitRepeatsLabel"/>
-
+        app:layout_constraintTop_toBottomOf="@+id/editHabitRepeatsLabel"/>
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/addHabitRepeatWeekdaysList"
+        android:id="@+id/editHabitRepeatWeekdaysList"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginEnd="16dp"
@@ -90,10 +86,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addHabitRepeatsLabel" />
-
+        app:layout_constraintTop_toBottomOf="@+id/editHabitRepeatsLabel" />
     <Button
-        android:id="@+id/addHabitSaveButton"
+        android:id="@+id/editHabitSaveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -103,8 +98,5 @@
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        />
-
-
+        app:layout_constraintRight_toRightOf="parent" />
 </android.support.constraint.ConstraintLayout>

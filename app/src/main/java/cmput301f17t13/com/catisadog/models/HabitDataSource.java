@@ -27,14 +27,12 @@ public class HabitDataSource extends DataSource<Habit> implements
 
     private static final String TAG = "HabitDataSource";
 
-    private Context mContext;
     private DatabaseReference mHabitsRef;
 
     private LinkedHashMap<String, Habit> mHabits;
     private ArrayList<Habit> mHabitArray;
 
-    public HabitDataSource(Context context, String userId) {
-        mContext = context;
+    public HabitDataSource(String userId) {
         mHabitsRef = FirebaseDatabase.getInstance().getReference("habits/" + userId);
         mHabitsRef.addChildEventListener(this);
 
@@ -54,12 +52,12 @@ public class HabitDataSource extends DataSource<Habit> implements
     @Override
     public void update(String key, Habit habit) {
         HabitDataModel habitModel = new HabitDataModel(habit);
-        mHabitsRef.orderByKey().equalTo(key).getRef().setValue(habitModel, null);
+        mHabitsRef.child(key).getRef().setValue(habitModel, null);
     }
 
     @Override
     public void delete(String key) {
-        mHabitsRef.orderByKey().equalTo(key).getRef().removeValue(null);
+        mHabitsRef.child(key).getRef().removeValue(null);
     }
 
     // Habit updates
@@ -70,6 +68,7 @@ public class HabitDataSource extends DataSource<Habit> implements
         HabitDataModel model = dataSnapshot.getValue(HabitDataModel.class);
 
         if (model != null) {
+            model.setKey(dataSnapshot.getKey());
             mHabits.put(dataSnapshot.getKey(), model.getHabit());
             datasetChanged();
         }
@@ -81,6 +80,7 @@ public class HabitDataSource extends DataSource<Habit> implements
         HabitDataModel model = dataSnapshot.getValue(HabitDataModel.class);
 
         if (model != null) {
+            model.setKey(dataSnapshot.getKey());
             mHabits.put(dataSnapshot.getKey(), model.getHabit());
             datasetChanged();
         }
@@ -103,8 +103,6 @@ public class HabitDataSource extends DataSource<Habit> implements
     @Override
     public void onCancelled(DatabaseError databaseError) {
         Log.w(TAG, "loadHabits:onCancelled", databaseError.toException());
-        Toast.makeText(mContext, "Failed to load habits.",
-                Toast.LENGTH_SHORT).show();
     }
 
     private void datasetChanged() {
