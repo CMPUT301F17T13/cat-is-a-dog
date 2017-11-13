@@ -19,12 +19,18 @@
 
 package cmput301f17t13.com.catisadog.activities.summary;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -51,6 +57,7 @@ public class EditHabitActivity extends AppCompatActivity {
 
     private static final String TAG = "EditHabitActivity";
     private static final String DATE_FORMAT = "EEEE MMMM d, YYYY";
+    private static final int SAVE_BUTTON_ID = 1032400432;
 
     private TextView editHabitStartDate;
     private DatePickerDialog.OnDateSetListener startDateSetListener;
@@ -133,6 +140,44 @@ public class EditHabitActivity extends AppCompatActivity {
         }
 
         habitRepository = new HabitDataSource(CurrentUser.getInstance().getUserId());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        final MenuItem deleteItem = menu.add(
+                Menu.NONE, SAVE_BUTTON_ID, Menu.NONE, "Delete");
+        MenuItemCompat.setShowAsAction(
+                deleteItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        deleteItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                confirmDelete();
+                return true;
+            }
+        });
+        return true;
+    }
+
+    private void confirmDelete() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Alert!!");
+        alert.setMessage("Are you sure to delete record");
+        alert.setPositiveButton("Delete habit", new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                habitRepository.delete(habitKey);
+                dialog.dismiss();
+                finish();
+            }
+        });
+        alert.setNegativeButton("Cancel", new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        alert.show();
     }
 
     /**
