@@ -14,6 +14,7 @@ import java.util.Set;
  */
 public class Habit implements Schedulable, Serializable {
 
+    private String key;
     private String userId;
 
     /** Brief title */
@@ -30,6 +31,8 @@ public class Habit implements Schedulable, Serializable {
 
     //TODO(#17): How to handle completion metrics
 
+    public Habit() {}
+
     public Habit(String userId, String title, String reason, DateTime startDate,
                  HashSet<Integer> schedule, HabitStatus status) {
         this.userId = userId;
@@ -40,10 +43,18 @@ public class Habit implements Schedulable, Serializable {
         this.status = status;
     }
 
-    // Getters and Setters
+    public String getKey() {
+        return key;
+    }
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public String getUserId() {
         return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {
@@ -65,9 +76,15 @@ public class Habit implements Schedulable, Serializable {
     public DateTime getStartDate() {
         return startDate;
     }
+    public void setStartDate(DateTime startDate) {
+        this.startDate = startDate;
+    }
 
     public HabitStatus getStatus() {
         return status;
+    }
+    public void setStatus(HabitStatus status) {
+        this.status = status;
     }
 
     @Override

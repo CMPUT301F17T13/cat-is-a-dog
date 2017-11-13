@@ -43,6 +43,8 @@ public class ViewHabitActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
+
+        //TODO(#51): Get Habit object from Repository, not intent
         Bundle bundle = intent.getExtras();
         habit = (Habit) bundle.getSerializable(
                 IntentConstants.VIEW_HABIT_INTENT_DATA);
@@ -83,15 +85,19 @@ public class ViewHabitActivity extends AppCompatActivity {
      */
     private String repeatsText() {
         Set<Integer> schedule = habit.getSchedule();
-        if (schedule.size() == 7) {
+        if (schedule.isEmpty()) {
+            return "Never";
+        } else if (schedule.size() == 7) {
             return "Every day";
-        } else if (schedule.contains(DateTimeConstants.MONDAY) &&
+        } else if (schedule.size() == 5 &&
+                schedule.contains(DateTimeConstants.MONDAY) &&
                 schedule.contains(DateTimeConstants.TUESDAY) &&
                 schedule.contains(DateTimeConstants.WEDNESDAY) &&
                 schedule.contains(DateTimeConstants.THURSDAY) &&
                 schedule.contains(DateTimeConstants.FRIDAY)) {
             return "Weekdays";
-        } else if (schedule.contains(DateTimeConstants.SATURDAY) &&
+        } else if (schedule.size() == 2 &&
+                schedule.contains(DateTimeConstants.SATURDAY) &&
                 schedule.contains(DateTimeConstants.SUNDAY)) {
             return "Weekends";
         } else {

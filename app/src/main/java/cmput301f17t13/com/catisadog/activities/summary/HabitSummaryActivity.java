@@ -15,18 +15,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.joda.time.DateTime;
 
@@ -34,9 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.function.Function;
 
 import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.activities.BaseDrawerActivity;
 import cmput301f17t13.com.catisadog.fragments.summary.FollowingHabitsFragment;
 import cmput301f17t13.com.catisadog.fragments.summary.MyHabitsFragment;
 import cmput301f17t13.com.catisadog.fragments.summary.TodoHabitsFragment;
@@ -45,10 +35,8 @@ import cmput301f17t13.com.catisadog.models.HabitDataSource;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
-import cmput301f17t13.com.catisadog.utils.data.Repository;
 
-public class HabitSummaryActivity extends AppCompatActivity implements Observer {
-
+public class HabitSummaryActivity extends BaseDrawerActivity implements Observer{
     private static final String TAG = "HabitSummaryActivity";
 
     public ArrayList<Habit> habits;
@@ -68,6 +56,7 @@ public class HabitSummaryActivity extends AppCompatActivity implements Observer 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_habit_summary);
+        drawToolbar();
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.habitSummaryPager);
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -83,33 +72,18 @@ public class HabitSummaryActivity extends AppCompatActivity implements Observer 
         myHabitsFragment = (MyHabitsFragment) adapter.getItem(0);
         todoHabitsFragment = (TodoHabitsFragment) adapter.getItem(1);
 
-        habitDataSource = new HabitDataSource(this, CurrentUser.getInstance().getUserId());
+        habitDataSource = new HabitDataSource(CurrentUser.getInstance().getUserId());
         habitDataSource.addObserver(this);
         habits = habitDataSource.getSource();
     }
 
     /**
-     * Navigate to the Add Habit Activity when the user clicks the floating plus icon
+     * Navigate to the Add/Edit Habit Activity when the user clicks the floating plus icon
      * @param v the button view
      */
     public void addHabit(View v) {
-        Intent intent = new Intent(this, AddHabitActivity.class);
-        startActivityForResult(intent, IntentConstants.ADD_HABIT_INTENT_REQUEST);
-    }
-
-    /**
-     * Handle the data returned from worker activities created by this activity
-     * (e.g. AddHabitActivity)
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == IntentConstants.ADD_HABIT_INTENT_RESULT) {
-            Habit habit = (Habit) data.getSerializableExtra(IntentConstants.ADD_HABIT_INTENT_DATA);
-            habitDataSource.add(habit);
-        }
+        Intent intent = new Intent(this, EditHabitActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -163,5 +137,4 @@ public class HabitSummaryActivity extends AppCompatActivity implements Observer 
             return mFragmentTitleList.get(position);
         }
     }
-
 }
