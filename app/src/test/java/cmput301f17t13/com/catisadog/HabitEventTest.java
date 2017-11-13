@@ -26,11 +26,11 @@ public class HabitEventTest {
         User user = new User("testUser");
 
         //Check to see if new HabitEvent is linked to the correct habit.
-        HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user);
+        HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user.getUserId());
         assertTrue(newHabitEvent.getHabit() == newHabit);
 
         //Adding a habitEvent with a null habit, should not be allowed
-        HabitEvent invalidEvent = new HabitEvent("1", null, user);
+        HabitEvent invalidEvent = new HabitEvent("1", null, user.getUserId());
         assertNull(invalidEvent);
 
         //Adding a habitEvent with a null user, should not be allowed
@@ -46,7 +46,7 @@ public class HabitEventTest {
         Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
         User user = new User("testUser");
 
-        HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user);
+        HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user.getUserId());
 
         //Checks to see if the comment has been updated
         newHabitEvent.setComment("TestComment");
@@ -69,7 +69,7 @@ public class HabitEventTest {
         User user = new User("testUser");
 
         Location location = LocationHelper.getLocation();
-        HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user);
+        HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user.getUserId());
         newHabitEvent.setLocation(location);
 
         assertTrue(newHabitEvent.getLocation() == location);
@@ -83,7 +83,7 @@ public class HabitEventTest {
         Habit newHabit = new Habit("1", "Test Habit", "Test Reason", now, schedule, HabitStatus.ON_TRACK);
         User user = new User("testUser");
 
-        HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user);
+        HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user.getUserId());
         newHabitEvent.setPhotoUrl("TestPhotoUrl.com");
 
         // Compare string using .equals()
