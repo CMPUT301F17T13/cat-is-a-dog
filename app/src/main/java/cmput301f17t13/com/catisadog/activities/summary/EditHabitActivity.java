@@ -9,13 +9,27 @@
 package cmput301f17t13.com.catisadog.activities.summary;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
+import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.models.Habit;
+import cmput301f17t13.com.catisadog.utils.IntentConstants;
 
 
 public class EditHabitActivity extends Activity {
     private Habit habit;
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        habit = (Habit) bundle.getSerializable(
+                IntentConstants.EDIT_HABIT_INTENT_DATA);
+//        setContentView(R.layout.activity_edit_habit);
+    }
 
     /**
      * Save changes to the habit

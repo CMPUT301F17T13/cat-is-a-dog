@@ -125,8 +125,9 @@ public class AddHabitActivity extends AppCompatActivity {
         HashSet<Integer> schedule = new HashSet<>();
         for (int i = 0; i < days.size(); i++) {
             if (days.get(i).isSelected()) {
-                schedule.add(days.get(i).getCalendarDayId());
-                Log.d("asd", Integer.valueOf(i).toString());
+                // Hack to map the weekdaybuttons values to DateTimeConstants
+                if (i == 0) schedule.add(7);
+                else schedule.add(i);
             }
         }
 

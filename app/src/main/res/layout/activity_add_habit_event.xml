@@ -44,16 +44,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/textViewLocation"
                 tools:context="com.example.mapwithmarker.MapsMarkerActivity" />
 
-            <fragment
-                android:id="@+id/fragment2"
-                android:name="cmput301f17t13.com.catisadog.fragments.summary.AddOverlayFragment"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/map"
-                app:layout_constraintEnd_toEndOf="@+id/map"
-                app:layout_constraintStart_toStartOf="@+id/map"
-                app:layout_constraintTop_toTopOf="@+id/map" />
-
             <TextView
                 android:id="@+id/textViewLocation"
                 android:layout_width="wrap_content"
@@ -72,32 +62,91 @@
                 android:layout_marginTop="16dp"
                 android:text="Image"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fragment2" />
+                app:layout_constraintTop_toBottomOf="@+id/map" />
 
             <ImageView
-                android:id="@+id/imageView4"
+                android:id="@+id/image"
                 android:layout_width="0dp"
                 android:layout_height="120dp"
-                android:layout_marginBottom="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView"
                 app:srcCompat="@drawable/bird" />
 
-            <fragment
-                android:id="@+id/fragment"
-                android:name="cmput301f17t13.com.catisadog.fragments.summary.AddOverlayFragment"
+            <ImageView
+                android:id="@+id/mapOpacityOverlay"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-                app:layout_constraintEnd_toEndOf="@+id/imageView4"
-                app:layout_constraintStart_toStartOf="@+id/imageView4"
-                app:layout_constraintTop_toTopOf="@+id/imageView4" />
+                android:alpha="0.5"
+                app:layout_constraintBottom_toBottomOf="@+id/map"
+                app:layout_constraintEnd_toEndOf="@+id/map"
+                app:layout_constraintStart_toStartOf="@+id/map"
+                app:layout_constraintTop_toTopOf="@+id/map"
+                app:srcCompat="@android:color/black" />
+
+            <ImageView
+                android:id="@+id/imageOpacityOverlay"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:alpha="0.5"
+                app:layout_constraintBottom_toBottomOf="@+id/image"
+                app:layout_constraintEnd_toEndOf="@+id/image"
+                app:layout_constraintStart_toStartOf="@+id/image"
+                app:layout_constraintTop_toTopOf="@+id/image"
+                app:srcCompat="@android:color/black" />
+
+            <ImageView
+                android:id="@+id/mapAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/mapOpacityOverlay"
+                app:layout_constraintEnd_toEndOf="@+id/mapOpacityOverlay"
+                app:layout_constraintStart_toStartOf="@+id/mapOpacityOverlay"
+                app:layout_constraintTop_toTopOf="@+id/mapOpacityOverlay"
+                app:srcCompat="@drawable/plus" />
+
+            <ImageView
+                android:id="@+id/imageAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageOpacityOverlay"
+                app:layout_constraintEnd_toEndOf="@+id/imageOpacityOverlay"
+                app:layout_constraintStart_toStartOf="@+id/imageOpacityOverlay"
+                app:layout_constraintTop_toTopOf="@+id/imageOpacityOverlay"
+                app:srcCompat="@drawable/plus" />
+
+            <ImageView
+                android:id="@+id/mapDelete"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/map"
+                app:layout_constraintTop_toTopOf="@+id/map"
+                app:srcCompat="@android:drawable/ic_menu_delete" />
+
+            <ImageView
+                android:id="@+id/imageDelete"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/image"
+                app:layout_constraintTop_toTopOf="@+id/image"
+                app:srcCompat="@android:drawable/ic_menu_delete" />
+
         </android.support.constraint.ConstraintLayout>
 </ScrollView>
 
