@@ -31,9 +31,7 @@ import cmput301f17t13.com.catisadog.models.Habit;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 
 /**
- * A screen to view all the current users habits
- *
- * @see cmput301f17t13.com.catisadog.models.Habit
+ * A screen to view all the current user's habits
  */
 
 public class MyHabitsFragment extends Fragment {
@@ -46,6 +44,9 @@ public class MyHabitsFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Set up the list view
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -67,6 +68,9 @@ public class MyHabitsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Update the list view
+     */
     public void updateListView() {
         if(habitsAdapter != null) {
             habitsAdapter.notifyDataSetChanged();
@@ -89,6 +93,10 @@ public class MyHabitsFragment extends Fragment {
         startActivity(intent);
     }
 
+    /**
+     * An adapter for converting habit objects into "my habits" to be displayed in a list
+     * view.
+     */
     private class MyHabitsAdapter extends ArrayAdapter<Habit> {
         public MyHabitsAdapter(Context context, ArrayList<Habit> habits) {
             super(context, 0, habits);
