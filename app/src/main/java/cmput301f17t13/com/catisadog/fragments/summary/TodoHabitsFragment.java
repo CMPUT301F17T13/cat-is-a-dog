@@ -48,17 +48,24 @@ public class TodoHabitsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_todo_habits, container, false);
-
-        HabitSummaryActivity habitSummaryActivity = (HabitSummaryActivity) getActivity();
         habitsListView = (ListView) view.findViewById(R.id.todoHabitsListView);
-        habitsAdapter = new TodoHabitsAdapter(habitSummaryActivity, habitSummaryActivity.todoHabits);
-        habitsListView.setAdapter(habitsAdapter);
 
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        HabitSummaryActivity habitSummaryActivity = (HabitSummaryActivity) getActivity();
+        habitsAdapter = new TodoHabitsAdapter(habitSummaryActivity, habitSummaryActivity.todoHabits);
+        habitsListView.setAdapter(habitsAdapter);
+    }
+
     public void updateListView() {
-        habitsAdapter.notifyDataSetChanged();
+        if (habitsAdapter != null) {
+            habitsAdapter.notifyDataSetChanged();
+        }
     }
 
     private class TodoHabitsAdapter extends ArrayAdapter<Habit> {

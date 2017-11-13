@@ -9,14 +9,17 @@
 package cmput301f17t13.com.catisadog.fragments.summary;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ActionMenuView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,7 +28,9 @@ import java.util.ArrayList;
 
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.activities.summary.AddHabitActivity;
+import cmput301f17t13.com.catisadog.activities.summary.EditHabitActivity;
 import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
+import cmput301f17t13.com.catisadog.activities.summary.ViewHabitActivity;
 import cmput301f17t13.com.catisadog.models.Habit;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 
@@ -52,6 +57,14 @@ public class MyHabitsFragment extends Fragment {
 
         HabitSummaryActivity habitSummaryActivity = (HabitSummaryActivity) getActivity();
         habitsListView = (ListView) view.findViewById(R.id.myHabitsListView);
+        habitsListView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                viewHabit(position);
+            }
+        });
         habitsAdapter = new MyHabitsAdapter(habitSummaryActivity, habitSummaryActivity.habits);
         habitsListView.setAdapter(habitsAdapter);
 
@@ -59,18 +72,25 @@ public class MyHabitsFragment extends Fragment {
     }
 
     public void updateListView() {
-        habitsAdapter.notifyDataSetChanged();
+        if(habitsAdapter != null) {
+            habitsAdapter.notifyDataSetChanged();
+        }
     }
 
     /**
      * Navigate to the View Habit Activity when the user presses a habit
-     * @param v the button view
+     * @param position position of selected habit in ListView
      *
      * @see cmput301f17t13.com.catisadog.activities.summary.ViewHabitActivity
      */
 
-    public void viewHabit(View v) {
-
+    public void viewHabit(int position) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(IntentConstants.VIEW_HABIT_INTENT_DATA,
+                               habitsAdapter.getItem(position));
+        Intent intent = new Intent(getActivity(), ViewHabitActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     private class MyHabitsAdapter extends ArrayAdapter<Habit> {
