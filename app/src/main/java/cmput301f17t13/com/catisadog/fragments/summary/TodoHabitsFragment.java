@@ -100,7 +100,7 @@ public class TodoHabitsFragment extends Fragment {
                     Log.d("Event", "Add habit event");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable(IntentConstants.ADD_HABIT_EVENT_INTENT_DATA,
-                            habit.getTitle());
+                            habit.getKey());
                     Intent intent = new Intent(getActivity(), AddHabitEventActivity.class);
                     intent.putExtras(bundle);
                     startActivity(intent);
