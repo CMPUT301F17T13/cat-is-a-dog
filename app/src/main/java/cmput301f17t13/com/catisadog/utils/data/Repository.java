@@ -8,7 +8,7 @@ package cmput301f17t13.com.catisadog.utils.data;
 
 
 public interface Repository<TEntity> {
-    void insert(TEntity entity);
-    void update(TEntity entity);
-    void delete(TEntity entity);
+    void add(TEntity entity);
+    void update(String key, TEntity entity);
+    void delete(String key);
 }

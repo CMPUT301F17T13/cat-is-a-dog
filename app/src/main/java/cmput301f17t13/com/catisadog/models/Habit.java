@@ -1,8 +1,10 @@
 package cmput301f17t13.com.catisadog.models;
 
 
+import android.util.Log;
 import android.util.SparseBooleanArray;
 
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import org.joda.time.DateTime;
@@ -20,7 +22,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-@IgnoreExtraProperties
+import cmput301f17t13.com.catisadog.BuildConfig;
+
 public class Habit implements Schedulable, Serializable {
 
     private String userId;
@@ -28,9 +31,8 @@ public class Habit implements Schedulable, Serializable {
     private String title;
     private String reason;
 
-    // TODO(#46): Only store timestamp in database
     private DateTime startDate;
-    private List<Boolean> schedule;
+    private HashSet<Integer> schedule;
     private HabitStatus status;
 
     //TODO(#17): How to handle completion metrics
@@ -41,14 +43,14 @@ public class Habit implements Schedulable, Serializable {
         this.title = title;
         this.reason = reason;
         this.startDate = startDate;
+        this.schedule = schedule;
         this.status = status;
-
-        setSchedule(schedule);
     }
 
     public String getUserId() {
         return userId;
     }
+
 
     public String getTitle() {
         return title;
@@ -75,22 +77,24 @@ public class Habit implements Schedulable, Serializable {
     }
 
     @Override
-    public List<Boolean> getSchedule() {
+    public Set<Integer> getSchedule() {
         return schedule;
     }
 
     @Override
     public void setSchedule(Set<Integer> days) {
-        schedule = new ArrayList<>(7);
+        schedule = new HashSet<>(7);
         for (int dayOfWeek = DateTimeConstants.MONDAY; dayOfWeek <= DateTimeConstants.SUNDAY; dayOfWeek++) {
-            schedule.add(days.contains(dayOfWeek));
+            if (days.contains(dayOfWeek)) {
+                schedule.add(dayOfWeek);
+            }
         }
     }
 
     @Override
     public boolean isTodo(DateTime date) {
         int dayOfWeek = date.toGregorianCalendar().get(Calendar.DAY_OF_WEEK);
-        return schedule.get(dayOfWeek - 1);
+        return schedule.contains(dayOfWeek);
     }
 
     @Override
