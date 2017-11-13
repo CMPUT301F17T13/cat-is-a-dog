@@ -21,7 +21,9 @@ import java.util.LinkedHashMap;
 
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
-
+/**
+ * Firebase datasource implementation for a user's habits
+ */
 public class HabitDataSource extends DataSource<Habit> implements
         ChildEventListener {
 
@@ -42,6 +44,10 @@ public class HabitDataSource extends DataSource<Habit> implements
         mHabitArray = new ArrayList<>();
     }
 
+    /**
+     * Get the data source refence (for adapters)
+     * @return the data source reference
+     */
     @Override
     public ArrayList<Habit> getSource() { return mHabitArray; }
 
