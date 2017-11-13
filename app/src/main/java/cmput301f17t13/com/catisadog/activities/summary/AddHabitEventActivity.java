@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.utils.IntentConstants;
 
 /**
  * Screen for creating new habit events.
@@ -67,6 +68,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements
     private GoogleMap map;
     private ImageView image;
 
+    // Properties we will add to the HabitEvent object
+    private String habitKey;
     private Location location;
     private Bitmap imageBitmap;
 
@@ -75,6 +78,13 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_habit_event);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Bundle b = getIntent().getExtras();
+        habitKey = "INVALID KEY"; // or other values
+        if(b != null)
+            habitKey = b.getString(IntentConstants.ADD_HABIT_EVENT_INTENT_DATA);
+
+        Log.d(TAG, "Adding HabitEvent to Habit with key: " + habitKey);
 
         // Get the SupportMapFragment and request notification
         // when the map is ready to be used.

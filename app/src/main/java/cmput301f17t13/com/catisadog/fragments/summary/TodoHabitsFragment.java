@@ -98,11 +98,10 @@ public class TodoHabitsFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Log.d("Event", "Add habit event");
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable(IntentConstants.ADD_HABIT_EVENT_INTENT_DATA,
-                            habit.getKey());
                     Intent intent = new Intent(getActivity(), AddHabitEventActivity.class);
-                    intent.putExtras(bundle);
+                    Bundle b = new Bundle();
+                    b.putString(IntentConstants.ADD_HABIT_EVENT_INTENT_DATA, habit.getKey());
+                    intent.putExtras(b); //Put your id to your next Intent
                     startActivity(intent);
                 }
             };
