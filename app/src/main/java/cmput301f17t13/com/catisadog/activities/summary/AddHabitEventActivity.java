@@ -36,7 +36,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.models.Habit;
+import cmput301f17t13.com.catisadog.models.HabitDataSource;
+import cmput301f17t13.com.catisadog.models.HabitEvent;
+import cmput301f17t13.com.catisadog.models.HabitEventDataSource;
+import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
+import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 /**
  * Screen for creating new habit events.
@@ -54,6 +60,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1111;
 
     private static final int SAVE_BUTTON_ID = 123;
+
+    private Repository<HabitEvent> habitEventRepository;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -84,6 +92,10 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         if(b != null)
             habitKey = b.getString(IntentConstants.ADD_HABIT_EVENT_INTENT_DATA);
 
+        CurrentUser currentUser = CurrentUser.getInstance();
+        if(currentUser != null)
+            habitEventRepository = new HabitEventDataSource(currentUser.getUserId());
+
         Log.d(TAG, "Adding HabitEvent to Habit with key: " + habitKey);
 
         // Get the SupportMapFragment and request notification
@@ -100,7 +112,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         imageDelete = (ImageView) findViewById(R.id.imageDelete);
         mapAdd = (ImageView) findViewById(R.id.mapAdd);
         imageAdd = (ImageView) findViewById(R.id.imageAdd);
-
 
         image = (ImageView) findViewById(R.id.image);
 
