@@ -73,6 +73,10 @@ public class AddHabitEventActivity extends AppCompatActivity implements
     private Location location;
     private Bitmap imageBitmap;
 
+    /**
+     * Add habit event
+     * @param savedInstanceState saved Bundle instance
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +116,10 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         updateOverlays();
     }
 
+    /**
+     * Run this code when the map has been loaded and is ready
+     * @param googleMap the map
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
@@ -126,6 +134,11 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
+    /**
+     * Creates menu items such as "save" button
+     * @param menu the menu
+     * @return true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         final MenuItem menuItem = menu.add(Menu.NONE, SAVE_BUTTON_ID, Menu.NONE, "Save");
@@ -134,6 +147,11 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         return true;
     }
 
+    /**
+     * Handler when menu item is selected
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "item:" + item.getItemId());
@@ -149,6 +167,10 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * OnClick handler for image and map
+     * @param v view that was clicked
+     */
     public void onClick(View v) {
         if(v == imageOpacityOverlay) {
             Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -166,9 +188,16 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Request location permissions
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
@@ -187,6 +216,9 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Get user's current location
+     */
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -219,6 +251,9 @@ public class AddHabitEventActivity extends AppCompatActivity implements
                 });
     }
 
+    /**
+     * Update map and image overlays
+     */
     private void updateOverlays() {
         if(imageBitmap != null) {
             imageDelete.setVisibility(View.VISIBLE);
@@ -240,6 +275,12 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Activity result handler
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");

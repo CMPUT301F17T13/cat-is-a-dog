@@ -21,12 +21,19 @@ import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 public class BaseDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    /**
+     * onCreate for BaseDrawerActivity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Logic for toolbar
+     */
     protected void drawToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -42,6 +49,9 @@ public class BaseDrawerActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Back button handler
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -52,6 +62,11 @@ public class BaseDrawerActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Handler when navigation item is selected
+     * @param item
+     * @return
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

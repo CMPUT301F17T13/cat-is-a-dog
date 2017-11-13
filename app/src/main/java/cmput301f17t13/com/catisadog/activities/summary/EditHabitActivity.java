@@ -70,6 +70,8 @@ public class EditHabitActivity extends AppCompatActivity {
     private String habitKey;
 
     /**
+     * Create or edit a habit
+     * Populate EditText and TextView with habit data if we are editing a habit
      * Set up calendar and weekday picker widgets
      * @param savedInstanceState
      */
@@ -142,6 +144,11 @@ public class EditHabitActivity extends AppCompatActivity {
         habitRepository = new HabitDataSource(CurrentUser.getInstance().getUserId());
     }
 
+    /**
+     * Create menu items such as "delete" button
+     * @param menu The menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         final MenuItem deleteItem = menu.add(
@@ -158,6 +165,9 @@ public class EditHabitActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Confirm before deleting habit
+     */
     private void confirmDelete() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Alert!!");

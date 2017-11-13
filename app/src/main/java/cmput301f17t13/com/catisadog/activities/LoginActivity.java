@@ -33,6 +33,10 @@ public class LoginActivity extends Activity implements
 
     private Authenticator mAuthenticator;
 
+    /**
+     * Setup firebase and get ready to log in user
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,12 +53,19 @@ public class LoginActivity extends Activity implements
         mAuthenticator.setAuthListener(this);
     }
 
+    /**
+     * Try to authenticate user on start
+     */
     @Override
     public void onStart() {
         super.onStart();
         mAuthenticator.signInIfAuthenticated();
     }
 
+    /**
+     * onClick handler for nested views such as sign in button
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -64,6 +75,12 @@ public class LoginActivity extends Activity implements
         }
     }
 
+    /**
+     * Handle activity results
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -83,6 +100,9 @@ public class LoginActivity extends Activity implements
         finish();
     }
 
+    /**
+     * Handler if authentication fails
+     */
     @Override
     public void onAuthFailed() {
         Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();

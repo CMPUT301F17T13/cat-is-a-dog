@@ -86,6 +86,11 @@ public class HabitSummaryActivity extends BaseDrawerActivity implements Observer
         startActivity(intent);
     }
 
+    /**
+     * Update nested fragments
+     * @param observable
+     * @param o
+     */
     @Override
     public void update(Observable observable, Object o) {
         calculateTodoHabits();
