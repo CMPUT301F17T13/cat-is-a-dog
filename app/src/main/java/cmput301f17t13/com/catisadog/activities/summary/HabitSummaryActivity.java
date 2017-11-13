@@ -18,24 +18,47 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.function.Function;
 
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.fragments.summary.FollowingHabitsFragment;
 import cmput301f17t13.com.catisadog.fragments.summary.MyHabitsFragment;
 import cmput301f17t13.com.catisadog.fragments.summary.TodoHabitsFragment;
 import cmput301f17t13.com.catisadog.models.Habit;
+import cmput301f17t13.com.catisadog.models.HabitDataSource;
+import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
+import cmput301f17t13.com.catisadog.utils.data.DataSource;
+import cmput301f17t13.com.catisadog.utils.data.Repository;
 
-public class HabitSummaryActivity extends AppCompatActivity {
+public class HabitSummaryActivity extends AppCompatActivity implements Observer {
 
-    public ArrayList<Habit> habits = new ArrayList<>();
+    private static final String TAG = "HabitSummaryActivity";
+
+    public ArrayList<Habit> habits;
     public ArrayList<Habit> todoHabits = new ArrayList<>();
     public ViewPagerAdapter adapter;
+
+    private MyHabitsFragment myHabitsFragment;
+    private TodoHabitsFragment todoHabitsFragment;
+
+    private DataSource<Habit> habitDataSource;
 
     /**
      * Set up tab layout
@@ -56,6 +79,13 @@ public class HabitSummaryActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.habitSummaryTabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        myHabitsFragment = (MyHabitsFragment) adapter.getItem(0);
+        todoHabitsFragment = (TodoHabitsFragment) adapter.getItem(1);
+
+        habitDataSource = new HabitDataSource(this, CurrentUser.getInstance().getUserId());
+        habitDataSource.addObserver(this);
+        habits = habitDataSource.getSource();
     }
 
     /**
@@ -78,15 +108,14 @@ public class HabitSummaryActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == IntentConstants.ADD_HABIT_INTENT_RESULT) {
             Habit habit = (Habit) data.getSerializableExtra(IntentConstants.ADD_HABIT_INTENT_DATA);
-            habits.add(habit);
+            habitDataSource.add(habit);
         }
+    }
 
+    @Override
+    public void update(Observable observable, Object o) {
         calculateTodoHabits();
-
-        MyHabitsFragment myHabitsFragment = (MyHabitsFragment) adapter.getItem(0);
         myHabitsFragment.updateListView();
-
-        TodoHabitsFragment todoHabitsFragment = (TodoHabitsFragment) adapter.getItem(1);
         todoHabitsFragment.updateListView();
     }
 

@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "972295417158-ujegb4im0nrnc3qpfv1c46vcovhclkb0.apps.googleusercontent.com",
+          "client_id": "972295417158-mjh01sal01ov8vfpej6fmi99vjcuf3qp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "cmput301f17t13.com.catisadog",
-            "certificate_hash": "c251dd64705bf8639002ad09f7808a75e46edbe8"
+            "certificate_hash": "dcd947ad297ef85961ec3febb1232ce00336f5ac"
           }
         },
         {

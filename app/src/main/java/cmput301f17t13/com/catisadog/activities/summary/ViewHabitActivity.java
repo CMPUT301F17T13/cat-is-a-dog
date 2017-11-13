@@ -22,6 +22,7 @@ import org.joda.time.DateTimeConstants;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.models.Habit;
@@ -81,7 +82,7 @@ public class ViewHabitActivity extends AppCompatActivity {
      * @return String representation of repeat text
      */
     private String repeatsText() {
-        HashSet<Integer> schedule = habit.getSchedule();
+        Set<Integer> schedule = habit.getSchedule();
         if (schedule.size() == 7) {
             return "Every day";
         } else if (schedule.contains(DateTimeConstants.MONDAY) &&

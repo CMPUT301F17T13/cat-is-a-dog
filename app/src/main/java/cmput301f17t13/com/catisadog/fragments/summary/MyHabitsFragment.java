@@ -72,7 +72,9 @@ public class MyHabitsFragment extends Fragment {
     }
 
     public void updateListView() {
-        habitsAdapter.notifyDataSetChanged();
+        if(habitsAdapter != null) {
+            habitsAdapter.notifyDataSetChanged();
+        }
     }
 
     /**

@@ -41,6 +41,7 @@ import java.util.UUID;
 
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.models.Habit;
+import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 
 public class AddHabitActivity extends AppCompatActivity {
@@ -130,8 +131,7 @@ public class AddHabitActivity extends AppCompatActivity {
             }
         }
 
-        String id = UUID.randomUUID().toString();
-        Habit habit = new Habit(id, habitTitle, habitReason, startDate, schedule, null);
+        Habit habit = new Habit(CurrentUser.getInstance().getUserId(), habitTitle, habitReason, startDate, schedule, null);
 
         Intent intent = new Intent();
         intent.putExtra(IntentConstants.ADD_HABIT_INTENT_DATA, habit);

@@ -11,15 +11,18 @@ import java.util.Map;
  */
 public class CurrentUser extends User {
 
+    private String userId;
+
     private FirebaseAuth mAuth;
     private static CurrentUser instance = null;
 
-    private CurrentUser(String username, Map<String, Boolean> followers, Map<String, Boolean> following) {
+    private CurrentUser(String id, String username, Map<String, Boolean> followers, Map<String, Boolean> following) {
         super(username);
         setFollowers(followers);
         setFollowing(following);
 
         mAuth = FirebaseAuth.getInstance();
+        userId = id;
     }
 
     /**
@@ -36,7 +39,7 @@ public class CurrentUser extends User {
      */
     public static void signIn(FirebaseUser user) {
         // TODO(#39): Get followers and following from Firebase
-        instance = new CurrentUser(user.getEmail(), null, null);
+        instance = new CurrentUser(user.getUid(), user.getEmail(), null, null);
     }
 
     /**
@@ -45,5 +48,9 @@ public class CurrentUser extends User {
     public static void signOut() {
         instance.mAuth.signOut();
         instance = null;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }
