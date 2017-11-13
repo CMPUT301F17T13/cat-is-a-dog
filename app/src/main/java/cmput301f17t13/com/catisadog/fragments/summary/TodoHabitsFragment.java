@@ -9,6 +9,7 @@
 package cmput301f17t13.com.catisadog.fragments.summary;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -25,8 +26,11 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.activities.summary.AddHabitEventActivity;
 import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
+import cmput301f17t13.com.catisadog.activities.summary.ViewHabitActivity;
 import cmput301f17t13.com.catisadog.models.Habit;
+import cmput301f17t13.com.catisadog.utils.IntentConstants;
 
 /**
  * A screen for seeing habits scheduled for today
@@ -76,7 +80,7 @@ public class TodoHabitsFragment extends Fragment {
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            Habit habit = this.getItem(position);
+            final Habit habit = this.getItem(position);
 
             if (convertView == null) {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_todo_habit, parent, false);
@@ -94,6 +98,11 @@ public class TodoHabitsFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     Log.d("Event", "Add habit event");
+                    Intent intent = new Intent(getActivity(), AddHabitEventActivity.class);
+                    Bundle b = new Bundle();
+                    b.putString(IntentConstants.ADD_HABIT_EVENT_INTENT_DATA, habit.getKey());
+                    intent.putExtras(b); //Put your id to your next Intent
+                    startActivity(intent);
                 }
             };
 
