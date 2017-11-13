@@ -43,7 +43,11 @@
             android:theme="@style/AppTheme.NoActionBar"
             />
         <activity android:name=".activities.summary.EditHabitActivity"/>
-        <activity android:name=".activities.summary.ViewHabitActivity" />
+        <activity
+            android:name=".activities.summary.ViewHabitActivity"
+            android:parentActivityName=".activities.summary.HabitSummaryActivity"
+            android:label="View Habit"
+            />
 
         <!-- Habit Event Activities -->
         <activity
