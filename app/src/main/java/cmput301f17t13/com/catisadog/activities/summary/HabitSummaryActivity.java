@@ -36,6 +36,10 @@ import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
+/**
+ * The activity that handles three tabs: my habits, to do habits, and following habits.
+ * Stores that habit objects and updates the tab fragments to display the UI.
+ */
 public class HabitSummaryActivity extends BaseDrawerActivity implements Observer{
     private static final String TAG = "HabitSummaryActivity";
 
@@ -86,6 +90,9 @@ public class HabitSummaryActivity extends BaseDrawerActivity implements Observer
         startActivity(intent);
     }
 
+    /**
+     * Notify the fragments that changes have occurred to the habits.
+     */
     @Override
     public void update(Observable observable, Object o) {
         calculateTodoHabits();
