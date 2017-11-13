@@ -1,39 +1,32 @@
 package cmput301f17t13.com.catisadog.models;
 
 
-import android.util.Log;
-import android.util.SparseBooleanArray;
-
-import com.google.firebase.database.Exclude;
-import com.google.firebase.database.IgnoreExtraProperties;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
-import cmput301f17t13.com.catisadog.BuildConfig;
-
+/**
+ * Object representing a habit
+ */
 public class Habit implements Schedulable, Serializable {
 
     private String key;
     private String userId;
 
+    /** Brief title */
     private String title;
+    /** Brief reason for habit */
     private String reason;
 
+    /** Start date for habit to be due */
     private DateTime startDate;
+    /** Days of the week the habit is due */
     private HashSet<Integer> schedule;
+    /** Status of the habit */
     private HabitStatus status;
 
     //TODO(#17): How to handle completion metrics
@@ -109,12 +102,20 @@ public class Habit implements Schedulable, Serializable {
         }
     }
 
+    /**
+     * Check if habit is due on a particular date
+     * @param date the date to test
+     * @return the habit is due on date
+     */
     @Override
     public boolean isTodo(DateTime date) {
         int dayOfWeek = date.toGregorianCalendar().get(Calendar.DAY_OF_WEEK);
         return schedule.contains(dayOfWeek);
     }
 
+    /**
+     * @return The next due date for the habit
+     */
     @Override
     public DateTime nextTodo() {
         return null;

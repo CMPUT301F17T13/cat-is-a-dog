@@ -6,42 +6,36 @@
 
 package cmput301f17t13.com.catisadog.models;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
+import cmput301f17t13.com.catisadog.utils.data.DataSource;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
-/**
- * Firebase datasource implementation for a user's habits
- */
-public class HabitDataSource extends DataSource<Habit> implements
+public class HabitEventDataSource extends DataSource<HabitEvent> implements
         ChildEventListener {
 
     private static final String TAG = "HabitDataSource";
 
     private DatabaseReference mHabitsRef;
 
-    private LinkedHashMap<String, Habit> mHabits;
-    private ArrayList<Habit> mHabitArray;
+    private LinkedHashMap<String, HabitEvent> mHabitEvents;
+    private ArrayList<HabitEvent> mHabitEventArray;
 
-    public HabitDataSource(String userId) {
-        mHabitsRef = FirebaseDatabase.getInstance().getReference("habits/" + userId);
+    public HabitEventDataSource(String userId) {
+        mHabitsRef = FirebaseDatabase.getInstance().getReference("events/" + userId);
         mHabitsRef.addChildEventListener(this);
 
-        mHabits = new LinkedHashMap<>();
-        mHabitArray = new ArrayList<>();
+        mHabitEvents = new LinkedHashMap<>();
+        mHabitEventArray = new ArrayList<>();
     }
 
     /**
@@ -49,18 +43,18 @@ public class HabitDataSource extends DataSource<Habit> implements
      * @return the data source reference
      */
     @Override
-    public ArrayList<Habit> getSource() { return mHabitArray; }
+    public ArrayList<HabitEvent> getSource() { return mHabitEventArray; }
 
     @Override
-    public void add(Habit habit) {
-        HabitDataModel habitModel = new HabitDataModel(habit);
-        mHabitsRef.push().setValue(habitModel,null);
+    public void add(HabitEvent habitEvent) {
+        HabitEventDataModel eventModel = new HabitEventDataModel(habitEvent);
+        mHabitsRef.push().setValue(eventModel,null);
     }
 
     @Override
-    public void update(String key, Habit habit) {
-        HabitDataModel habitModel = new HabitDataModel(habit);
-        mHabitsRef.child(key).getRef().setValue(habitModel, null);
+    public void update(String key, HabitEvent habitEvent) {
+        HabitEventDataModel eventModel = new HabitEventDataModel(habitEvent);
+        mHabitsRef.child(key).getRef().setValue(eventModel, null);
     }
 
     @Override
@@ -73,13 +67,13 @@ public class HabitDataSource extends DataSource<Habit> implements
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
-        HabitDataModel model = dataSnapshot.getValue(HabitDataModel.class);
+        HabitEventDataModel model = dataSnapshot.getValue(HabitEventDataModel.class);
 
-        if (model != null) {
+        /*if (model != null) {
             model.setKey(dataSnapshot.getKey());
-            mHabits.put(dataSnapshot.getKey(), model.getHabit());
+            mHabitEvents.put(dataSnapshot.getKey(), model.getHabitEvent());
             datasetChanged();
-        }
+        }*/
     }
 
     @Override
@@ -87,18 +81,18 @@ public class HabitDataSource extends DataSource<Habit> implements
         Log.d(TAG, "onChildChanged:" + dataSnapshot.getKey());
         HabitDataModel model = dataSnapshot.getValue(HabitDataModel.class);
 
-        if (model != null) {
+        /*if (model != null) {
             model.setKey(dataSnapshot.getKey());
-            mHabits.put(dataSnapshot.getKey(), model.getHabit());
+            mHabitEvents.put(dataSnapshot.getKey(), model.getHabit());
             datasetChanged();
-        }
+        }*/
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
         Log.d(TAG, "onChildRemoved:" + dataSnapshot.getKey());
 
-        mHabits.remove(dataSnapshot.getKey());
+        mHabitEvents.remove(dataSnapshot.getKey());
         datasetChanged();
     }
 
@@ -114,8 +108,8 @@ public class HabitDataSource extends DataSource<Habit> implements
     }
 
     private void datasetChanged() {
-        mHabitArray.clear();
-        mHabitArray.addAll(mHabits.values());
+        mHabitEventArray.clear();
+        mHabitEventArray.addAll(mHabitEvents.values());
         setChanged();
         notifyObservers();
     }
