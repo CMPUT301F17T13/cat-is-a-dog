@@ -27,7 +27,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <!-- Login Activity -->
         <activity
             android:name=".activities.LoginActivity"
@@ -50,6 +49,7 @@
         <activity
             android:name=".activities.summary.AddHabitEventActivity"
             android:exported="true"
+            android:parentActivityName=".activities.summary.HabitSummaryActivity"
             android:label="Add Habit Event">
         </activity>
     </application>
