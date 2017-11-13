@@ -98,6 +98,15 @@ public class HabitSummaryActivity extends AppCompatActivity implements Observer 
     }
 
     /**
+     * Navigate to the Add Habit Event Activity when the user clicks add habit event button
+     * @param v the button view
+     */
+    public void addHabitEvent(View v) {
+        Intent intent = new Intent(this, AddHabitActivity.class);
+        startActivityForResult(intent, IntentConstants.ADD_HABIT_INTENT_REQUEST);
+    }
+
+    /**
      * Handle the data returned from worker activities created by this activity
      * (e.g. AddHabitActivity)
      * @param requestCode

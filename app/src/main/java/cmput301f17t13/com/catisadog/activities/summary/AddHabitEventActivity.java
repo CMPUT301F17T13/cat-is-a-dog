@@ -33,7 +33,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import cmput301f17t13.com.catisadog.R;
-import cmput301f17t13.com.catisadog.fragments.summary.AddOverlayFragment;
 
 /**
  * Screen for creating new habit events.
