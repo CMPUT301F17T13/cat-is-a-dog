@@ -18,6 +18,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.joda.time.DateTime;
 
@@ -36,6 +42,8 @@ public class HabitSummaryActivity extends AppCompatActivity {
     public ArrayList<Habit> habits = new ArrayList<>();
     public ArrayList<Habit> todoHabits = new ArrayList<>();
     public ViewPagerAdapter adapter;
+
+    private DatabaseReference habitsRef;
 
     /**
      * Set up tab layout
@@ -56,6 +64,9 @@ public class HabitSummaryActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.habitSummaryTabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        habitsRef = database.getReference("habits");
     }
 
     /**
@@ -79,6 +90,12 @@ public class HabitSummaryActivity extends AppCompatActivity {
         if (resultCode == IntentConstants.ADD_HABIT_INTENT_RESULT) {
             Habit habit = (Habit) data.getSerializableExtra(IntentConstants.ADD_HABIT_INTENT_DATA);
             habits.add(habit);
+            habitsRef.push().setValue(habit, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    Toast.makeText(HabitSummaryActivity.this, "Inserted habit.", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
 
         calculateTodoHabits();
