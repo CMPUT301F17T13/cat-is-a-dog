@@ -7,8 +7,6 @@
 package cmput301f17t13.com.catisadog.utils.data;
 
 
-import java.util.List;
-
 public interface Repository<TEntity> {
     void add(TEntity entity);
     void update(String key, TEntity entity);

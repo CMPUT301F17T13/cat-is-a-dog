@@ -8,33 +8,38 @@ import cmput301f17t13.com.catisadog.models.user.User;
 
 public class HabitEvent {
 
+    private String key;
+    private String userId;
     private Habit habit;
     private String comment;
     private String photoUrl;
     private Location location;
     private DateTime eventDate;
-    private User user;
-    private String id;
 
-    public HabitEvent(String id, Habit habit, String comment, String photoUrl, Location location, DateTime eventDate, User user) {
-        this.id = id;
+    public HabitEvent() {}
+
+    public HabitEvent(String key, Habit habit, String comment, String photoUrl, Location location, DateTime eventDate, String userId) {
+        this.key = key;
+        this.userId = userId;
         this.habit = habit;
         this.comment = comment;
         this.photoUrl = photoUrl;
         this.location = location;
         this.eventDate = eventDate;
-        this.user = user;
     }
 
-    public HabitEvent(String id, Habit habit, User user) {
-        this.id = id;
+    public HabitEvent(String key, Habit habit, String userId) {
+        this.key = key;
         this.habit = habit;
-        this.user = user;
+        this.userId = userId;
         this.eventDate = new DateTime();
     }
 
     public Habit getHabit() {
         return habit;
+    }
+    public void setHabit(Habit habit) {
+        this.habit = habit;
     }
 
     public String getComment() {
@@ -69,11 +74,17 @@ public class HabitEvent {
         this.eventDate = eventDate;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public String getId() {
-        return id;
+    public String getKey() {
+        return key;
+    }
+    public void setKey(String key) {
+        this.key = key;
     }
 }

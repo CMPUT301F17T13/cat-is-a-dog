@@ -137,5 +137,4 @@ public class HabitSummaryActivity extends BaseDrawerActivity implements Observer
             return mFragmentTitleList.get(position);
         }
     }
-
 }
