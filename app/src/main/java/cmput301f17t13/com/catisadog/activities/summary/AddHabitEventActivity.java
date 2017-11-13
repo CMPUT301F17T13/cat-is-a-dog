@@ -12,15 +12,18 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -44,8 +47,12 @@ import cmput301f17t13.com.catisadog.R;
 public class AddHabitEventActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         View.OnClickListener {
+    private static final String TAG = "AddHabitEventActivity";
+
     private static final int CAMERA_REQUEST = 1888;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1111;
+
+    private static final int SAVE_BUTTON_ID = 123;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -67,6 +74,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_habit_event);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Get the SupportMapFragment and request notification
         // when the map is ready to be used.
@@ -110,7 +118,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        final MenuItem menuItem = menu.add(Menu.NONE, 1000, Menu.NONE, "Save");
+        final MenuItem menuItem = menu.add(Menu.NONE, SAVE_BUTTON_ID, Menu.NONE, "Save");
         MenuItemCompat.setShowAsAction(menuItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
 
         return true;
@@ -118,8 +126,17 @@ public class AddHabitEventActivity extends AppCompatActivity implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        return true;
+        Log.d(TAG, "item:" + item.getItemId());
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            case SAVE_BUTTON_ID:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void onClick(View v) {
