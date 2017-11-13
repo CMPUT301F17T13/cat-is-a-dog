@@ -49,17 +49,24 @@ public class MyHabitsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_habits, container, false);
-
-        HabitSummaryActivity habitSummaryActivity = (HabitSummaryActivity) getActivity();
         habitsListView = (ListView) view.findViewById(R.id.myHabitsListView);
-        habitsAdapter = new MyHabitsAdapter(habitSummaryActivity, habitSummaryActivity.habits);
-        habitsListView.setAdapter(habitsAdapter);
 
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        HabitSummaryActivity habitSummaryActivity = (HabitSummaryActivity) getActivity();
+        habitsAdapter = new MyHabitsAdapter(habitSummaryActivity, habitSummaryActivity.habits);
+        habitsListView.setAdapter(habitsAdapter);
+    }
+
     public void updateListView() {
-        habitsAdapter.notifyDataSetChanged();
+        if(habitsAdapter != null) {
+            habitsAdapter.notifyDataSetChanged();
+        }
     }
 
     /**

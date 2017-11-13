@@ -6,11 +6,14 @@
 
 package cmput301f17t13.com.catisadog.utils.data;
 
-
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Observable;
 
-public interface Repository<TEntity> {
-    void add(TEntity entity);
-    void update(String key, TEntity entity);
-    void delete(String key);
+
+public abstract class DataSource<TEntity> extends Observable implements
+        Repository<TEntity> {
+
+    public abstract ArrayList<TEntity> getSource();
 }
