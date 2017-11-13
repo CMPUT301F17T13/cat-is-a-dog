@@ -16,6 +16,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * Represents the Firebase data model for the Habit class
+ *
+ * @see Habit
+ */
 @IgnoreExtraProperties
 public class HabitDataModel {
 
@@ -32,6 +37,10 @@ public class HabitDataModel {
     /** Empty constructor for firebase */
     public HabitDataModel() {}
 
+    /**
+     * Convert a habit to its data model
+     * @param habit the habit to convert
+     */
     public HabitDataModel(Habit habit) {
         key = habit.getKey();
         userId = habit.getUserId();
@@ -40,12 +49,16 @@ public class HabitDataModel {
 
         startDate = habit.getStartDate().getMillis();
 
-        schedule = new ArrayList<>(7);
+        schedule = new ArrayList<>(DateTimeConstants.DAYS_PER_WEEK);
         for (int i = 0; i < DateTimeConstants.DAYS_PER_WEEK; i++) {
             schedule.add(habit.getSchedule().contains(i + 1));
         }
     }
 
+    /**
+     * Convert to a habit
+     * @return the corresponding Habit object
+     */
     @Exclude
     public Habit getHabit() {
         HashSet<Integer> newSchedule = new HashSet<>(7);
@@ -66,6 +79,8 @@ public class HabitDataModel {
 
         return habit;
     }
+
+    /* Getters and Setters */
 
     @Exclude
     public String getKey() {
