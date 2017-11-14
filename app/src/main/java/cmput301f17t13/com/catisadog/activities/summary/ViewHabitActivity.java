@@ -11,10 +11,16 @@
 
 package cmput301f17t13.com.catisadog.activities.summary;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -26,7 +32,10 @@ import java.util.Set;
 
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.models.Habit;
+import cmput301f17t13.com.catisadog.models.HabitDataSource;
+import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
+import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 /**
  * A screen for viewing habit details
@@ -34,7 +43,9 @@ import cmput301f17t13.com.catisadog.utils.IntentConstants;
  * @see cmput301f17t13.com.catisadog.models.Habit
  */
 public class ViewHabitActivity extends AppCompatActivity {
+    private static final int DELETE_BUTTON_ID = 1032400432;
     private Habit habit;
+    private Repository<Habit> habitRepository;
 
     /**
      * OnCreate method to setup the UI and fill TextView values with habit data
@@ -56,6 +67,54 @@ public class ViewHabitActivity extends AppCompatActivity {
                 .setText(repeatsText());
         ((TextView) findViewById(R.id.habitCompletionMetricsValue))
                 .setText(completionMetricsText());
+
+        habitRepository = new HabitDataSource(CurrentUser.getInstance().getUserId());
+    }
+
+    /**
+     * Create menu items such as "delete" button
+     * @param menu The menu
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        final MenuItem deleteItem = menu.add(
+                Menu.NONE, DELETE_BUTTON_ID, Menu.NONE, "Delete");
+        MenuItemCompat.setShowAsAction(
+                deleteItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        deleteItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                confirmDelete();
+                return true;
+            }
+        });
+        return true;
+    }
+
+    /**
+     * Confirm before deleting habit
+     */
+    private void confirmDelete() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Confirmation");
+        alert.setMessage("Are you sure you would like to delete the habit and all its habit events?");
+        alert.setPositiveButton("Delete habit", new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                habitRepository.delete(habit.getKey());
+                dialog.dismiss();
+                finish();
+            }
+        });
+        alert.setNegativeButton("Cancel", new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        alert.show();
     }
 
     /**
