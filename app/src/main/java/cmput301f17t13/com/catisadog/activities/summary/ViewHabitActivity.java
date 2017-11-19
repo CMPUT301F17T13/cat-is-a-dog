@@ -39,17 +39,17 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import cmput301f17t13.com.catisadog.R;
-import cmput301f17t13.com.catisadog.models.Habit;
-import cmput301f17t13.com.catisadog.models.HabitDataModel;
-import cmput301f17t13.com.catisadog.models.HabitDataSource;
-import cmput301f17t13.com.catisadog.models.user.CurrentUser;
+import cmput301f17t13.com.catisadog.models.habit.Habit;
+import cmput301f17t13.com.catisadog.models.habit.HabitDataModel;
+import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
+import cmput301f17t13.com.catisadog.models.habit.HabitRepository;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 /**
  * A screen for viewing habit details
  *
- * @see cmput301f17t13.com.catisadog.models.Habit
+ * @see Habit
  */
 public class ViewHabitActivity extends AppCompatActivity {
 
@@ -81,7 +81,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         mHabitViewGroup = (Group) findViewById(R.id.habitViewGroup);
         mLoadingBar = (ProgressBar) findViewById(R.id.habitViewLoadingBar);
 
-        habitRepository = new HabitDataSource(habitOwner);
+        habitRepository = new HabitRepository(habitOwner);
     }
 
     /**

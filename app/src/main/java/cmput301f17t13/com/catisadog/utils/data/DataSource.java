@@ -6,14 +6,18 @@
 
 package cmput301f17t13.com.catisadog.utils.data;
 
+import com.google.firebase.database.ChildEventListener;
+
 import java.util.ArrayList;
 import java.util.Observable;
 
 /**
  * Represents a data source for an entity
+ * @param <TEntity> The entity type
  */
-public abstract class DataSource<TEntity> extends Observable implements
-        Repository<TEntity> {
+public abstract class DataSource<TEntity> extends Observable
+       implements ChildEventListener {
 
     public abstract ArrayList<TEntity> getSource();
+
 }

@@ -30,10 +30,10 @@ import cmput301f17t13.com.catisadog.activities.BaseDrawerActivity;
 import cmput301f17t13.com.catisadog.fragments.summary.FollowingHabitsFragment;
 import cmput301f17t13.com.catisadog.fragments.summary.MyHabitsFragment;
 import cmput301f17t13.com.catisadog.fragments.summary.TodoHabitsFragment;
-import cmput301f17t13.com.catisadog.models.Habit;
-import cmput301f17t13.com.catisadog.models.HabitDataSource;
+import cmput301f17t13.com.catisadog.models.habit.Habit;
+import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
+import cmput301f17t13.com.catisadog.models.habit.TodoHabitDataSource;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
-import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
 /**
@@ -52,6 +52,7 @@ public class HabitSummaryActivity extends BaseDrawerActivity implements Observer
 
     private String userId;
     private DataSource<Habit> habitDataSource;
+    private DataSource<Habit> todoDataSource;
 
     /**
      * Set up tab layout
@@ -78,9 +79,14 @@ public class HabitSummaryActivity extends BaseDrawerActivity implements Observer
         todoHabitsFragment = (TodoHabitsFragment) adapter.getItem(1);
 
         userId = CurrentUser.getInstance().getUserId();
+
         habitDataSource = new HabitDataSource(userId);
         habitDataSource.addObserver(this);
         habits = habitDataSource.getSource();
+
+        todoDataSource = new TodoHabitDataSource(userId);
+        todoDataSource.addObserver(this);
+        todoHabits = todoDataSource.getSource();
     }
 
     /**
@@ -97,21 +103,12 @@ public class HabitSummaryActivity extends BaseDrawerActivity implements Observer
      */
     @Override
     public void update(Observable observable, Object o) {
-        calculateTodoHabits();
-        myHabitsFragment.updateListView();
-        todoHabitsFragment.updateListView();
-    }
-
-    /**
-     * Calculate the habits that are to-do today and add them to a new array
-     */
-    private void calculateTodoHabits() {
-        todoHabits.clear();
-        for (int i = 0; i < habits.size(); i++) {
-            if (habits.get(i).isTodo(new DateTime())) {
-                todoHabits.add(habits.get(i));
-                Log.d("todo", Integer.valueOf(i).toString());
-            }
+        String type = (String) o;
+        switch (type) {
+            case TodoHabitDataSource.SourceType:
+                todoHabitsFragment.updateListView();
+            default:
+                myHabitsFragment.updateListView();
         }
     }
 

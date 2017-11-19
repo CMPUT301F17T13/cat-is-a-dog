@@ -8,8 +8,8 @@ import org.junit.Test;
 
 import java.util.HashSet;
 
-import cmput301f17t13.com.catisadog.models.Habit;
-import cmput301f17t13.com.catisadog.models.HabitEvent;
+import cmput301f17t13.com.catisadog.models.habit.Habit;
+import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 import cmput301f17t13.com.catisadog.models.HabitStatus;
 import cmput301f17t13.com.catisadog.models.user.User;
 import cmput301f17t13.com.catisadog.utils.LocationHelper;

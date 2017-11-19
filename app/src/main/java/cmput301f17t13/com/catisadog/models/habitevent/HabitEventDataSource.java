@@ -4,10 +4,11 @@
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-package cmput301f17t13.com.catisadog.models;
+package cmput301f17t13.com.catisadog.models.habitevent;
 
 import android.util.Log;
 
+import cmput301f17t13.com.catisadog.models.habit.HabitDataModel;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
 import com.google.firebase.database.ChildEventListener;
@@ -25,14 +26,14 @@ public class HabitEventDataSource extends DataSource<HabitEvent> implements
 
     private static final String TAG = "HabitDataSource";
 
-    private DatabaseReference mHabitsRef;
+    private DatabaseReference mHabitEventsRef;
 
     private LinkedHashMap<String, HabitEvent> mHabitEvents;
     private ArrayList<HabitEvent> mHabitEventArray;
 
     public HabitEventDataSource(String userId) {
-        mHabitsRef = FirebaseDatabase.getInstance().getReference("events/" + userId);
-        mHabitsRef.addChildEventListener(this);
+        mHabitEventsRef = FirebaseDatabase.getInstance().getReference("events/" + userId);
+        mHabitEventsRef.addChildEventListener(this);
 
         mHabitEvents = new LinkedHashMap<>();
         mHabitEventArray = new ArrayList<>();
@@ -44,23 +45,6 @@ public class HabitEventDataSource extends DataSource<HabitEvent> implements
      */
     @Override
     public ArrayList<HabitEvent> getSource() { return mHabitEventArray; }
-
-    @Override
-    public void add(HabitEvent habitEvent) {
-        HabitEventDataModel eventModel = new HabitEventDataModel(habitEvent);
-        mHabitsRef.push().setValue(eventModel,null);
-    }
-
-    @Override
-    public void update(String key, HabitEvent habitEvent) {
-        HabitEventDataModel eventModel = new HabitEventDataModel(habitEvent);
-        mHabitsRef.child(key).getRef().setValue(eventModel, null);
-    }
-
-    @Override
-    public void delete(String key) {
-        mHabitsRef.child(key).getRef().removeValue(null);
-    }
 
     // Habit updates
 

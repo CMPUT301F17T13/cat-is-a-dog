@@ -4,19 +4,15 @@
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-package cmput301f17t13.com.catisadog.models;
+package cmput301f17t13.com.catisadog.models.habit;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,22 +22,36 @@ import cmput301f17t13.com.catisadog.utils.data.DataSource;
 /**
  * Firebase datasource implementation for a user's habits
  */
-public class HabitDataSource extends DataSource<Habit> implements
-        ChildEventListener {
+public class HabitDataSource extends DataSource<Habit> {
 
     private static final String TAG = "HabitDataSource";
 
-    private DatabaseReference mHabitsRef;
+    DatabaseReference mHabitsRef;
+    String userId;
 
     private LinkedHashMap<String, Habit> mHabits;
     private ArrayList<Habit> mHabitArray;
 
     public HabitDataSource(String userId) {
-        mHabitsRef = FirebaseDatabase.getInstance().getReference("habits/" + userId);
-        mHabitsRef.addChildEventListener(this);
+        this.userId = userId;
 
         mHabits = new LinkedHashMap<>();
         mHabitArray = new ArrayList<>();
+
+        setReference();
+    }
+
+    protected void setReference() {
+        mHabitsRef = FirebaseDatabase.getInstance().getReference("habits/" + userId);
+        mHabitsRef.addChildEventListener(this);
+    }
+
+    protected boolean isValid(Habit habit) {
+        return true;
+    }
+
+    public String getType() {
+        return "habitDataSource";
     }
 
     /**
@@ -50,26 +60,6 @@ public class HabitDataSource extends DataSource<Habit> implements
      */
     @Override
     public ArrayList<Habit> getSource() { return mHabitArray; }
-
-    @Override
-    public void add(Habit habit) {
-        HabitDataModel habitModel = new HabitDataModel(habit);
-        DatabaseReference newRef = mHabitsRef.push();
-
-        habitModel.setKey(newRef.getKey());
-        newRef.setValue(habitModel,null);
-    }
-
-    @Override
-    public void update(String key, Habit habit) {
-        HabitDataModel habitModel = new HabitDataModel(habit);
-        mHabitsRef.child(key).getRef().setValue(habitModel, null);
-    }
-
-    @Override
-    public void delete(String key) {
-        mHabitsRef.child(key).removeValue(null);
-    }
 
     // Habit updates
 
@@ -80,8 +70,11 @@ public class HabitDataSource extends DataSource<Habit> implements
 
         if (model != null) {
             model.setKey(dataSnapshot.getKey());
-            mHabits.put(dataSnapshot.getKey(), model.getHabit());
-            datasetChanged();
+            Habit habit = model.getHabit();
+            if (isValid(habit)) {
+                mHabits.put(dataSnapshot.getKey(), model.getHabit());
+                datasetChanged();
+            }
         }
     }
 
@@ -92,8 +85,11 @@ public class HabitDataSource extends DataSource<Habit> implements
 
         if (model != null) {
             model.setKey(dataSnapshot.getKey());
-            mHabits.put(dataSnapshot.getKey(), model.getHabit());
-            datasetChanged();
+            Habit habit = model.getHabit();
+            if (isValid(habit)) {
+                mHabits.put(dataSnapshot.getKey(), model.getHabit());
+                datasetChanged();
+            }
         }
     }
 
@@ -120,6 +116,6 @@ public class HabitDataSource extends DataSource<Habit> implements
         mHabitArray.clear();
         mHabitArray.addAll(mHabits.values());
         setChanged();
-        notifyObservers();
+        notifyObservers(getType());
     }
 }

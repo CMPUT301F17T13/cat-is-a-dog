@@ -9,13 +9,14 @@
 package cmput301f17t13.com.catisadog.activities.history;
 
 import android.app.Activity;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
+
+import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 
 /**
  * A screen for editing Habit Events
  *
- * @see cmput301f17t13.com.catisadog.models.HabitEvent
+ * @see HabitEvent
  */
 public class EditHabitEventActivity extends Activity {
 

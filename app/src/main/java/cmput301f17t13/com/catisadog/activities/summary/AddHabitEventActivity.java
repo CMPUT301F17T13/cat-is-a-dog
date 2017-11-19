@@ -5,11 +5,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.ThumbnailUtils;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
@@ -23,7 +21,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -36,10 +33,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import cmput301f17t13.com.catisadog.R;
-import cmput301f17t13.com.catisadog.models.Habit;
-import cmput301f17t13.com.catisadog.models.HabitDataSource;
-import cmput301f17t13.com.catisadog.models.HabitEvent;
-import cmput301f17t13.com.catisadog.models.HabitEventDataSource;
+import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
+import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSource;
+import cmput301f17t13.com.catisadog.models.habitevent.HabitEventRepository;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
@@ -49,7 +45,7 @@ import cmput301f17t13.com.catisadog.utils.data.Repository;
  * Child Activity of HabitSummaryActivity
  *
  * @see HabitSummaryActivity
- * @see cmput301f17t13.com.catisadog.models.HabitEvent
+ * @see HabitEvent
  */
 public class AddHabitEventActivity extends AppCompatActivity implements
         OnMapReadyCallback,
@@ -98,7 +94,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements
 
         CurrentUser currentUser = CurrentUser.getInstance();
         if(currentUser != null)
-            habitEventRepository = new HabitEventDataSource(currentUser.getUserId());
+            habitEventRepository = new HabitEventRepository(currentUser.getUserId());
 
         Log.d(TAG, "Adding HabitEvent to Habit with key: " + habitKey);
 

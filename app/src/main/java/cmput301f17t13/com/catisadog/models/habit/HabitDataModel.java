@@ -4,7 +4,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-package cmput301f17t13.com.catisadog.models;
+package cmput301f17t13.com.catisadog.models.habit;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
@@ -15,6 +15,8 @@ import org.joda.time.DateTimeConstants;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import cmput301f17t13.com.catisadog.models.HabitStatus;
 
 /**
  * Represents the Firebase data model for the Habit class

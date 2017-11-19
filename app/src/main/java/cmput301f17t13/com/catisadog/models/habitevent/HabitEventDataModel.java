@@ -4,7 +4,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-package cmput301f17t13.com.catisadog.models;
+package cmput301f17t13.com.catisadog.models.habitevent;
 
 import android.location.Location;
 
@@ -12,6 +12,8 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import org.joda.time.DateTime;
+
+import cmput301f17t13.com.catisadog.models.habit.Habit;
 
 @IgnoreExtraProperties
 public class HabitEventDataModel {

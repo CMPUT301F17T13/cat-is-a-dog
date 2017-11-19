@@ -1,16 +1,12 @@
 package cmput301f17t13.com.catisadog;
 
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.DrawableContainer;
-
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
 
-import cmput301f17t13.com.catisadog.models.Habit;
-import cmput301f17t13.com.catisadog.models.HabitStatus;
+import cmput301f17t13.com.catisadog.models.habit.Habit;
 
 import static org.junit.Assert.*;
 

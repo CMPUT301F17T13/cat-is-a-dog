@@ -14,23 +14,17 @@
  * Child Fragment Activity of HabitSummaryActivity
  *
  * @see HabitSummaryActivity
- * @see cmput301f17t13.com.catisadog.models.Habit
+ * @see cmput301f17t13.com.catisadog.models.habit.Habit
  */
 
 package cmput301f17t13.com.catisadog.activities.summary;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -47,8 +41,9 @@ import java.util.Calendar;
 import java.util.HashSet;
 
 import cmput301f17t13.com.catisadog.R;
-import cmput301f17t13.com.catisadog.models.Habit;
-import cmput301f17t13.com.catisadog.models.HabitDataSource;
+import cmput301f17t13.com.catisadog.models.habit.Habit;
+import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
+import cmput301f17t13.com.catisadog.models.habit.HabitRepository;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
@@ -140,7 +135,7 @@ public class EditHabitActivity extends AppCompatActivity {
             habitKey = habit.getKey();
         }
 
-        habitRepository = new HabitDataSource(CurrentUser.getInstance().getUserId());
+        habitRepository = new HabitRepository(CurrentUser.getInstance().getUserId());
     }
 
     /**

@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import cmput301f17t13.com.catisadog.activities.summary.ViewHabitActivity;
-import cmput301f17t13.com.catisadog.models.Habit;
-import cmput301f17t13.com.catisadog.utils.IntentConstants;
+import cmput301f17t13.com.catisadog.models.habit.Habit;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;

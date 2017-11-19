@@ -12,6 +12,8 @@ import android.location.Location;
 
 import java.util.ArrayList;
 
+import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
+
 /**
  * A collection of HabitEvents on a map
  *

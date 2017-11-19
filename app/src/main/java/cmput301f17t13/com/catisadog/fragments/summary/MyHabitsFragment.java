@@ -27,8 +27,7 @@ import java.util.ArrayList;
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 import cmput301f17t13.com.catisadog.activities.summary.ViewHabitActivity;
-import cmput301f17t13.com.catisadog.models.Habit;
-import cmput301f17t13.com.catisadog.utils.IntentConstants;
+import cmput301f17t13.com.catisadog.models.habit.Habit;
 
 /**
  * A screen to view all the current user's habits

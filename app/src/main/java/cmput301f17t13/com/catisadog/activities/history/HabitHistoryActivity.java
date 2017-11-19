@@ -11,8 +11,7 @@ import android.location.Location;
 
 import java.util.List;
 
-import cmput301f17t13.com.catisadog.models.HabitEvent;
-import cmput301f17t13.com.catisadog.models.user.CurrentUser;
+import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 
 public class HabitHistoryActivity extends Activity {
     private List<HabitEvent> currentUserHabitEvents;
