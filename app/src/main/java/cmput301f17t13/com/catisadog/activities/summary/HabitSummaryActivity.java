@@ -50,6 +50,7 @@ public class HabitSummaryActivity extends BaseDrawerActivity implements Observer
     private MyHabitsFragment myHabitsFragment;
     private TodoHabitsFragment todoHabitsFragment;
 
+    private String userId;
     private DataSource<Habit> habitDataSource;
 
     /**
@@ -76,7 +77,8 @@ public class HabitSummaryActivity extends BaseDrawerActivity implements Observer
         myHabitsFragment = (MyHabitsFragment) adapter.getItem(0);
         todoHabitsFragment = (TodoHabitsFragment) adapter.getItem(1);
 
-        habitDataSource = new HabitDataSource(CurrentUser.getInstance().getUserId());
+        userId = CurrentUser.getInstance().getUserId();
+        habitDataSource = new HabitDataSource(userId);
         habitDataSource.addObserver(this);
         habits = habitDataSource.getSource();
     }

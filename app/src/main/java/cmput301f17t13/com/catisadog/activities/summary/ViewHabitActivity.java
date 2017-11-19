@@ -53,7 +53,7 @@ import cmput301f17t13.com.catisadog.utils.data.Repository;
  */
 public class ViewHabitActivity extends AppCompatActivity {
 
-    private final static String TAG = "ViewHabitActivity";
+    private static final String TAG = "ViewHabitActivity";
     private static final int DELETE_BUTTON_ID = 1032400432;
 
     private String habitOwner;
@@ -73,18 +73,21 @@ public class ViewHabitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_habit);
 
         Intent intent = getIntent();
-
-        //TODO(#51): Get Habit object from Repository, not intent
         Bundle bundle = intent.getExtras();
+
         habitKey = bundle.getString(getString(R.string.VIEW_HABIT_HABIT_KEY), "invalid");
         habitOwner = bundle.getString(getString(R.string.VIEW_HABIT_USER_ID), "invalid");
 
         mHabitViewGroup = (Group) findViewById(R.id.habitViewGroup);
         mLoadingBar = (ProgressBar) findViewById(R.id.habitViewLoadingBar);
 
-        habitRepository = new HabitDataSource(CurrentUser.getInstance().getUserId());
+        habitRepository = new HabitDataSource(habitOwner);
     }
 
+    /**
+     * Pull the latest version of the habit and reflect it on the UI
+     * If it doesn't exist, close the activity
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -114,17 +117,22 @@ public class ViewHabitActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Update the UI to reflect the current habit
+     */
     private void updateUI() {
-        ((TextView) findViewById(R.id.habitTitle)).setText(habit.getTitle());
-        ((TextView) findViewById(R.id.habitReason)).setText(habit.getReason());
-        ((TextView) findViewById(R.id.habitStartValue)).setText(startsText());
-        ((TextView) findViewById(R.id.habitRepeatsValue))
-                .setText(repeatsText());
-        ((TextView) findViewById(R.id.habitCompletionMetricsValue))
-                .setText(completionMetricsText());
+        if (habit != null) {
+            ((TextView) findViewById(R.id.habitTitle)).setText(habit.getTitle());
+            ((TextView) findViewById(R.id.habitReason)).setText(habit.getReason());
+            ((TextView) findViewById(R.id.habitStartValue)).setText(startsText());
+            ((TextView) findViewById(R.id.habitRepeatsValue))
+                    .setText(repeatsText());
+            ((TextView) findViewById(R.id.habitCompletionMetricsValue))
+                    .setText(completionMetricsText());
 
-        mLoadingBar.setVisibility(View.GONE);
-        mHabitViewGroup.setVisibility(View.VISIBLE);
+            mLoadingBar.setVisibility(View.GONE);
+            mHabitViewGroup.setVisibility(View.VISIBLE);
+        }
     }
 
     /**

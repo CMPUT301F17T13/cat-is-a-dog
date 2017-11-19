@@ -82,12 +82,10 @@ public class HabitDataModel {
 
     /* Getters and Setters */
 
-    @Exclude
     public String getKey() {
         return key;
     }
 
-    @Exclude
     public void setKey(String key) {
         this.key = key;
     }

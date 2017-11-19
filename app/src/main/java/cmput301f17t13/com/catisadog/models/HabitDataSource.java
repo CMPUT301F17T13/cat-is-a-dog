@@ -54,7 +54,10 @@ public class HabitDataSource extends DataSource<Habit> implements
     @Override
     public void add(Habit habit) {
         HabitDataModel habitModel = new HabitDataModel(habit);
-        mHabitsRef.push().setValue(habitModel,null);
+        DatabaseReference newRef = mHabitsRef.push();
+
+        habitModel.setKey(newRef.getKey());
+        newRef.setValue(habitModel,null);
     }
 
     @Override
@@ -65,7 +68,7 @@ public class HabitDataSource extends DataSource<Habit> implements
 
     @Override
     public void delete(String key) {
-        mHabitsRef.child(key).getRef().removeValue(null);
+        mHabitsRef.child(key).removeValue(null);
     }
 
     // Habit updates
