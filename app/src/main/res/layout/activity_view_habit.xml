@@ -5,12 +5,33 @@
   ~ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   -->
 
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/habitViewLoadingBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.constraint.Group
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids=
+            "habitTitle,habitReason,habitStartLabel,habitStartValue,
+            habitRepeatsLabel,habitRepeatsValue,
+            habitCompletionMetricsLabel,habitCompletionMetricsValue"
+        android:id="@+id/habitViewGroup" />
+
     <TextView
         android:id="@+id/habitTitle"
         android:layout_width="0dp"
@@ -18,12 +39,13 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Habit Title"
         android:maxLength="20"
+        android:text="Habit Title"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/habitReason"
         android:layout_width="0dp"
@@ -31,12 +53,13 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
-        android:text="Habit reason (30 chars)"
         android:maxLength="30"
+        android:text="Habit reason (30 chars)"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/habitTitle" />
+
     <TextView
         android:id="@+id/habitStartLabel"
         android:layout_width="0dp"
@@ -46,6 +69,7 @@
         android:text="START"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/habitReason" />
+
     <TextView
         android:id="@+id/habitStartValue"
         android:layout_width="0dp"
@@ -55,6 +79,7 @@
         android:text="Sunday November 12, 2019"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/habitStartLabel" />
+
     <TextView
         android:id="@+id/habitRepeatsLabel"
         android:layout_width="wrap_content"
@@ -64,6 +89,7 @@
         android:text="REPEATS"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/habitStartValue" />
+
     <TextView
         android:id="@+id/habitRepeatsValue"
         android:layout_width="wrap_content"
@@ -73,6 +99,7 @@
         android:text="Weekdays"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/habitRepeatsLabel" />
+
     <TextView
         android:id="@+id/habitCompletionMetricsLabel"
         android:layout_width="wrap_content"
@@ -82,6 +109,7 @@
         android:text="COMPLETION METRICS"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/habitRepeatsValue" />
+
     <TextView
         android:id="@+id/habitCompletionMetricsValue"
         android:layout_width="wrap_content"
@@ -91,6 +119,7 @@
         android:text="Metrics coming soon!"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/habitCompletionMetricsLabel" />
+
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -101,5 +130,5 @@
         android:onClick="editHabit"
         android:src="@drawable/ic_mode_edit_white_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent" />
 </android.support.constraint.ConstraintLayout>

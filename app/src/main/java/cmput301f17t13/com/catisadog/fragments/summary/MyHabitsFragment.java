@@ -85,9 +85,12 @@ public class MyHabitsFragment extends Fragment {
      */
 
     public void viewHabit(int position) {
+        Habit viewHabit = habitsAdapter.getItem(position);
+
         Bundle bundle = new Bundle();
-        bundle.putSerializable(IntentConstants.VIEW_HABIT_INTENT_DATA,
-                               habitsAdapter.getItem(position));
+        bundle.putString(getString(R.string.VIEW_HABIT_HABIT_KEY), viewHabit.getKey());
+        bundle.putString(getString(R.string.VIEW_HABIT_USER_ID), viewHabit.getUserId());
+
         Intent intent = new Intent(getActivity(), ViewHabitActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);

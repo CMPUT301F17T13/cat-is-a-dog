@@ -10,7 +10,6 @@ import android.text.TextUtils;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +19,6 @@ import java.util.HashSet;
 
 import cmput301f17t13.com.catisadog.activities.summary.ViewHabitActivity;
 import cmput301f17t13.com.catisadog.models.Habit;
-import cmput301f17t13.com.catisadog.models.HabitStatus;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -54,7 +52,8 @@ public class ViewHabitActivityTest {
                     Context targetContext = InstrumentationRegistry.getInstrumentation()
                             .getTargetContext();
                     Intent result = new Intent(targetContext, ViewHabitActivity.class);
-                    result.putExtra(IntentConstants.VIEW_HABIT_INTENT_DATA, newHabit);
+                    result.putExtra(getActivity().getString(R.string.VIEW_HABIT_HABIT_KEY), newHabit.getKey());
+                    result.putExtra(getActivity().getString(R.string.VIEW_HABIT_USER_ID), newHabit.getUserId());
                     return result;
                 }
             };

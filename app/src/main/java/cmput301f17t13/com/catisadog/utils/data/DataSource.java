@@ -7,11 +7,11 @@
 package cmput301f17t13.com.catisadog.utils.data;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Observable;
 
-
+/**
+ * Represents a data source for an entity
+ */
 public abstract class DataSource<TEntity> extends Observable implements
         Repository<TEntity> {
 

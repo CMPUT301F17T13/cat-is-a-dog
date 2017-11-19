@@ -14,7 +14,9 @@ import java.util.Set;
  */
 public class Habit implements Schedulable, Serializable {
 
+    /** Unique identifier */
     private String key;
+    /** Owner ID */
     private String userId;
 
     /** Brief title */
@@ -25,7 +27,7 @@ public class Habit implements Schedulable, Serializable {
     /** Start date for habit to be due */
     private DateTime startDate;
     /** Days of the week the habit is due */
-    private HashSet<Integer> schedule;
+    private Set<Integer> schedule;
     /** Status of the habit */
     private HabitStatus status;
 
@@ -34,13 +36,14 @@ public class Habit implements Schedulable, Serializable {
     public Habit() {}
 
     public Habit(String userId, String title, String reason, DateTime startDate,
-                 HashSet<Integer> schedule, HabitStatus status) {
+                 Set<Integer> schedule, HabitStatus status) {
         this.userId = userId;
         this.title = title;
         this.reason = reason;
         this.startDate = startDate;
-        this.schedule = schedule;
         this.status = status;
+
+        setSchedule(schedule);
     }
 
     public String getKey() {
@@ -60,7 +63,6 @@ public class Habit implements Schedulable, Serializable {
     public String getTitle() {
         return title;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -68,7 +70,6 @@ public class Habit implements Schedulable, Serializable {
     public String getReason() {
         return reason;
     }
-
     public void setReason(String reason) {
         this.reason = reason;
     }
@@ -92,6 +93,10 @@ public class Habit implements Schedulable, Serializable {
         return schedule;
     }
 
+    /**
+     * Sets the days of the week the habit is due
+     * @param days a set of integers from 1 to 7, representing Monday-Sunday as due dates
+     */
     @Override
     public void setSchedule(Set<Integer> days) {
         schedule = new HashSet<>(7);
@@ -110,11 +115,12 @@ public class Habit implements Schedulable, Serializable {
     @Override
     public boolean isTodo(DateTime date) {
         int dayOfWeek = date.toGregorianCalendar().get(Calendar.DAY_OF_WEEK);
-        return schedule.contains(dayOfWeek);
+        return schedule.contains(dayOfWeek) && date.getMillis() > startDate.getMillis();
     }
 
     /**
-     * @return The next due date for the habit
+     * Get the next due date for the habit
+     * @return the next due date
      */
     @Override
     public DateTime nextTodo() {

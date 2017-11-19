@@ -22,16 +22,25 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.support.constraint.Group;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.joda.time.DateTimeConstants;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.models.Habit;
+import cmput301f17t13.com.catisadog.models.HabitDataModel;
 import cmput301f17t13.com.catisadog.models.HabitDataSource;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
@@ -43,9 +52,17 @@ import cmput301f17t13.com.catisadog.utils.data.Repository;
  * @see cmput301f17t13.com.catisadog.models.Habit
  */
 public class ViewHabitActivity extends AppCompatActivity {
+
+    private final static String TAG = "ViewHabitActivity";
     private static final int DELETE_BUTTON_ID = 1032400432;
+
+    private String habitOwner;
+    private String habitKey;
     private Habit habit;
     private Repository<Habit> habitRepository;
+
+    private Group mHabitViewGroup;
+    private ProgressBar mLoadingBar;
 
     /**
      * OnCreate method to setup the UI and fill TextView values with habit data
@@ -53,13 +70,51 @@ public class ViewHabitActivity extends AppCompatActivity {
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_view_habit);
+
         Intent intent = getIntent();
 
         //TODO(#51): Get Habit object from Repository, not intent
         Bundle bundle = intent.getExtras();
-        habit = (Habit) bundle.getSerializable(
-                IntentConstants.VIEW_HABIT_INTENT_DATA);
-        setContentView(R.layout.activity_view_habit);
+        habitKey = bundle.getString(getString(R.string.VIEW_HABIT_HABIT_KEY), "invalid");
+        habitOwner = bundle.getString(getString(R.string.VIEW_HABIT_USER_ID), "invalid");
+
+        mHabitViewGroup = (Group) findViewById(R.id.habitViewGroup);
+        mLoadingBar = (ProgressBar) findViewById(R.id.habitViewLoadingBar);
+
+        habitRepository = new HabitDataSource(CurrentUser.getInstance().getUserId());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mHabitViewGroup.setVisibility(View.GONE);
+        mLoadingBar.setVisibility(View.VISIBLE);
+
+        DatabaseReference habitRef = FirebaseDatabase.getInstance().getReference("habits/" + habitOwner + "/" + habitKey);
+        habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                HabitDataModel model = dataSnapshot.getValue(HabitDataModel.class);
+                if (model != null) {
+                    habit = model.getHabit();
+                    updateUI();
+                }
+                else {
+                    Toast.makeText(ViewHabitActivity.this, "Something went wrong.", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                finish();
+            }
+        });
+    }
+
+    private void updateUI() {
         ((TextView) findViewById(R.id.habitTitle)).setText(habit.getTitle());
         ((TextView) findViewById(R.id.habitReason)).setText(habit.getReason());
         ((TextView) findViewById(R.id.habitStartValue)).setText(startsText());
@@ -68,7 +123,8 @@ public class ViewHabitActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.habitCompletionMetricsValue))
                 .setText(completionMetricsText());
 
-        habitRepository = new HabitDataSource(CurrentUser.getInstance().getUserId());
+        mLoadingBar.setVisibility(View.GONE);
+        mHabitViewGroup.setVisibility(View.VISIBLE);
     }
 
     /**

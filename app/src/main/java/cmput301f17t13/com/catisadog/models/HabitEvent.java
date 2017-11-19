@@ -6,6 +6,9 @@ import org.joda.time.DateTime;
 
 import cmput301f17t13.com.catisadog.models.user.User;
 
+/**
+ * Represents a habit event
+ */
 public class HabitEvent {
 
     private String key;
