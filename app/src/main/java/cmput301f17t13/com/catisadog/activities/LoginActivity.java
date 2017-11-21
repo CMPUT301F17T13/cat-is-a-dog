@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.SignInButton;
@@ -31,6 +32,8 @@ public class LoginActivity extends Activity implements
 
     private static final String TAG = "LoginActivity";
 
+    private ProgressBar loginProgressBar;
+
     private Authenticator mAuthenticator;
 
     /**
@@ -48,6 +51,8 @@ public class LoginActivity extends Activity implements
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
         signInButton.setSize(SignInButton.SIZE_WIDE);
         signInButton.setOnClickListener(this);
+
+        loginProgressBar = (ProgressBar) findViewById(R.id.login_progress);
 
         mAuthenticator = new GoogleAuthenticator(this);
         mAuthenticator.setAuthListener(this);
@@ -70,6 +75,7 @@ public class LoginActivity extends Activity implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.sign_in_button:
+                loginProgressBar.setVisibility(View.VISIBLE);
                 mAuthenticator.signIn();
                 break;
         }
@@ -93,6 +99,7 @@ public class LoginActivity extends Activity implements
      */
     @Override
     public void onAuthSuccess() {
+        loginProgressBar.setVisibility(View.GONE);
         Toast.makeText(LoginActivity.this, "Signed in!", Toast.LENGTH_SHORT).show();
 
         Intent transition = new Intent(LoginActivity.this, HabitSummaryActivity.class);
@@ -105,6 +112,7 @@ public class LoginActivity extends Activity implements
      */
     @Override
     public void onAuthFailed() {
+        loginProgressBar.setVisibility(View.GONE);
         Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
     }
 }

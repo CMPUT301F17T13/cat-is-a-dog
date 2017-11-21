@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Habit Tracker</string>
     <string name="project_name">Cat is a Dog</string>
+    <string name="copyright">© 2017 Cat is a Dog. All Rights Reserved.</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

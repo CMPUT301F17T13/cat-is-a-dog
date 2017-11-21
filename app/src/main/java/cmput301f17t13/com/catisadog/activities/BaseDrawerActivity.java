@@ -9,11 +9,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import cmput301f17t13.com.catisadog.R;
-import cmput301f17t13.com.catisadog.activities.history.HabitHistoryActivity;
 import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
+import cmput301f17t13.com.catisadog.models.user.User;
 
 /**
  * Base Activity implementing Nav Drawer set up
@@ -46,6 +48,14 @@ public class BaseDrawerActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View header = navigationView.getHeaderView(0);
+        TextView name = (TextView) header.findViewById(R.id.navBarUserName);
+
+        //Get username info to display on header
+        User currUser = CurrentUser.getInstance();
+        name.setText(currUser.getUsername());
+
     }
 
 
