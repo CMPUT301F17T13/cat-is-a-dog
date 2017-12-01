@@ -38,6 +38,10 @@ public class HabitEventDataModel {
         this.eventDate = event.getEventDate().getMillis();
     }
 
+    /**
+     * Convert to a habit event object
+     * @return the habit event object
+     */
     @Exclude
     public HabitEvent getHabitEvent() {
         HabitEvent event = new HabitEvent();

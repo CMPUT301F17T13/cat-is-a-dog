@@ -8,6 +8,7 @@
     tools:context="cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/summary_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

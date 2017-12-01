@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2017 James Hryniw, Leland Jansen, Nathan Liebrecht, Abid Rahman, Kevin Wang - All Rights Reserved.
+  ~ Licensed under the Apache License, Version 2.0. Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  -->
+
+<resources>
+    <string name="default_web_client_id" translatable="false">972295417158-u469fho46b7q2jo373abuu3jdv1arfi4.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://cat-is-a-dog.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">972295417158</string>
+    <string name="google_api_key" translatable="false">AIzaSyD0EGEYQaTAMe3OT3PMmSjd5QpU7hhXCQs</string>
+    <string name="google_app_id" translatable="false">1:972295417158:android:bb5edcc17a3f99f1</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyD0EGEYQaTAMe3OT3PMmSjd5QpU7hhXCQs</string>
+    <string name="google_storage_bucket" translatable="false">cat-is-a-dog.appspot.com</string>
+    <string name="project_id" translatable="false">cat-is-a-dog</string>
+
+    <string name="mock_default_web_client_id" translatable="false">972295417158-u469fho46b7q2jo373abuu3jdv1arfi4.apps.googleusercontent.com</string>
+    <string name="mock_firebase_database_url" translatable="false">ws://10.0.2.2:5000</string>
+    <string name="mock_gcm_defaultSenderId" translatable="false">972295417158</string>
+    <string name="mock_google_api_key" translatable="false">AIzaSyD0EGEYQaTAMe3OT3PMmSjd5QpU7hhXCQs</string>
+    <string name="mock_google_app_id" translatable="false">1:972295417158:android:bb5edcc17a3f99f1</string>
+    <string name="mock_google_crash_reporting_api_key" translatable="false">AIzaSyD0EGEYQaTAMe3OT3PMmSjd5QpU7hhXCQs</string>
+    <string name="mock_google_storage_bucket" translatable="false">cat-is-a-dog.appspot.com</string>
+    <string name="mock_project_id" translatable="false">cat-is-a-dog</string>
+</resources>

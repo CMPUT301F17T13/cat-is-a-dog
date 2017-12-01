@@ -71,6 +71,7 @@ obj/
 .idea/copyright/profiles_settings.xml
 .idea/encodings.xml
 .idea/markdown-navigator.xml
+.idea/markdown-exported-files.xml
 .idea/misc.xml
 .idea/modules.xml
 .idea/scopes/scope_settings.xml

@@ -9,7 +9,10 @@ package cmput301f17t13.com.catisadog.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -21,6 +24,7 @@ import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 import cmput301f17t13.com.catisadog.utils.auth.Authenticator;
 import cmput301f17t13.com.catisadog.utils.auth.GoogleAuthenticator;
+import cmput301f17t13.com.catisadog.utils.testing.SimpleIdlingResource;
 
 /**
  * View to sign in a user.
@@ -31,6 +35,9 @@ public class LoginActivity extends Activity implements
         Authenticator.OnResultListener {
 
     private static final String TAG = "LoginActivity";
+
+    // The Idling Resource which will be null in production.
+    @Nullable private SimpleIdlingResource mIdlingResource;
 
     private ProgressBar loginProgressBar;
 
@@ -44,8 +51,6 @@ public class LoginActivity extends Activity implements
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        FirebaseApp.initializeApp(this);
 
         // Set the dimensions of the Google sign-in button.
         SignInButton signInButton = (SignInButton) findViewById(R.id.sign_in_button);
@@ -77,6 +82,11 @@ public class LoginActivity extends Activity implements
             case R.id.sign_in_button:
                 loginProgressBar.setVisibility(View.VISIBLE);
                 mAuthenticator.signIn();
+
+                if (mIdlingResource != null) {
+                    mIdlingResource.setIdleState(false);
+                }
+
                 break;
         }
     }
@@ -104,6 +114,11 @@ public class LoginActivity extends Activity implements
 
         Intent transition = new Intent(LoginActivity.this, HabitSummaryActivity.class);
         startActivity(transition);
+
+        if (mIdlingResource != null) {
+            mIdlingResource.setIdleState(true);
+        }
+
         finish();
     }
 
@@ -114,5 +129,21 @@ public class LoginActivity extends Activity implements
     public void onAuthFailed() {
         loginProgressBar.setVisibility(View.GONE);
         Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+
+        if (mIdlingResource != null) {
+            mIdlingResource.setIdleState(true);
+        }
+    }
+
+    /**
+     * Only called from test, creates and returns a new {@link SimpleIdlingResource}.
+     */
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
     }
 }
