@@ -32,7 +32,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.joda.time.DateTime;
+
 import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSource;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventRepository;
@@ -89,8 +92,9 @@ public class AddHabitEventActivity extends AppCompatActivity implements
 
         Bundle b = getIntent().getExtras();
         habitKey = "INVALID KEY"; // or other values
-        if(b != null)
+        if(b != null) {
             habitKey = b.getString(IntentConstants.ADD_HABIT_EVENT_INTENT_DATA);
+        }
 
         CurrentUser currentUser = CurrentUser.getInstance();
         if(currentUser != null)
@@ -168,6 +172,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case SAVE_BUTTON_ID:
+                saveEvent();
+                Toast.makeText(this, "Habit event saved!", Toast.LENGTH_SHORT).show();
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
         }
@@ -193,6 +199,23 @@ public class AddHabitEventActivity extends AppCompatActivity implements
             location = null;
             updateOverlays();
         }
+    }
+
+    /**
+     * Create and store HabitEvent object from filled fields
+     */
+    private void saveEvent() {
+        HabitEvent event = new HabitEvent();
+
+        event.setComment(comment.getText().toString());
+        event.setEventDate(DateTime.now());
+        event.setHabitKey(habitKey);
+        event.setLatitude(location.getLatitude());
+        event.setLongitude(location.getLongitude());
+
+        event.setPhotoUrl("imageUrl");
+
+        habitEventRepository.add(event);
     }
 
     /**

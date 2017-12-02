@@ -17,13 +17,19 @@ public class HabitEventRepository implements Repository<HabitEvent> {
     private DatabaseReference mHabitEventsRef;
 
     public HabitEventRepository(String userId) {
-        mHabitEventsRef = FirebaseDatabase.getInstance().getReference("habits/" + userId);
+        mHabitEventsRef = FirebaseDatabase.getInstance().getReference("events/" + userId);
     }
 
     @Override
     public void add(HabitEvent habitEvent) {
         HabitEventDataModel eventModel = new HabitEventDataModel(habitEvent);
-        mHabitEventsRef.push().setValue(eventModel,null);
+
+        DatabaseReference newEvent = mHabitEventsRef.push();
+        eventModel.setKey(newEvent.getKey());
+
+        // Reverse Chronological Order
+        newEvent.setPriority(-1 * habitEvent.getEventDate().getMillis(), null);
+        newEvent.setValue(eventModel, null);
     }
 
     @Override

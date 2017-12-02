@@ -15,8 +15,7 @@ import java.util.Observable;
  * Represents a data source for an entity
  * @param <TEntity> The entity type
  */
-public abstract class DataSource<TEntity> extends Observable
-       implements ChildEventListener {
+public abstract class DataSource<TEntity> extends Observable {
 
     public abstract ArrayList<TEntity> getSource();
 

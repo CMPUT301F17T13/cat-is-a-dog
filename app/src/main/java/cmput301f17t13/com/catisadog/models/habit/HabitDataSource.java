@@ -22,7 +22,8 @@ import cmput301f17t13.com.catisadog.utils.data.DataSource;
 /**
  * Firebase datasource implementation for a user's habits
  */
-public class HabitDataSource extends DataSource<Habit> {
+public class HabitDataSource extends DataSource<Habit>
+    implements ChildEventListener {
 
     private static final String TAG = "HabitDataSource";
 
