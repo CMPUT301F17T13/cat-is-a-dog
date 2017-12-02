@@ -95,7 +95,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         mHabitViewGroup.setVisibility(View.GONE);
         mLoadingBar.setVisibility(View.VISIBLE);
 
-        DatabaseReference habitRef = FirebaseDatabase.getInstance().getReference("habitEvents/" + habitOwner + "/" + habitKey);
+        DatabaseReference habitRef = FirebaseDatabase.getInstance().getReference("habits/" + habitOwner + "/" + habitKey);
         habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

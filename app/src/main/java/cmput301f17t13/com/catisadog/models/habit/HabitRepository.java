@@ -17,7 +17,7 @@ public class HabitRepository implements Repository<Habit> {
     private DatabaseReference mHabitsRef;
 
     public HabitRepository(String userId) {
-        this.mHabitsRef = FirebaseDatabase.getInstance().getReference("habitEvents/" + userId);
+        this.mHabitsRef = FirebaseDatabase.getInstance().getReference("habits/" + userId);
     }
 
     @Override

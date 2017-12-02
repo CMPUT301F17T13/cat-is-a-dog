@@ -43,7 +43,7 @@ public class HabitDataSource extends DataSource<Habit>
     }
 
     protected void setReference() {
-        mHabitsRef = FirebaseDatabase.getInstance().getReference("habitEvents/" + userId);
+        mHabitsRef = FirebaseDatabase.getInstance().getReference("habits/" + userId);
         mHabitsRef.addChildEventListener(this);
     }
 
