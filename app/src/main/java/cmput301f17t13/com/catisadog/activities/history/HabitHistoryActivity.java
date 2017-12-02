@@ -118,15 +118,17 @@ public class HabitHistoryActivity extends AppCompatActivity implements
             boundsBuilder.include(marker.getPosition());
         }
 
-        LatLngBounds bounds = boundsBuilder.build();
+        if(habitEvents.size() > 0) {
+            LatLngBounds bounds = boundsBuilder.build();
 
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
+            int width = getResources().getDisplayMetrics().widthPixels;
+            int height = getResources().getDisplayMetrics().heightPixels;
+            int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
 
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
 
-        map.moveCamera(cu);
+            map.moveCamera(cu);
+        }
     }
 
     /**
