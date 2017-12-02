@@ -95,7 +95,7 @@ public class ViewHabitActivity extends AppCompatActivity {
         mHabitViewGroup.setVisibility(View.GONE);
         mLoadingBar.setVisibility(View.VISIBLE);
 
-        DatabaseReference habitRef = FirebaseDatabase.getInstance().getReference("habits/" + habitOwner + "/" + habitKey);
+        DatabaseReference habitRef = FirebaseDatabase.getInstance().getReference("habitEvents/" + habitOwner + "/" + habitKey);
         habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -252,7 +252,7 @@ public class ViewHabitActivity extends AppCompatActivity {
 
     /**
      * Completion metrics text
-     * TODO(#47): Return string representation of habits when complete
+     * TODO(#47): Return string representation of habitEvents when complete
      * @return String representing completion metrics
      */
     private String completionMetricsText() {

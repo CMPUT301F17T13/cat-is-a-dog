@@ -32,7 +32,7 @@ import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 
 /**
- * A screen for seeing habits scheduled for today
+ * A screen for seeing habitEvents scheduled for today
  */
 
 public class TodoHabitsFragment extends Fragment {
@@ -70,7 +70,7 @@ public class TodoHabitsFragment extends Fragment {
     }
 
     /**
-     * An adapter for converting habit objects into to-do habits to be displayed in a list
+     * An adapter for converting habit objects into to-do habitEvents to be displayed in a list
      * view.
      */
     private class TodoHabitsAdapter extends ArrayAdapter<Habit> {

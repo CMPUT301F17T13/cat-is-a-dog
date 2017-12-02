@@ -30,7 +30,7 @@ import cmput301f17t13.com.catisadog.activities.summary.ViewHabitActivity;
 import cmput301f17t13.com.catisadog.models.habit.Habit;
 
 /**
- * A screen to view all the current user's habits
+ * A screen to view all the current user's habitEvents
  */
 
 public class MyHabitsFragment extends Fragment {
@@ -96,7 +96,7 @@ public class MyHabitsFragment extends Fragment {
     }
 
     /**
-     * An adapter for converting habit objects into "my habits" to be displayed in a list
+     * An adapter for converting habit objects into "my habitEvents" to be displayed in a list
      * view.
      */
     private class MyHabitsAdapter extends ArrayAdapter<Habit> {

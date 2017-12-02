@@ -25,7 +25,7 @@ public class TodoHabitDataSource extends HabitDataSource {
         DateTime now = DateTime.now();
         int dayOfWeek = now.dayOfWeek().get() - 1;
 
-        mHabitsRef = FirebaseDatabase.getInstance().getReference("habits/" + userId)
+        mHabitsRef = FirebaseDatabase.getInstance().getReference("habitEvents/" + userId)
                 .orderByChild("startDate").endAt(now.getMillis())
                 .orderByChild("schedule/" + Integer.toString(dayOfWeek)).equalTo(true).getRef();
     }*/

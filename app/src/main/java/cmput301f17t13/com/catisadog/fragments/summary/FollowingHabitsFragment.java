@@ -19,7 +19,7 @@ import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 
 /**
- * A screen for showing habits for all users the current user is following
+ * A screen for showing habitEvents for all users the current user is following
  * Child Fragment of HabitSummaryActivity
  *
  * @see HabitSummaryActivity
