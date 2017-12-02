@@ -17,6 +17,7 @@ import java.util.TimeZone;
 
 public class FirebaseUtil {
 
+    private final static char terminalCharacter = '\uf8ff';
     private final static String datePattern = "yyyy-MM-dd";
     private final static DateTimeFormatter dateFormatter = DateTimeFormat.forPattern(datePattern);
 
@@ -32,4 +33,12 @@ public class FirebaseUtil {
         return dateFormatter.parseDateTime(dateString);
     }
 
+    /**
+     * Produces the range terminal key for a given key {@param key}
+     * @param key the firebase key
+     * @return the terminal key for a range matching {@param key}
+     */
+    public static String terminalKey(String key) {
+        return key + terminalCharacter;
+    }
 }

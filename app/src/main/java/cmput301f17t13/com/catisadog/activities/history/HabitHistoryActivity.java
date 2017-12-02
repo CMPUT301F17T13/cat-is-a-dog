@@ -34,13 +34,14 @@ import butterknife.ButterKnife;
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.activities.summary.AddHabitEventActivity;
 import cmput301f17t13.com.catisadog.activities.summary.EditHabitActivity;
+import cmput301f17t13.com.catisadog.activities.BaseDrawerActivity;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSource;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
-public class HabitHistoryActivity extends AppCompatActivity implements
+public class HabitHistoryActivity extends BaseDrawerActivity implements
         Observer,
         OnMapReadyCallback {
 
@@ -55,6 +56,7 @@ public class HabitHistoryActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_habit_history);
+        drawToolbar();
 
         String userId = CurrentUser.getInstance().getUserId();
         eventDataSource = new HabitEventDataSource(userId);
@@ -122,16 +124,14 @@ public class HabitHistoryActivity extends AppCompatActivity implements
                 .snippet(""+i));
             boundsBuilder.include(marker.getPosition());
         }
-
+        
         if(habitEvents.size() > 0) {
             LatLngBounds bounds = boundsBuilder.build();
-
             int width = getResources().getDisplayMetrics().widthPixels;
             int height = getResources().getDisplayMetrics().heightPixels;
             int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
 
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
-
             map.moveCamera(cu);
         }
     }
