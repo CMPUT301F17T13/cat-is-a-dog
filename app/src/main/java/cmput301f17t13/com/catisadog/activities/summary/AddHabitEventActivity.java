@@ -124,8 +124,10 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         habitKey = "INVALID KEY"; // or other values
         if(b != null) {
             if(b.containsKey(IntentConstants.ADD_HABIT_EVENT_INTENT_DATA)) {
+                setTitle("Add Habit Event");
                 habitKey = b.getString(IntentConstants.ADD_HABIT_EVENT_INTENT_DATA);
             } else if(b.containsKey(IntentConstants.EDIT_HABIT_EVENT_INTENT_DATA)) {
+                setTitle("Edit Habit Event");
                 HabitEvent habitEvent = (HabitEvent)b.getSerializable(IntentConstants.EDIT_HABIT_EVENT_INTENT_DATA);
                 restoreHabitEvent(habitEvent);
             }
