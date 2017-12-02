@@ -117,7 +117,7 @@ public class HabitHistoryActivity extends AppCompatActivity implements
                 .snippet(""+i));
             boundsBuilder.include(marker.getPosition());
         }
-
+        
         if(habitEvents.size() > 0) {
             LatLngBounds bounds = boundsBuilder.build();
 

@@ -9,15 +9,22 @@ package cmput301f17t13.com.catisadog.models.habitevent;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.joda.time.DateTime;
+
+import java.util.Locale;
+
+import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 
 public class HabitEventRepository implements Repository<HabitEvent> {
 
     private DatabaseReference mHabitEventsRef;
+    private String userId;
 
     public HabitEventRepository(String userId) {
         mHabitEventsRef = FirebaseDatabase.getInstance().getReference("events/" + userId);
+        this.userId = userId;
     }
 
     @Override
@@ -42,5 +49,4 @@ public class HabitEventRepository implements Repository<HabitEvent> {
     public void delete(String key) {
         mHabitEventsRef.child(key).getRef().removeValue(null);
     }
-
 }

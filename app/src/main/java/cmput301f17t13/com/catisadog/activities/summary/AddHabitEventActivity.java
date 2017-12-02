@@ -207,6 +207,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements
     private void saveEvent() {
         HabitEvent event = new HabitEvent();
 
+        event.setUserId(CurrentUser.getInstance().getUserId());
         event.setComment(comment.getText().toString());
         event.setEventDate(DateTime.now());
         event.setHabitKey(habitKey);

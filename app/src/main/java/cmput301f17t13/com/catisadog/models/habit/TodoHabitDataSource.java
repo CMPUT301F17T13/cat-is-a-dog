@@ -17,28 +17,42 @@ import com.google.firebase.database.ValueEventListener;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Locale;
 
+import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataModel;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
 
-public class TodoHabitDataSource extends DataSource<Habit>
-     implements ValueEventListener {
+public class TodoHabitDataSource extends DataSource<Habit> {
 
     public static final String SourceType = "todoDataSource";
 
     private String userId;
+
+    private HashSet<String> completedToday;
+    private ArrayList<Habit> dueHabits;
     private ArrayList<Habit> todoHabits;
 
     public TodoHabitDataSource(String userId) {
         this.userId = userId;
+
         todoHabits = new ArrayList<>();
+        dueHabits = new ArrayList<>();
+        completedToday = new HashSet<>();
 
         int dayOfWeek = DateTime.now().getDayOfWeek() - 1;
         Query todoQuery = FirebaseDatabase.getInstance().getReference("habits/" + userId)
                 .orderByChild("schedule/" + Integer.toString(dayOfWeek)).equalTo(true);
 
-        todoQuery.addValueEventListener(this);
+        todoQuery.addValueEventListener(new DueListener());
+
+        String nowKey = String.format(Locale.CANADA, "%s_%s", userId, FirebaseUtil.dateToString(DateTime.now()));
+        Query eventRef = FirebaseDatabase.getInstance().getReference("events/" + userId)
+                .orderByChild("complete").startAt(nowKey).endAt(nowKey+"\uf8ff");
+
+        eventRef.addValueEventListener(new EventListener());
     }
 
     @Override
@@ -46,64 +60,71 @@ public class TodoHabitDataSource extends DataSource<Habit>
         return todoHabits;
     }
 
-    @Override
-    public void onDataChange(DataSnapshot dataSnapshot) {
-        DateTime now = DateTime.now();
-        DatabaseReference eventRef = FirebaseDatabase.getInstance().getReference("events/" + userId);
+    private class DueListener implements ValueEventListener {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            DateTime now = DateTime.now();
 
-        todoHabits.clear();
+            dueHabits.clear();
 
-        for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-            HabitDataModel model = snapshot.getValue(HabitDataModel.class);
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                HabitDataModel model = snapshot.getValue(HabitDataModel.class);
 
-            if (model != null) {
-                final Habit habit = model.getHabit();
-
-                if (habit.isTodo(now)) {
-                    // Check that we haven't done that habit today
-
-                    // Query for all habit events for this habit
-                    Query isAlreadyDoneQuery = eventRef.orderByChild("habit")
-                            .equalTo(habit.getKey());
-
-                    isAlreadyDoneQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.exists()) {
-                                String today = FirebaseUtil.dateToString(DateTime.now());
-
-                                for(DataSnapshot eventSnapshot : dataSnapshot.getChildren()) {
-                                    HabitEventDataModel eventModel = eventSnapshot.getValue(HabitEventDataModel.class);
-
-                                    if (eventModel != null) {
-                                        if (today.equals(eventModel.getEventDate())) {
-                                            // We have a match, so do not add the habit
-                                            return;
-                                        }
-                                    }
-                                }
-                            }
-
-                            todoHabits.add(habit);
-                            datasetChanged();
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
+                if (model != null) {
+                    Habit habit = model.getHabit();
+                    if (habit != null) {
+                        dueHabits.add(habit);
+                    }
                 }
+            }
+
+            datasetChanged();
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    }
+
+    private class EventListener implements ValueEventListener {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            completedToday.clear();
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                HabitEventDataModel model = snapshot.getValue(HabitEventDataModel.class);
+
+                if (model != null) {
+                    HabitEvent habitEvent = model.getHabitEvent();
+                    if (habitEvent != null) {
+                        completedToday.add(habitEvent.getHabitKey());
+                    }
+                }
+            }
+
+            datasetChanged();
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    }
+
+    private void merge() {
+        todoHabits.clear();
+        for(Habit h : dueHabits) {
+            if (h.isTodo(DateTime.now())) {
+                if (completedToday.contains(h.getKey())) {
+                    h.setComplete();
+                }
+                todoHabits.add(h);
             }
         }
     }
 
-    @Override
-    public void onCancelled(DatabaseError databaseError) {
-
-    }
-
     private void datasetChanged() {
+        merge();
         setChanged();
         notifyObservers();
     }

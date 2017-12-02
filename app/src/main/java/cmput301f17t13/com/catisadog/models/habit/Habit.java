@@ -39,6 +39,8 @@ public class Habit implements Schedulable, Serializable {
     private Set<Integer> schedule;
     /** Status of the habit */
     private HabitStatus status;
+    /** Flag if the habit has been completed today */
+    private boolean complete = false;
 
     //TODO(#17): How to handle completion metrics
 
@@ -95,6 +97,14 @@ public class Habit implements Schedulable, Serializable {
     }
     public void setStatus(HabitStatus status) {
         this.status = status;
+    }
+
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void setComplete() {
+        this.complete = true;
     }
 
     @Override

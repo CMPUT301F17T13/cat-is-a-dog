@@ -8,15 +8,23 @@ package cmput301f17t13.com.catisadog.utils.data;
 
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.tz.ZoneInfoProvider;
+
+import java.util.TimeZone;
 
 public class FirebaseUtil {
 
     private final static String datePattern = "yyyy-MM-dd";
     private final static DateTimeFormatter dateFormatter = DateTimeFormat.forPattern(datePattern);
 
+    private static DateTimeZone localTimeZone = DateTimeZone.forTimeZone(TimeZone.getDefault());
+
+    // Use local time
     public static String dateToString(DateTime date) {
+        date = date.toDateTime(localTimeZone);
         return dateFormatter.print(date.toInstant());
     }
 
