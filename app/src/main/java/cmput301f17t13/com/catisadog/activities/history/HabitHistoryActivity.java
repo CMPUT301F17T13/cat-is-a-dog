@@ -1,11 +1,13 @@
 package cmput301f17t13.com.catisadog.activities.history;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +32,12 @@ import java.util.Observer;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.activities.summary.AddHabitEventActivity;
+import cmput301f17t13.com.catisadog.activities.summary.EditHabitActivity;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSource;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
+import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
 public class HabitHistoryActivity extends AppCompatActivity implements
@@ -117,7 +122,7 @@ public class HabitHistoryActivity extends AppCompatActivity implements
                 .snippet(""+i));
             boundsBuilder.include(marker.getPosition());
         }
-        
+
         if(habitEvents.size() > 0) {
             LatLngBounds bounds = boundsBuilder.build();
 
@@ -142,7 +147,7 @@ public class HabitHistoryActivity extends AppCompatActivity implements
 
         @NonNull
         @Override
-        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        public View getView(int position, @Nullable View convertView, @NonNull final ViewGroup parent) {
             final HabitEvent habitEvent = this.getItem(position);
 
             if (convertView == null) {
@@ -156,19 +161,19 @@ public class HabitHistoryActivity extends AppCompatActivity implements
             reasonView.setText(habitEvent.getComment());
             startDateView.setText(habitEvent.getEventDate().toString("d MMM"));
 
-            /*View.OnClickListener addHabitEventButtonListener = new View.OnClickListener() {
+            View.OnClickListener addHabitEventButtonListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.d("Event", "Add habit event");
-                    Intent intent = new Intent(getActivity(), AddHabitEventActivity.class);
+                    Log.d("Event", "Edit habit event");
+                    Intent intent = new Intent(parent.getContext(), AddHabitEventActivity.class);
                     Bundle b = new Bundle();
-                    b.putString(IntentConstants.ADD_HABIT_EVENT_INTENT_DATA, habit.getKey());
+                    b.putSerializable(IntentConstants.EDIT_HABIT_EVENT_INTENT_DATA, habitEvent);
                     intent.putExtras(b); //Put your id to your next Intent
                     startActivity(intent);
                 }
             };
 
-            addHabitEventButton.setOnClickListener(addHabitEventButtonListener);*/
+            convertView.setOnClickListener(addHabitEventButtonListener);
 
             return convertView;
         }

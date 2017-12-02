@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.ThumbnailUtils;
@@ -14,6 +15,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,10 +36,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.joda.time.DateTime;
 
+import java.io.ByteArrayOutputStream;
+import java.util.Objects;
+
 import cmput301f17t13.com.catisadog.R;
-import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
-import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSource;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventRepository;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
@@ -76,6 +79,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements
     private ImageView image;
 
     // Properties we will add to the HabitEvent object
+    private String editingHabitEventKey;
     private String habitKey;
     private Location location;
     private Bitmap imageBitmap;
@@ -89,18 +93,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_habit_event);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        Bundle b = getIntent().getExtras();
-        habitKey = "INVALID KEY"; // or other values
-        if(b != null) {
-            habitKey = b.getString(IntentConstants.ADD_HABIT_EVENT_INTENT_DATA);
-        }
-
-        CurrentUser currentUser = CurrentUser.getInstance();
-        if(currentUser != null)
-            habitEventRepository = new HabitEventRepository(currentUser.getUserId());
-
-        Log.d(TAG, "Adding HabitEvent to Habit with key: " + habitKey);
 
         // Get the SupportMapFragment and request notification
         // when the map is ready to be used.
@@ -123,8 +115,47 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         imageOpacityOverlay.setOnClickListener(this);
         mapDelete.setOnClickListener(this);
         imageDelete.setOnClickListener(this);
-        
+
+        CurrentUser currentUser = CurrentUser.getInstance();
+        if(currentUser != null)
+            habitEventRepository = new HabitEventRepository(currentUser.getUserId());
+
+        Bundle b = getIntent().getExtras();
+        habitKey = "INVALID KEY"; // or other values
+        if(b != null) {
+            if(b.containsKey(IntentConstants.ADD_HABIT_EVENT_INTENT_DATA)) {
+                habitKey = b.getString(IntentConstants.ADD_HABIT_EVENT_INTENT_DATA);
+            } else if(b.containsKey(IntentConstants.EDIT_HABIT_EVENT_INTENT_DATA)) {
+                HabitEvent habitEvent = (HabitEvent)b.getSerializable(IntentConstants.EDIT_HABIT_EVENT_INTENT_DATA);
+                restoreHabitEvent(habitEvent);
+            }
+        }
+
         updateOverlays();
+        Log.d(TAG, "Adding HabitEvent to Habit with key: " + habitKey);
+    }
+
+    public void restoreHabitEvent(HabitEvent habitEvent) {
+        editingHabitEventKey = habitEvent.getKey();
+        habitKey = habitEvent.getHabitKey();
+
+        if(habitEvent.getLatitude() !=0 && habitEvent.getLongitude() !=0) {
+            location = new Location("");
+            location.setLatitude(habitEvent.getLatitude());
+            location.setLongitude(habitEvent.getLongitude());
+
+            //map updated in onMapReady()
+        }
+
+        if(habitEvent.getPhotoUrl() != null) {
+            byte[] decodedByteArray = Base64.decode(habitEvent.getPhotoUrl(), Base64.NO_WRAP);
+            imageBitmap = BitmapFactory.decodeByteArray(decodedByteArray, 0, decodedByteArray.length);
+            image.setImageBitmap(imageBitmap);
+        }
+
+        if(habitEvent.getComment() != null && !Objects.equals(habitEvent.getComment(), "")) {
+            comment.setText(habitEvent.getComment());
+        }
     }
 
     /**
@@ -139,10 +170,17 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         // Add a marker in Sydney, Australia,
         // and move the map's camera to the same location.
 
-        LatLng sydney = new LatLng(-33.852, 151.211);
-        googleMap.addMarker(new MarkerOptions().position(sydney)
-                .title("Location"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        if(location != null) {
+            LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+            map.addMarker(new MarkerOptions().position(loc)
+                    .title("Location"));
+            map.moveCamera(CameraUpdateFactory.newLatLng(loc));
+        } else {
+            LatLng sydney = new LatLng(-33.852, 151.211);
+            googleMap.addMarker(new MarkerOptions().position(sydney)
+                    .title("Location"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        }
     }
 
     /**
@@ -199,27 +237,6 @@ public class AddHabitEventActivity extends AppCompatActivity implements
             location = null;
             updateOverlays();
         }
-    }
-
-    /**
-     * Create and store HabitEvent object from filled fields
-     */
-    private void saveEvent() {
-        HabitEvent event = new HabitEvent();
-
-        event.setUserId(CurrentUser.getInstance().getUserId());
-        event.setComment(comment.getText().toString());
-        event.setEventDate(DateTime.now());
-        event.setHabitKey(habitKey);
-
-        if(location != null) {
-            event.setLatitude(location.getLatitude());
-            event.setLongitude(location.getLongitude());
-        }
-
-        event.setPhotoUrl("imageUrl");
-
-        habitEventRepository.add(event);
     }
 
     /**
@@ -322,6 +339,37 @@ public class AddHabitEventActivity extends AppCompatActivity implements
             imageBitmap = thumb;
             image.setImageBitmap(thumb);
             updateOverlays();
+        }
+    }
+
+    /**
+     * Create and store HabitEvent object from filled fields
+     */
+    private void saveEvent() {
+        HabitEvent event = new HabitEvent();
+
+        event.setUserId(CurrentUser.getInstance().getUserId());
+        event.setComment(comment.getText().toString());
+        event.setEventDate(DateTime.now());
+        event.setHabitKey(habitKey);
+
+        if(location != null) {
+            event.setLatitude(location.getLatitude());
+            event.setLongitude(location.getLongitude());
+        }
+
+        if(imageBitmap != null) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            event.setPhotoUrl(encoded);
+        }
+
+        if(editingHabitEventKey != null) {
+            habitEventRepository.update(editingHabitEventKey, event);
+        } else {
+            habitEventRepository.add(event);
         }
     }
 }
