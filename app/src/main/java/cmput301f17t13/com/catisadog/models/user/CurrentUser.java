@@ -28,7 +28,15 @@ public class CurrentUser extends User {
      * @return the current user
      */
     public static CurrentUser getInstance() {
-        return instance;
+        if(isAuthenticated()) return instance;
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            signIn(user);
+            return instance;
+        }
+
+        return null;
     }
 
     /**

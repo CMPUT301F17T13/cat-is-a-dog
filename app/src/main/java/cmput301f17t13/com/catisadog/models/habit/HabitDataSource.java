@@ -20,7 +20,7 @@ import java.util.LinkedHashMap;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
 /**
- * Firebase datasource implementation for a user's habits
+ * Firebase datasource implementation for a user's habitEvents
  */
 public class HabitDataSource extends DataSource<Habit>
     implements ChildEventListener {

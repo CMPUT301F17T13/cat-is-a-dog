@@ -252,7 +252,7 @@ public class ViewHabitActivity extends AppCompatActivity {
 
     /**
      * Completion metrics text
-     * TODO(#47): Return string representation of habits when complete
+     * TODO(#47): Return string representation of habitEvents when complete
      * @return String representing completion metrics
      */
     private String completionMetricsText() {

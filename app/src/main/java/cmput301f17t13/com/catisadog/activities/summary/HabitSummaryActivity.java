@@ -37,7 +37,7 @@ import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
 /**
- * The activity that handles three tabs: my habits, to do habits, and following habits.
+ * The activity that handles three tabs: my habitEvents, to do habitEvents, and following habitEvents.
  * Stores that habit objects and updates the tab fragments to display the UI.
  */
 public class HabitSummaryActivity extends BaseDrawerActivity {

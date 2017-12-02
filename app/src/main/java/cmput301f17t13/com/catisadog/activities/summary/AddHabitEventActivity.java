@@ -210,8 +210,11 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         event.setComment(comment.getText().toString());
         event.setEventDate(DateTime.now());
         event.setHabitKey(habitKey);
-        event.setLatitude(location.getLatitude());
-        event.setLongitude(location.getLongitude());
+
+        if(location != null) {
+            event.setLatitude(location.getLatitude());
+            event.setLongitude(location.getLongitude());
+        }
 
         event.setPhotoUrl("imageUrl");
 
