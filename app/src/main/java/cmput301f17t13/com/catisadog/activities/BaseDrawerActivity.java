@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.activities.history.HabitHistoryActivity;
 import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.models.user.User;
@@ -89,10 +90,9 @@ public class BaseDrawerActivity extends AppCompatActivity
             finish();
 
         } else if (id == R.id.nav_history) {
-            //----Uncomment below when Activity is created--//
-            //Intent intent = new Intent(this, HabitHistoryActivity.class);
-            //startActivity(intent);
-            //finish();
+            Intent intent = new Intent(this, HabitHistoryActivity.class);
+            startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_users) {
             //----Uncomment below when Activity is created--//
