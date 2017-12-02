@@ -10,12 +10,14 @@ import android.location.Location;
 
 import org.joda.time.DateTime;
 
+import java.io.Serializable;
+
 import cmput301f17t13.com.catisadog.models.habit.Habit;
 
 /**
  * Represents a habit event
  */
-public class HabitEvent {
+public class HabitEvent implements Serializable {
 
     private String key;
     private String userId;
