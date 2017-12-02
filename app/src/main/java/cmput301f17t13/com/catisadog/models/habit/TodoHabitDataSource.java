@@ -50,7 +50,7 @@ public class TodoHabitDataSource extends DataSource<Habit> {
 
         String nowKey = String.format(Locale.CANADA, "%s_%s", userId, FirebaseUtil.dateToString(DateTime.now()));
         Query eventRef = FirebaseDatabase.getInstance().getReference("events/" + userId)
-                .orderByChild("complete").startAt(nowKey).endAt(nowKey+"\uf8ff");
+                .orderByChild("complete").startAt(nowKey).endAt(FirebaseUtil.terminalKey(nowKey));
 
         eventRef.addValueEventListener(new EventListener());
     }

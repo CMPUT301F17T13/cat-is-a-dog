@@ -14,6 +14,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
+import cmput301f17t13.com.catisadog.models.user.User;
+import cmput301f17t13.com.catisadog.models.user.UserRepository;
+import cmput301f17t13.com.catisadog.utils.data.Repository;
+
+import static cmput301f17t13.com.catisadog.models.user.CurrentUser.isAuthenticated;
 
 /**
  * Abstract handler for all Firebase authentication requests
@@ -38,11 +43,13 @@ public abstract class Authenticator {
     Activity mContext;
     FirebaseAuth mAuth;
 
+    private Repository<User> userRepository;
     private OnResultListener mAuthListener;
 
     Authenticator(Activity context) {
         mContext = context;
         mAuth = FirebaseAuth.getInstance();
+        userRepository = new UserRepository();
     }
 
     /**
@@ -83,6 +90,7 @@ public abstract class Authenticator {
         // Sign in the authenticated user
         FirebaseUser user = mAuth.getCurrentUser();
         CurrentUser.signIn(user);
+        userRepository.add(CurrentUser.getInstance());
 
         if(mAuthListener != null) {
             mAuthListener.onAuthSuccess();

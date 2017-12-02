@@ -52,7 +52,7 @@ public class CurrentUser extends User {
      * Sign out the currently authenticated user
      */
     public static void signOut() {
-        if (!isAuthenticated()) {
+        if (isAuthenticated()) {
             instance.mAuth.signOut();
             instance = null;
         }
