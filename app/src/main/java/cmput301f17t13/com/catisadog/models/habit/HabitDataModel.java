@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import cmput301f17t13.com.catisadog.models.HabitStatus;
+import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
 
 /**
  * Represents the Firebase data model for the Habit class
@@ -63,7 +64,7 @@ public class HabitDataModel {
      */
     @Exclude
     public Habit getHabit() {
-        HashSet<Integer> newSchedule = new HashSet<>(7);
+        HashSet<Integer> newSchedule = new HashSet<>(DateTimeConstants.DAYS_PER_WEEK);
         for(int i = 0; i < schedule.size(); i++) {
             if(schedule.get(i)) {
                 newSchedule.add(i + 1);

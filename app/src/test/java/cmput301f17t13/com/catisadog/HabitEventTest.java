@@ -18,8 +18,8 @@ import static org.junit.Assert.*;
 
 public class HabitEventTest {
 
-    Habit newHabit;
-    User user;
+    private Habit newHabit;
+    private User user;
 
     @Before
     public void setUP() {
@@ -34,22 +34,22 @@ public class HabitEventTest {
     public void getHabit() throws Exception {
 
         //Check to see if new HabitEvent is linked to the correct habit.
-        HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user.getUserId());
-        assertTrue(newHabitEvent.getHabit() == newHabit);
+        HabitEvent newHabitEvent = new HabitEvent("1", newHabit.getKey(), user.getUserId());
+        assertTrue(newHabitEvent.getHabitKey().equals(newHabit.getKey()));
 
         //Adding a habitEvent with a null habit, should not be allowed
         HabitEvent invalidEvent = new HabitEvent("1", null, user.getUserId());
         assertNull(invalidEvent);
 
         //Adding a habitEvent with a null user, should not be allowed
-        HabitEvent invalidEventUser = new HabitEvent("1", newHabit, null);
+        HabitEvent invalidEventUser = new HabitEvent("1", newHabit.getKey(), null);
         assertNull(invalidEventUser);
     }
 
     @Test
     public void setComment() throws Exception {
 
-        HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user.getUserId());
+        HabitEvent newHabitEvent = new HabitEvent("1", newHabit.getKey(), user.getUserId());
 
         //Checks to see if the comment has been updated
         newHabitEvent.setComment("TestComment");
@@ -66,16 +66,18 @@ public class HabitEventTest {
     @Test
     public void setLocation() throws Exception {
         Location location = LocationHelper.getLocation();
-        HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user.getUserId());
-        newHabitEvent.setLocation(location);
+        HabitEvent newHabitEvent = new HabitEvent("1", newHabit.getKey(), user.getUserId());
+        newHabitEvent.setLatitude(location.getLatitude());
+        newHabitEvent.setLongitude(location.getLongitude());
 
-        assertTrue(newHabitEvent.getLocation() == location);
+        assertTrue(newHabitEvent.getLatitude() == location.getLatitude());
+        assertTrue(newHabitEvent.getLongitude() == location.getLongitude());
     }
 
     @Test
     public void setPhotoUrl() throws Exception {
 
-        HabitEvent newHabitEvent = new HabitEvent("1", newHabit, user.getUserId());
+        HabitEvent newHabitEvent = new HabitEvent("1", newHabit.getKey(), user.getUserId());
 
         newHabitEvent.setPhotoUrl("TestPhotoUrl.com");
 

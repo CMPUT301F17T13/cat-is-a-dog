@@ -19,36 +19,38 @@ public class HabitEvent {
 
     private String key;
     private String userId;
-    private Habit habit;
+    private String habitKey;
     private String comment;
     private String photoUrl;
-    private Location location;
+    private double latitude;
+    private double longitude;
     private DateTime eventDate;
 
     public HabitEvent() {}
 
-    public HabitEvent(String key, Habit habit, String comment, String photoUrl, Location location, DateTime eventDate, String userId) {
+    public HabitEvent(String key, String habitKey, String comment, String photoUrl, double lat, double lon, DateTime eventDate, String userId) {
         this.key = key;
         this.userId = userId;
-        this.habit = habit;
+        this.habitKey = habitKey;
         this.comment = comment;
         this.photoUrl = photoUrl;
-        this.location = location;
+        this.latitude = lat;
+        this.longitude = lon;
         this.eventDate = eventDate;
     }
 
-    public HabitEvent(String key, Habit habit, String userId) {
+    public HabitEvent(String key, String habitKey, String userId) {
         this.key = key;
-        this.habit = habit;
+        this.habitKey = habitKey;
         this.userId = userId;
         this.eventDate = new DateTime();
     }
 
-    public Habit getHabit() {
-        return habit;
+    public String getHabitKey() {
+        return habitKey;
     }
-    public void setHabit(Habit habit) {
-        this.habit = habit;
+    public void setHabitKey(String habitKey) {
+        this.habitKey = habitKey;
     }
 
     public String getComment() {
@@ -67,12 +69,20 @@ public class HabitEvent {
         this.photoUrl = photoUrl;
     }
 
-    public Location getLocation() {
-        return location;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public DateTime getEventDate() {

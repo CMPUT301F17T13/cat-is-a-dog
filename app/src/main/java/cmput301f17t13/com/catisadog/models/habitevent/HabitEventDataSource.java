@@ -16,26 +16,26 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 
-public class HabitEventDataSource extends DataSource<HabitEvent> implements
-        ChildEventListener {
+public class HabitEventDataSource extends DataSource<HabitEvent>
+        implements ValueEventListener {
 
     private static final String TAG = "HabitDataSource";
 
-    private DatabaseReference mHabitEventsRef;
-
-    private LinkedHashMap<String, HabitEvent> mHabitEvents;
     private ArrayList<HabitEvent> mHabitEventArray;
 
     public HabitEventDataSource(String userId) {
-        mHabitEventsRef = FirebaseDatabase.getInstance().getReference("events/" + userId);
-        mHabitEventsRef.addChildEventListener(this);
+        Query habitEventQuery = FirebaseDatabase.getInstance().getReference("events/" + userId)
+                .orderByPriority();
 
-        mHabitEvents = new LinkedHashMap<>();
+        habitEventQuery.addValueEventListener(this);
+
         mHabitEventArray = new ArrayList<>();
     }
 
@@ -46,54 +46,30 @@ public class HabitEventDataSource extends DataSource<HabitEvent> implements
     @Override
     public ArrayList<HabitEvent> getSource() { return mHabitEventArray; }
 
-    // Habit updates
+    // Habit Event updates
 
     @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
-        HabitEventDataModel model = dataSnapshot.getValue(HabitEventDataModel.class);
+    public void onDataChange(DataSnapshot dataSnapshot) {
+        mHabitEventArray.clear();
 
-        /*if (model != null) {
-            model.setKey(dataSnapshot.getKey());
-            mHabitEvents.put(dataSnapshot.getKey(), model.getHabitEvent());
-            datasetChanged();
-        }*/
-    }
+        for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+            HabitEventDataModel model = snapshot.getValue(HabitEventDataModel.class);
 
-    @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        Log.d(TAG, "onChildChanged:" + dataSnapshot.getKey());
-        HabitDataModel model = dataSnapshot.getValue(HabitDataModel.class);
+            if (model != null) {
+                model.setKey(snapshot.getKey());
+                mHabitEventArray.add(model.getHabitEvent());
+            }
+        }
 
-        /*if (model != null) {
-            model.setKey(dataSnapshot.getKey());
-            mHabitEvents.put(dataSnapshot.getKey(), model.getHabit());
-            datasetChanged();
-        }*/
-    }
-
-    @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {
-        Log.d(TAG, "onChildRemoved:" + dataSnapshot.getKey());
-
-        mHabitEvents.remove(dataSnapshot.getKey());
         datasetChanged();
     }
 
     @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-        Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
-        // Do nothing, doesn't affect ordering
-    }
-
-    @Override
     public void onCancelled(DatabaseError databaseError) {
-        Log.w(TAG, "loadHabits:onCancelled", databaseError.toException());
+        Log.e(TAG, databaseError.getDetails());
     }
 
     private void datasetChanged() {
-        mHabitEventArray.clear();
-        mHabitEventArray.addAll(mHabitEvents.values());
         setChanged();
         notifyObservers();
     }

@@ -14,16 +14,18 @@ import com.google.firebase.database.IgnoreExtraProperties;
 import org.joda.time.DateTime;
 
 import cmput301f17t13.com.catisadog.models.habit.Habit;
+import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
 
 @IgnoreExtraProperties
 public class HabitEventDataModel {
 
     private String key;
     private String userId;
-    private String habit;
+    private String habitKey;
     private String comment;
     private String photoUrl;
-    private Location location;
+    private double latitude;
+    private double longitude;
     private long eventDate;
 
     public HabitEventDataModel() {}
@@ -31,26 +33,28 @@ public class HabitEventDataModel {
     public HabitEventDataModel(HabitEvent event) {
         this.key = event.getKey();
         this.userId = event.getUserId();
-        this.habit = event.getHabit().getKey();
+        this.habitKey = event.getHabitKey();
         this.comment = event.getComment();
         this.photoUrl = event.getPhotoUrl();
-        this.location = event.getLocation();
+        this.latitude = event.getLatitude();
+        this.longitude = event.getLongitude();
         this.eventDate = event.getEventDate().getMillis();
     }
 
     /**
-     * Convert to a habit event object
-     * @return the habit event object
+     * Convert to a habitKey event object
+     * @return the habitKey event object
      */
     @Exclude
     public HabitEvent getHabitEvent() {
         HabitEvent event = new HabitEvent();
         event.setKey(key);
         event.setUserId(userId);
-        event.setHabit(new Habit());
+        event.setHabitKey(habitKey);
         event.setComment(comment);
         event.setPhotoUrl(photoUrl);
-        event.setLocation(location);
+        event.setLatitude(latitude);
+        event.setLongitude(longitude);
         event.setEventDate(new DateTime(eventDate));
 
         return event;
@@ -74,12 +78,12 @@ public class HabitEventDataModel {
         this.userId = user;
     }
 
-    public String getHabit() {
-        return habit;
+    public String getHabitKey() {
+        return habitKey;
     }
 
-    public void setHabit(String habit) {
-        this.habit = habit;
+    public void setHabitKey(String habitKey) {
+        this.habitKey = habitKey;
     }
 
     public String getComment() {
@@ -98,12 +102,20 @@ public class HabitEventDataModel {
         this.photoUrl = photoUrl;
     }
 
-    public Location getLocation() {
-        return location;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public long getEventDate() {

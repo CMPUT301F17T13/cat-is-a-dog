@@ -23,17 +23,27 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 import cmput301f17t13.com.catisadog.activities.summary.ViewHabitActivity;
 import cmput301f17t13.com.catisadog.models.habit.Habit;
+import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
+import cmput301f17t13.com.catisadog.models.user.CurrentUser;
+import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
 /**
  * A screen to view all the current user's habitEvents
  */
 
-public class MyHabitsFragment extends Fragment {
+public class MyHabitsFragment extends Fragment
+        implements Observer {
+
+    private ArrayList<Habit> habits;
+    private DataSource<Habit> habitDataSource;
+    private String userId;
 
     private ListView habitsListView;
     private MyHabitsAdapter habitsAdapter;
@@ -51,6 +61,12 @@ public class MyHabitsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_habits, container, false);
 
+        userId = CurrentUser.getInstance().getUserId();
+
+        habitDataSource = new HabitDataSource(userId);
+        habitDataSource.addObserver(this);
+        habits = habitDataSource.getSource();
+
         HabitSummaryActivity habitSummaryActivity = (HabitSummaryActivity) getActivity();
         habitsListView = (ListView) view.findViewById(R.id.myHabitsListView);
         habitsListView.setOnItemClickListener(
@@ -61,7 +77,7 @@ public class MyHabitsFragment extends Fragment {
                 viewHabit(position);
             }
         });
-        habitsAdapter = new MyHabitsAdapter(habitSummaryActivity, habitSummaryActivity.habits);
+        habitsAdapter = new MyHabitsAdapter(getActivity(), habits);
         habitsListView.setAdapter(habitsAdapter);
 
         return view;
@@ -70,7 +86,8 @@ public class MyHabitsFragment extends Fragment {
     /**
      * Update the list view
      */
-    public void updateListView() {
+    @Override
+    public void update(Observable observable, Object o) {
         if(habitsAdapter != null) {
             habitsAdapter.notifyDataSetChanged();
         }

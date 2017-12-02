@@ -40,19 +40,13 @@ import cmput301f17t13.com.catisadog.utils.data.DataSource;
  * The activity that handles three tabs: my habitEvents, to do habitEvents, and following habitEvents.
  * Stores that habit objects and updates the tab fragments to display the UI.
  */
-public class HabitSummaryActivity extends BaseDrawerActivity implements Observer{
+public class HabitSummaryActivity extends BaseDrawerActivity {
     private static final String TAG = "HabitSummaryActivity";
 
-    public ArrayList<Habit> habits;
-    public ArrayList<Habit> todoHabits = new ArrayList<>();
     public ViewPagerAdapter adapter;
 
-    private MyHabitsFragment myHabitsFragment;
-    private TodoHabitsFragment todoHabitsFragment;
-
-    private String userId;
-    private DataSource<Habit> habitDataSource;
-    private DataSource<Habit> todoDataSource;
+    //private MyHabitsFragment myHabitsFragment;
+    //private TodoHabitsFragment todoHabitsFragment;
 
     /**
      * Set up tab layout
@@ -75,18 +69,8 @@ public class HabitSummaryActivity extends BaseDrawerActivity implements Observer
         TabLayout tabLayout = (TabLayout) findViewById(R.id.habitSummaryTabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        myHabitsFragment = (MyHabitsFragment) adapter.getItem(0);
-        todoHabitsFragment = (TodoHabitsFragment) adapter.getItem(1);
-
-        userId = CurrentUser.getInstance().getUserId();
-
-        habitDataSource = new HabitDataSource(userId);
-        habitDataSource.addObserver(this);
-        habits = habitDataSource.getSource();
-
-        todoDataSource = new TodoHabitDataSource(userId);
-        todoDataSource.addObserver(this);
-        todoHabits = todoDataSource.getSource();
+        //myHabitsFragment = (MyHabitsFragment) adapter.getItem(0);
+        //todoHabitsFragment = (TodoHabitsFragment) adapter.getItem(1);
     }
 
     /**
@@ -96,20 +80,6 @@ public class HabitSummaryActivity extends BaseDrawerActivity implements Observer
     public void addHabit(View v) {
         Intent intent = new Intent(this, EditHabitActivity.class);
         startActivity(intent);
-    }
-
-    /**
-     * Notify the fragments that changes have occurred to the habitEvents.
-     */
-    @Override
-    public void update(Observable observable, Object o) {
-        String type = (String) o;
-        switch (type) {
-            case TodoHabitDataSource.SourceType:
-                todoHabitsFragment.updateListView();
-            default:
-                myHabitsFragment.updateListView();
-        }
     }
 
     /**

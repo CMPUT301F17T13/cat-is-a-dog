@@ -24,21 +24,31 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.activities.summary.AddHabitEventActivity;
 import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 import cmput301f17t13.com.catisadog.models.habit.Habit;
+import cmput301f17t13.com.catisadog.models.habit.TodoHabitDataSource;
+import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
+import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
 /**
  * A screen for seeing habitEvents scheduled for today
  */
 
-public class TodoHabitsFragment extends Fragment {
+public class TodoHabitsFragment extends Fragment
+        implements Observer {
+
+    private String userId;
+    private ArrayList<Habit> todoHabits;
+    private DataSource<Habit> todoDataSource;
 
     private ListView habitsListView;
-    private TodoHabitsAdapter habitsAdapter;
+    private TodoHabitsAdapter todoHabitsAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +61,12 @@ public class TodoHabitsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_todo_habits, container, false);
         habitsListView = (ListView) view.findViewById(R.id.todoHabitsListView);
 
+        userId = CurrentUser.getInstance().getUserId();
+
+        todoDataSource = new TodoHabitDataSource(userId);
+        todoDataSource.addObserver(this);
+        todoHabits = todoDataSource.getSource();
+
         return view;
     }
 
@@ -58,14 +74,15 @@ public class TodoHabitsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        HabitSummaryActivity habitSummaryActivity = (HabitSummaryActivity) getActivity();
-        habitsAdapter = new TodoHabitsAdapter(habitSummaryActivity, habitSummaryActivity.todoHabits);
-        habitsListView.setAdapter(habitsAdapter);
+        todoHabitsAdapter = new TodoHabitsAdapter(getActivity(), todoHabits);
+        habitsListView.setAdapter(todoHabitsAdapter);
     }
 
-    public void updateListView() {
-        if (habitsAdapter != null) {
-            habitsAdapter.notifyDataSetChanged();
+
+    @Override
+    public void update(Observable observable, Object o) {
+        if (todoHabitsAdapter != null) {
+            todoHabitsAdapter.notifyDataSetChanged();
         }
     }
 

@@ -21,7 +21,7 @@ import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 
 public class HabitHistoryActivity extends AppCompatActivity {
     private HabitHistoryActivity.HabitHistoryAdapter habitsAdapter;
-    
+
     public ArrayList<HabitEvent> habitEvents;
 
     private @BindView(R.id.list) ListView habitsListView;
