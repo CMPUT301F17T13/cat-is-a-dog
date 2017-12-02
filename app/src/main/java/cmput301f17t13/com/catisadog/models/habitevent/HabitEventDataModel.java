@@ -10,8 +10,11 @@ import android.location.Location;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.firebase.database.PropertyName;
 
 import org.joda.time.DateTime;
+
+import java.util.Locale;
 
 import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
@@ -28,6 +31,9 @@ public class HabitEventDataModel {
     private double longitude;
     private long eventDate;
 
+    // Indexes
+    public String complete;
+
     public HabitEventDataModel() {}
 
     public HabitEventDataModel(HabitEvent event) {
@@ -39,6 +45,14 @@ public class HabitEventDataModel {
         this.latitude = event.getLatitude();
         this.longitude = event.getLongitude();
         this.eventDate = event.getEventDate().getMillis();
+
+        // Create indexes
+        this.complete = completeKey(userId, event.getEventDate(), habitKey);
+    }
+
+    public static String completeKey(String userId, DateTime date, String key) {
+        String strDate = FirebaseUtil.dateToString(date);
+        return String.format(Locale.CANADA, "%s_%s_%s", userId, strDate, key);
     }
 
     /**

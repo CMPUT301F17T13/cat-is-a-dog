@@ -91,28 +91,67 @@ public class TodoHabitsFragment extends Fragment
      * view.
      */
     private class TodoHabitsAdapter extends ArrayAdapter<Habit> {
+
+        private static final int TODO_TYPE = 0;
+        private static final int COMPLETE_TYPE = 1;
+
+        private LayoutInflater mInflater;
+
         public TodoHabitsAdapter(Context context, ArrayList<Habit> habits) {
             super(context, 0, habits);
+
+            mInflater = LayoutInflater.from(context);
         }
 
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-            final Habit habit = this.getItem(position);
+            ViewHolder holder = null;
+            Habit habit = this.getItem(position);
+            int type = habit.isComplete() ? COMPLETE_TYPE : TODO_TYPE;
 
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_todo_habit, parent, false);
+            if(convertView == null || ((ViewHolder) convertView.getTag()).type != type) {
+                holder = new ViewHolder();
+                switch (type) {
+                    case TODO_TYPE:
+                        convertView = mInflater.inflate(R.layout.item_todo_habit, parent, false);
+
+                        holder.type = TODO_TYPE;
+                        holder.titleView = (TextView) convertView.findViewById(R.id.todoHabitListItemTitle);
+                        holder.reasonView = (TextView) convertView.findViewById(R.id.todoHabitListItemReason);
+                        holder.startDateView = (TextView) convertView.findViewById(R.id.todoHabitListItemStartDate);
+                        holder.addEventButton = (Button) convertView.findViewById(R.id.todoHabitAddEvent);
+                        break;
+                    case COMPLETE_TYPE:
+                        convertView = mInflater.inflate(R.layout.item_complete_habit, parent, false);
+
+                        holder.type = COMPLETE_TYPE;
+                        holder.titleView = (TextView) convertView.findViewById(R.id.todoHabitCompleteTitle);
+                        break;
+                }
+                convertView.setTag(holder);
+            }
+            else {
+                holder = (ViewHolder) convertView.getTag();
             }
 
-            TextView titleView = (TextView) convertView.findViewById(R.id.todoHabitListItemTitle);
-            TextView reasonView = (TextView) convertView.findViewById(R.id.todoHabitListItemReason);
-            TextView startDateView = (TextView) convertView.findViewById(R.id.todoHabitListItemStartDate);
-            Button addHabitEventButton = (Button) convertView.findViewById(R.id.todoHabitAddEvent);
-            titleView.setText(habit.getTitle());
-            reasonView.setText(habit.getReason());
-            startDateView.setText(habit.getStartDate().toString("d MMM"));
+            switch (type) {
+                case TODO_TYPE:
+                    holder.titleView.setText(habit.getTitle());
+                    holder.reasonView.setText(habit.getReason());
+                    holder.startDateView.setText(habit.getStartDate().toString("d MMM"));
+                    holder.addEventButton.setOnClickListener(getAddEventOnClickListener(habit));
+                    break;
+                case COMPLETE_TYPE:
+                    holder.titleView.setText(habit.getTitle());
+                    break;
+            }
 
-            View.OnClickListener addHabitEventButtonListener = new View.OnClickListener() {
+            return convertView;
+        }
+
+        private View.OnClickListener getAddEventOnClickListener(final Habit habit) {
+            return new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Log.d("Event", "Add habit event");
@@ -123,11 +162,14 @@ public class TodoHabitsFragment extends Fragment
                     startActivity(intent);
                 }
             };
-
-            addHabitEventButton.setOnClickListener(addHabitEventButtonListener);
-
-            return convertView;
         }
     }
 
+    public static class ViewHolder {
+        public int type;
+        public TextView titleView;
+        public TextView reasonView;
+        public TextView startDateView;
+        public Button addEventButton;
+    }
 }
