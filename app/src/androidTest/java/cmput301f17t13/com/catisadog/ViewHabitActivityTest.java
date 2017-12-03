@@ -69,54 +69,7 @@ public class ViewHabitActivityTest {
 
     @Test
     public void testSchedule() {
-        HashSet<Integer> schedule = new HashSet<>();
-        schedule.add(2);
-        schedule.add(3);
-
-        String repeatedDays;
-
-        if (schedule.isEmpty()) {
-            repeatedDays = "Never";
-        } else if (schedule.size() == 7) {
-            repeatedDays = "Every day";
-        } else if (schedule.size() == 5 &&
-                schedule.contains(DateTimeConstants.MONDAY) &&
-                schedule.contains(DateTimeConstants.TUESDAY) &&
-                schedule.contains(DateTimeConstants.WEDNESDAY) &&
-                schedule.contains(DateTimeConstants.THURSDAY) &&
-                schedule.contains(DateTimeConstants.FRIDAY)) {
-            repeatedDays = "Weekdays";
-        } else if (schedule.size() == 2 &&
-                schedule.contains(DateTimeConstants.SATURDAY) &&
-                schedule.contains(DateTimeConstants.SUNDAY)) {
-            repeatedDays = "Weekends";
-        } else {
-            ArrayList<String> dates = new ArrayList<>();
-            if (schedule.contains(DateTimeConstants.SUNDAY)) {
-                dates.add("Sun");
-            }
-            if (schedule.contains(DateTimeConstants.MONDAY)) {
-                dates.add("Mon");
-            }
-            if (schedule.contains(DateTimeConstants.TUESDAY)) {
-                dates.add("Tue");
-            }
-            if (schedule.contains(DateTimeConstants.WEDNESDAY)) {
-                dates.add("Wed");
-            }
-            if (schedule.contains(DateTimeConstants.THURSDAY)) {
-                dates.add("Thu");
-            }
-            if (schedule.contains(DateTimeConstants.FRIDAY)) {
-                dates.add("Fri");
-            }
-            if (schedule.contains(DateTimeConstants.SATURDAY)) {
-                dates.add("Sat");
-            }
-            repeatedDays = TextUtils.join(", ", dates);
-        }
-
-        onView(withId(R.id.habitRepeatsValue)).check(matches(withText(repeatedDays)));
+        onView(withId(R.id.habitRepeatsValue)).check(matches(withText("Every day")));
     }
 
 }

@@ -67,7 +67,9 @@ public class AuthTest {
     }
 
     @After
-    public void unregisterIdlingResource() {
+    public void tearDown() {
+        Intents.release();
+
         if (mIdlingResource != null) {
             IdlingRegistry.getInstance().unregister(mIdlingResource);
         }

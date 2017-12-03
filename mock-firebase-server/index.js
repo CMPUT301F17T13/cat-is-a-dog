@@ -5,7 +5,7 @@ new FirebaseServer(5000, 'test.firebaseio.com', {
 		"mockUserId": {
 			"1": {
 				"reason": "Test Reason",
-				"schedule": [false,true,true,false,false,false,false],
+				"schedule": [true,true,true,true,true,true,true],
 				"startDate": 1512198000000,
 				"title": "Test Habit",
 				"userId": "mockUserId",
