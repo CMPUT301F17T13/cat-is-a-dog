@@ -35,7 +35,8 @@ public class HabitDataModel {
 
     private long startDate;
     private List<Boolean> schedule;
-    private HabitStatus status;
+
+    private Double completionRate;
 
     /** Empty constructor for firebase */
     public HabitDataModel() {}
@@ -56,6 +57,8 @@ public class HabitDataModel {
         for (int i = 0; i < DateTimeConstants.DAYS_PER_WEEK; i++) {
             schedule.add(habit.getSchedule().contains(i + 1));
         }
+
+        completionRate = habit.getCompletionRate();
     }
 
     /**
@@ -78,7 +81,11 @@ public class HabitDataModel {
         habit.setReason(reason);
         habit.setStartDate(new DateTime(startDate));
         habit.setSchedule(newSchedule);
-        habit.setStatus(status);
+        habit.setCompletionRate(completionRate);
+
+        if (completionRate != null) {
+            habit.setStatus(HabitStatus.fromCompletionRate(completionRate));
+        }
 
         return habit;
     }
@@ -133,11 +140,11 @@ public class HabitDataModel {
         this.schedule = schedule;
     }
 
-    public HabitStatus getStatus() {
-        return status;
+    public Double getCompletionRate() {
+        return completionRate;
     }
 
-    public void setStatus(HabitStatus status) {
-        this.status = status;
+    public void setCompletionRate(Double completionRate) {
+        this.completionRate = completionRate;
     }
 }

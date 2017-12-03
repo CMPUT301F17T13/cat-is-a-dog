@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -133,6 +134,16 @@ public class MyHabitsFragment extends Fragment
             TextView titleView = (TextView) convertView.findViewById(R.id.myHabitListItemTitle);
             TextView reasonView = (TextView) convertView.findViewById(R.id.myHabitListItemReason);
             TextView startDateView = (TextView) convertView.findViewById(R.id.myHabitListItemStartDate);
+            TextView completionView = (TextView) convertView.findViewById(R.id.txtCompletion);
+
+            if(habit.getStatus() != null) {
+                completionView.setTextColor(habit.getStatus().getColor());
+                completionView.setText(String.format(Locale.CANADA, "%2.0f%%", habit.getCompletionRate()));
+            }
+            else {
+                completionView.setText("");
+            }
+
             titleView.setText(habit.getTitle());
             reasonView.setText(habit.getReason());
             startDateView.setText(habit.getStartDate().toString("d MMM"));

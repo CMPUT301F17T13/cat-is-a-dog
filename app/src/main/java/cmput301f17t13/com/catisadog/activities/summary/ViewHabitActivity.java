@@ -15,6 +15,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -32,26 +33,38 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.jjoe64.graphview.DefaultLabelFormatter;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Set;
 
 import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.models.habit.CompletionMetricDataSource;
 import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.models.habit.HabitDataModel;
 import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
 import cmput301f17t13.com.catisadog.models.habit.HabitRepository;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
+import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
+import cmput301f17t13.com.catisadog.utils.date.DateUtil;
 
 /**
  * A screen for viewing habit details
  *
  * @see Habit
  */
-public class ViewHabitActivity extends AppCompatActivity {
+public class ViewHabitActivity extends AppCompatActivity
+    implements Observer {
 
     private static final String TAG = "ViewHabitActivity";
     private static final int DELETE_BUTTON_ID = 1032400432;
@@ -60,6 +73,7 @@ public class ViewHabitActivity extends AppCompatActivity {
     private String habitKey;
     private Habit habit;
     private Repository<Habit> habitRepository;
+    private ArrayList<Double> completionMetrics;
 
     private Group mHabitViewGroup;
     private ProgressBar mLoadingBar;
@@ -102,6 +116,7 @@ public class ViewHabitActivity extends AppCompatActivity {
                 HabitDataModel model = dataSnapshot.getValue(HabitDataModel.class);
                 if (model != null) {
                     habit = model.getHabit();
+                    getCompletionData();
                     updateUI();
                 }
                 else {
@@ -115,6 +130,77 @@ public class ViewHabitActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+    }
+
+    /**
+     * Creates the completion metrics graph for the habit
+     */
+    private void createCompletionGraph() {
+
+        int startedWeeksAgo = DateUtil.WeekDifference(habit.getStartDate(), DateTime.now()) + 1;
+        if (startedWeeksAgo > 6) startedWeeksAgo = 6;
+
+        Double runningTotal = 0.00;
+        Double[] runningAverages = new Double[7];
+        for (int i = -1 * startedWeeksAgo; i <= 0; i++) {
+            runningTotal += completionMetrics.get(6+i);
+            runningAverages[6+i] = runningTotal/(startedWeeksAgo + i + 1);
+        }
+
+        ArrayList<DataPoint> dataPoints = new ArrayList<>();
+        for (int i = -1 * startedWeeksAgo; i <= 0; i++) {
+            if(runningAverages[6+i] == null) runningAverages[6+i] = 0.00;
+            dataPoints.add(new DataPoint(i, runningAverages[6+i]));
+        }
+
+        habit.setCompletionRate(runningAverages[6]);
+        habitRepository.update(habit.getKey(), habit);
+
+        GraphView graph = (GraphView) findViewById(R.id.graph);
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoints.toArray(new DataPoint[dataPoints.size()]));
+
+        series.setTitle("Completion Metrics");
+        series.setColor(Color.RED);
+
+        graph.getViewport().setMinX(-7);
+        graph.getViewport().setMaxX(0);
+        graph.getViewport().setMinY(0);
+        graph.getViewport().setMaxY(100);
+
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setXAxisBoundsManual(true);
+
+        // custom label formatter to show percentages
+        graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+            @Override
+            public String formatLabel(double value, boolean isValueX) {
+                if (isValueX) {
+                    // show normal x values
+                    return super.formatLabel(value, isValueX);
+                } else {
+                    // show currency for y values
+                    return super.formatLabel(value, isValueX) + " %";
+                }
+            }
+        });
+
+        graph.addSeries(series);
+    }
+
+    /**
+     * Fetches the completion data for the habit
+     */
+    private void getCompletionData() {
+        DataSource<Double> metricSource = new CompletionMetricDataSource(habit);
+        completionMetrics = metricSource.getSource();
+        metricSource.addObserver(this);
+        //return new double[] { 95.0,90.1,70.5,50.2,35.1, 35.1, 30 };
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        createCompletionGraph();
     }
 
     /**
@@ -127,8 +213,6 @@ public class ViewHabitActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.habitStartValue)).setText(startsText());
             ((TextView) findViewById(R.id.habitRepeatsValue))
                     .setText(repeatsText());
-            ((TextView) findViewById(R.id.habitCompletionMetricsValue))
-                    .setText(completionMetricsText());
 
             mLoadingBar.setVisibility(View.GONE);
             mHabitViewGroup.setVisibility(View.VISIBLE);
@@ -250,15 +334,4 @@ public class ViewHabitActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Completion metrics text
-     * TODO(#47): Return string representation of habitEvents when complete
-     * @return String representing completion metrics
-     */
-    private String completionMetricsText() {
-        return "Coming soon!\n" +
-                "Past 7 occurences:\n" +
-                "Past month:\n" +
-                "All time:";
-    }
 }

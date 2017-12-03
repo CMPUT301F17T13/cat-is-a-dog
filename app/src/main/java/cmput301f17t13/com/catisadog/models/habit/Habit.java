@@ -7,10 +7,13 @@
 package cmput301f17t13.com.catisadog.models.habit;
 
 
+import android.support.annotation.Nullable;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -43,6 +46,7 @@ public class Habit implements Schedulable, Serializable {
     private boolean complete = false;
 
     //TODO(#17): How to handle completion metrics
+    private Double completionRate = null;
 
     public Habit() {}
 
@@ -105,6 +109,14 @@ public class Habit implements Schedulable, Serializable {
 
     public void setComplete() {
         this.complete = true;
+    }
+
+    public Double getCompletionRate() {
+        return completionRate;
+    }
+
+    public void setCompletionRate(Double completionRate) {
+        this.completionRate = completionRate;
     }
 
     @Override

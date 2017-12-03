@@ -40,6 +40,10 @@ dependencies {
     dependencies {
         compile 'com.github.TouchBoarder:weekdays-buttons-bar:v1.0.2'
     }
+
+    // Completion graphs
+    compile 'com.jjoe64:graphview:4.2.1'
+
     // Google / Firebase Dependencies
     compile 'com.google.firebase:firebase-auth:11.6.2'
     compile 'com.google.firebase:firebase-database:11.6.2'
