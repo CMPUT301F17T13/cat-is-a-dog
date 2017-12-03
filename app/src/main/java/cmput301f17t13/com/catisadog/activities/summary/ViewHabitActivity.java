@@ -35,7 +35,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
+import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -157,7 +159,7 @@ public class ViewHabitActivity extends AppCompatActivity
         series.setTitle("Completion Metrics");
         series.setColor(Color.RED);
 
-        graph.getViewport().setMinX(-7);
+        graph.getViewport().setMinX(-6);
         graph.getViewport().setMaxX(0);
         graph.getViewport().setMinY(0);
         graph.getViewport().setMaxY(100);
@@ -165,19 +167,19 @@ public class ViewHabitActivity extends AppCompatActivity
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setXAxisBoundsManual(true);
 
-        // custom label formatter to show percentages
-        graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
-            @Override
-            public String formatLabel(double value, boolean isValueX) {
-                if (isValueX) {
-                    // show normal x values
-                    return super.formatLabel(value, isValueX);
-                } else {
-                    // show currency for y values
-                    return super.formatLabel(value, isValueX) + " %";
-                }
-            }
-        });
+        // use static labels for horizontal and vertical labels
+        StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
+        staticLabelsFormatter.setVerticalLabels(new String[] {"0%","20%","40%","60%","80%","100%"});
+        staticLabelsFormatter.setHorizontalLabels(new String[] {"-6","-5","-4","-3","-2","-1","0"});
+
+        graph.setTitle("Events completed over last 7 weeks");
+        int bgColor = (15 & 0xff) << 24 | (0xD3 & 0xff) << 16 | (0x2F & 0xff) << 8 | (0x2F & 0xff);
+        graph.getViewport().setBackgroundColor(bgColor);
+
+        graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+        graph.getGridLabelRenderer().setHighlightZeroLines(false);
+        graph.getGridLabelRenderer().setNumHorizontalLabels(7);
+        graph.getGridLabelRenderer().setNumVerticalLabels(6);
 
         graph.addSeries(series);
     }

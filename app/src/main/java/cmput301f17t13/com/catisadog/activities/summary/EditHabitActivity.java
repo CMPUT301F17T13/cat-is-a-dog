@@ -42,7 +42,6 @@ import java.util.HashSet;
 
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.models.habit.Habit;
-import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
 import cmput301f17t13.com.catisadog.models.habit.HabitRepository;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
@@ -60,7 +59,7 @@ public class EditHabitActivity extends AppCompatActivity {
     private WeekdaysDataSource wds;
     private Repository<Habit> habitRepository;
 
-    private Boolean isNewHabit;
+    private Boolean isEditHabit;
     private String habitKey;
 
     /**
@@ -115,7 +114,7 @@ public class EditHabitActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
 
         if (bundle == null) {
-            isNewHabit = false;
+            isEditHabit = false;
         }
         else {
             Habit habit = (Habit) bundle.getSerializable(
@@ -131,7 +130,7 @@ public class EditHabitActivity extends AppCompatActivity {
                 wds.setSelectedDays(day);
             }
 
-            isNewHabit = true;
+            isEditHabit = true;
             habitKey = habit.getKey();
         }
 
@@ -171,7 +170,7 @@ public class EditHabitActivity extends AppCompatActivity {
                 habitTitle, habitReason, startDate, schedule, null);
         habit.setKey(habitKey);
 
-        if (isNewHabit) {
+        if (isEditHabit) {
             habitRepository.update(habit.getKey(), habit);
         }
         else {

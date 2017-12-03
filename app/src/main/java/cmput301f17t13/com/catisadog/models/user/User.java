@@ -1,20 +1,15 @@
 package cmput301f17t13.com.catisadog.models.user;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class User {
 
     private String userId;
-    private String username;
-    private Map<String, Boolean> followers;
-    private Map<String, Boolean> following;
+    private String email;
+    private String displayName;
+    private String photoUrl;
+
+    public User() {} // only for Firebase
 
     public User(String userId) {
-        this.followers = new HashMap<>();
-        this.following = new HashMap<>();
         this.userId = userId;
     }
 
@@ -22,35 +17,27 @@ public class User {
         return userId;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void follow(User otherUser) {
-        // Sends a follow request
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public List<FollowRequest> getRequests() {
-        return null;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
-    public Map<String, Boolean> getFollowers() {
-        return followers;
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
-    public void setFollowers(Map<String, Boolean> followers) {
-        this.followers = followers;
-    }
-
-    public Map<String, Boolean> getFollowing() {
-        return following;
-    }
-
-    public void setFollowing(Map<String, Boolean> following) {
-        this.following = following;
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }

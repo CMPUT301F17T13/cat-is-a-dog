@@ -3,9 +3,6 @@ package cmput301f17t13.com.catisadog.models.user;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.Collection;
-import java.util.Map;
-
 /**
  * A singleton representing the currently authenticated user
  */
@@ -14,11 +11,11 @@ public class CurrentUser extends User {
     private FirebaseAuth mAuth;
     private static CurrentUser instance = null;
 
-    private CurrentUser(String id, String username, Map<String, Boolean> followers, Map<String, Boolean> following) {
+    private CurrentUser(String id, String displayName, String email, String photoUrl) {
         super(id);
-        setUsername(username);
-        setFollowers(followers);
-        setFollowing(following);
+        setDisplayName(displayName);
+        setEmail(email);
+        setPhotoUrl(photoUrl);
 
         mAuth = FirebaseAuth.getInstance();
     }
@@ -28,7 +25,9 @@ public class CurrentUser extends User {
      * @return the current user
      */
     public static CurrentUser getInstance() {
-        if(isAuthenticated()) return instance;
+        if (isAuthenticated()) {
+            return instance;
+        }
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -44,8 +43,7 @@ public class CurrentUser extends User {
      * @param user firebase user
      */
     public static void signIn(FirebaseUser user) {
-        // TODO(#39): Get followers and following from Firebase
-        instance = new CurrentUser(user.getUid(), user.getEmail(), null, null);
+        instance = new CurrentUser(user.getUid(), user.getDisplayName(), user.getEmail(), user.getPhotoUrl().toString());
     }
 
     /**

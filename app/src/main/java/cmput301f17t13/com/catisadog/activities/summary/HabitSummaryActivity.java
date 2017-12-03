@@ -18,30 +18,21 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 
-import org.joda.time.DateTime;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.activities.BaseDrawerActivity;
 import cmput301f17t13.com.catisadog.fragments.summary.FollowingHabitsFragment;
 import cmput301f17t13.com.catisadog.fragments.summary.MyHabitsFragment;
 import cmput301f17t13.com.catisadog.fragments.summary.TodoHabitsFragment;
-import cmput301f17t13.com.catisadog.models.habit.Habit;
-import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
-import cmput301f17t13.com.catisadog.models.habit.TodoHabitDataSource;
-import cmput301f17t13.com.catisadog.models.user.CurrentUser;
-import cmput301f17t13.com.catisadog.utils.data.DataSource;
+import cmput301f17t13.com.catisadog.utils.ViewPagerAdapter;
 
 /**
  * The activity that handles three tabs: my habitEvents, to do habitEvents, and following habitEvents.
  * Stores that habit objects and updates the tab fragments to display the UI.
  */
 public class HabitSummaryActivity extends BaseDrawerActivity {
-    private static final String TAG = "HabitSummaryActivity";
 
     public ViewPagerAdapter adapter;
 
@@ -82,35 +73,4 @@ public class HabitSummaryActivity extends BaseDrawerActivity {
         startActivity(intent);
     }
 
-    /**
-     * Pager adapter to handle fragment tabs
-     */
-    private class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
-    }
 }
