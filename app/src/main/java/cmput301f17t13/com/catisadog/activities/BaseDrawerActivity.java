@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import cmput301f17t13.com.catisadog.R;
@@ -18,6 +19,7 @@ import cmput301f17t13.com.catisadog.activities.history.HabitHistoryActivity;
 import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.models.user.User;
+import cmput301f17t13.com.catisadog.utils.DownloadImageTask;
 
 /**
  * Base Activity implementing Nav Drawer set up
@@ -57,6 +59,10 @@ public class BaseDrawerActivity extends AppCompatActivity
         //Get username info to display on header
         User currUser = CurrentUser.getInstance();
         name.setText(currUser.getDisplayName());
+
+        ImageView photoView = (ImageView) header.findViewById(R.id.navBarUserImage);
+        photoView.setTag(currUser.getPhotoUrl());
+        new DownloadImageTask().execute(photoView);
 
     }
 
