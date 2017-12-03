@@ -49,7 +49,7 @@ public class FollowRequestsFragment extends Fragment
 
         userId = CurrentUser.getInstance().getUserId();
 
-        followRequestDataSource = new FollowRequestDataSource(userId, null);
+        followRequestDataSource = new FollowRequestDataSource(null, userId);
         followRequestDataSource.setOnlyShowUnaccepted(true);
         followRequestDataSource.addObserver(this);
         followRequests = followRequestDataSource.getSource();

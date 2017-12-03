@@ -56,7 +56,7 @@ public class SearchUsersFragment extends Fragment
         userDataSource.addObserver(this);
         users = userDataSource.getSource();
 
-        followRequestDataSource = new FollowRequestDataSource(null, userId);
+        followRequestDataSource = new FollowRequestDataSource(userId, null);
         followRequestDataSource.addObserver(this);
         following = followRequestDataSource.getSource();
 
