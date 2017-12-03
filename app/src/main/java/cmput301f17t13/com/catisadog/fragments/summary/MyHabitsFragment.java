@@ -68,7 +68,6 @@ public class MyHabitsFragment extends Fragment
         habitDataSource.addObserver(this);
         habits = habitDataSource.getSource();
 
-        HabitSummaryActivity habitSummaryActivity = (HabitSummaryActivity) getActivity();
         habitsListView = (ListView) view.findViewById(R.id.myHabitsListView);
         habitsListView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
@@ -89,9 +88,7 @@ public class MyHabitsFragment extends Fragment
      */
     @Override
     public void update(Observable observable, Object o) {
-        if(habitsAdapter != null) {
-            habitsAdapter.notifyDataSetChanged();
-        }
+        habitsAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -114,7 +111,7 @@ public class MyHabitsFragment extends Fragment
     }
 
     /**
-     * An adapter for converting habit objects into "my habitEvents" to be displayed in a list
+     * An adapter for converting habit objects into "my habits" to be displayed in a list
      * view.
      */
     private class MyHabitsAdapter extends ArrayAdapter<Habit> {

@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.activities.social.SocialActivity;
 import cmput301f17t13.com.catisadog.activities.history.HabitHistoryActivity;
 import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
@@ -55,7 +56,7 @@ public class BaseDrawerActivity extends AppCompatActivity
 
         //Get username info to display on header
         User currUser = CurrentUser.getInstance();
-        name.setText(currUser.getUsername());
+        name.setText(currUser.getDisplayName());
 
     }
 
@@ -94,11 +95,10 @@ public class BaseDrawerActivity extends AppCompatActivity
             startActivity(intent);
             finish();
 
-        } else if (id == R.id.nav_users) {
-            //----Uncomment below when Activity is created--//
-            //Intent intent = new Intent(this, OtherUsersActivity.class);
-            //startActivity(intent);
-            //finish();
+        } else if (id == R.id.nav_social) {
+            Intent intent = new Intent(this, SocialActivity.class);
+            startActivity(intent);
+            finish();
 
         } else if (id == R.id.nav_logout) {
             CurrentUser.signOut();
