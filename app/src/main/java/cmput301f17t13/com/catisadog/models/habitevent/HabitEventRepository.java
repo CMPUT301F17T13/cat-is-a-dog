@@ -6,14 +6,18 @@
 
 package cmput301f17t13.com.catisadog.models.habitevent;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.joda.time.DateTime;
 
 import java.util.Locale;
 
 import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
+import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 
@@ -48,5 +52,24 @@ public class HabitEventRepository implements Repository<HabitEvent> {
     @Override
     public void delete(String key) {
         mHabitEventsRef.child(key).getRef().removeValue(null);
+    }
+
+    @Override
+    public void get(String key, final OnResultListener<HabitEvent> resultListener) {
+        mHabitEventsRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                HabitEventDataModel model = dataSnapshot.getValue(HabitEventDataModel.class);
+
+                if(model != null) {
+                    resultListener.onResult(model.getHabitEvent());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

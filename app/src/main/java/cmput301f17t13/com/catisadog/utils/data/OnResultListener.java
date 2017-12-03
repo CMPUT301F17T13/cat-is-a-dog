@@ -6,13 +6,7 @@
 
 package cmput301f17t13.com.catisadog.utils.data;
 
-/**
- * Indicates a CRUD Repository service
- * @param <TEntity> The entity type
- */
-public interface Repository<TEntity> {
-    void add(TEntity entity);
-    void update(String key, TEntity entity);
-    void delete(String key);
-    void get(String key, OnResultListener<TEntity> resultListener);
+
+public interface OnResultListener<TResult> {
+    void onResult(TResult result);
 }

@@ -6,9 +6,13 @@
 
 package cmput301f17t13.com.catisadog.models.habit;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 
@@ -38,5 +42,24 @@ public class HabitRepository implements Repository<Habit> {
     @Override
     public void delete(String key) {
         mHabitsRef.child(key).removeValue(null);
+    }
+
+    @Override
+    public void get(String key, final OnResultListener<Habit> resultListener) {
+        mHabitsRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                HabitDataModel model = dataSnapshot.getValue(HabitDataModel.class);
+
+                if(model != null) {
+                    resultListener.onResult(model.getHabit());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
