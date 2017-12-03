@@ -54,6 +54,9 @@ public class HabitRepository implements Repository<Habit> {
                 if(model != null) {
                     resultListener.onResult(model.getHabit());
                 }
+                else {
+                    resultListener.onResult(null);
+                }
             }
 
             @Override
