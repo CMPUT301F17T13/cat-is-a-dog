@@ -22,6 +22,7 @@ public class FollowRequestDataSource extends DataSource<FollowRequest>
 
     private ArrayList<FollowRequest> mFollowRequestArray;
     private boolean onlyShowUnaccepted;
+    private boolean onlyShowAccepted;
 
     public FollowRequestDataSource(String follower, String followee) {
         Query followRequestQuery = FirebaseDatabase.getInstance().getReference("followrequests/");
@@ -42,6 +43,10 @@ public class FollowRequestDataSource extends DataSource<FollowRequest>
         this.onlyShowUnaccepted = onlyShowUnaccepted;
     }
 
+    public void setOnlyShowAccepted(boolean onlyShowAccepted) {
+        this.onlyShowAccepted = onlyShowAccepted;
+    }
+
     /**
      * Get the data source reference (for adapters)
      * @return the data source reference
@@ -56,6 +61,7 @@ public class FollowRequestDataSource extends DataSource<FollowRequest>
         for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
             FollowRequest request = snapshot.getValue(FollowRequest.class);
             if (onlyShowUnaccepted && request.getAccepted()) continue;
+            if (onlyShowAccepted && !request.getAccepted()) continue;
             mFollowRequestArray.add(request);
         }
 
