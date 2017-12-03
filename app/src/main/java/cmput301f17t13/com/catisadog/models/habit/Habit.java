@@ -45,8 +45,7 @@ public class Habit implements Schedulable, Serializable {
     /** Flag if the habit has been completed today */
     private boolean complete = false;
 
-    //TODO(#17): How to handle completion metrics
-    private Double completionRate = null;
+    private Double completionRate = 0.0;
 
     public Habit() {}
 

@@ -1,25 +1,20 @@
 package cmput301f17t13.com.catisadog.models;
 
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 
-public class HabitStatus {
-    public static final HabitStatus ON_TRACK = new HabitStatus("On track", null, Color.GREEN);
-    public static final HabitStatus NEAR_GOAL = new HabitStatus("Near goal", null, Color.YELLOW);
-    public static final HabitStatus INACTIVE = new HabitStatus("Inactive", null, Color.RED);
+import java.io.Serializable;
+
+public class HabitStatus implements Serializable {
+    public static final HabitStatus ON_TRACK = new HabitStatus("On track", Color.GREEN);
+    public static final HabitStatus NEAR_GOAL = new HabitStatus("Near goal", Color.YELLOW);
+    public static final HabitStatus INACTIVE = new HabitStatus("Inactive", Color.RED);
 
     private String message;
     private int color;
-    private Drawable icon; //Resource key
 
-    private HabitStatus(String message, Drawable icon, int color) {
+    private HabitStatus(String message, int color) {
         this.message = message;
-        this.icon = icon;
         this.color = color;
-    }
-
-    public Drawable getIcon() {
-        return icon;
     }
 
     public String getMessage() {
