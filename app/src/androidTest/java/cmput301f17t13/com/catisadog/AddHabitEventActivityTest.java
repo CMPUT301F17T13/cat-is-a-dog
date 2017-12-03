@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
@@ -47,6 +48,8 @@ public class AddHabitEventActivityTest {
                 new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
 
         intending(not(isInternal())).respondWith(result);
+
+        Espresso.closeSoftKeyboard();
 
         onView(withId(R.id.imageOpacityOverlay)).perform(click());
         onView(withId(R.id.imageOpacityOverlay)).check(matches(not(isDisplayed())));

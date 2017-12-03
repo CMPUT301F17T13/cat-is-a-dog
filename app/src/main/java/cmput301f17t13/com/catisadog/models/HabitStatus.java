@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class HabitStatus implements Serializable {
     public static final HabitStatus ON_TRACK = new HabitStatus("On track", Color.GREEN);
-    public static final HabitStatus NEAR_GOAL = new HabitStatus("Near goal", Color.YELLOW);
+    public static final HabitStatus NEAR_GOAL = new HabitStatus("Near goal", Color.rgb(240, 120, 0));
     public static final HabitStatus INACTIVE = new HabitStatus("Inactive", Color.RED);
 
     private String message;

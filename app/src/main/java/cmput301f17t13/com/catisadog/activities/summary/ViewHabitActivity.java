@@ -55,6 +55,7 @@ import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
 import cmput301f17t13.com.catisadog.models.habit.HabitRepository;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
+import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 import cmput301f17t13.com.catisadog.utils.date.DateUtil;
 
@@ -109,28 +110,21 @@ public class ViewHabitActivity extends AppCompatActivity
         mHabitViewGroup.setVisibility(View.GONE);
         mLoadingBar.setVisibility(View.VISIBLE);
 
-        DatabaseReference habitRef = FirebaseDatabase.getInstance().getReference("habits/" + habitOwner + "/" + habitKey);
-        habitRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        habitRepository.get(habitKey, new OnResultListener<Habit>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                HabitDataModel model = dataSnapshot.getValue(HabitDataModel.class);
-                if (model != null) {
-                    habit = model.getHabit();
+            public void onResult(Habit h) {
+                if (h != null) {
+                    habit = h;
                     getCompletionData();
                     updateUI();
                 }
                 else {
-                    Toast.makeText(ViewHabitActivity.this, "Something went wrong.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ViewHabitActivity.this,
+                            "Something went wrong.", Toast.LENGTH_LONG).show();
                     finish();
                 }
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                finish();
-            }
         });
-
     }
 
     /**

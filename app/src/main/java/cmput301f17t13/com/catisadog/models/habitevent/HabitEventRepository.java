@@ -64,6 +64,9 @@ public class HabitEventRepository implements Repository<HabitEvent> {
                 if(model != null) {
                     resultListener.onResult(model.getHabitEvent());
                 }
+                else {
+                    resultListener.onResult(null);
+                }
             }
 
             @Override

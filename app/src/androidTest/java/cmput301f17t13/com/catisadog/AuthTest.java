@@ -43,7 +43,6 @@ public class AuthTest {
 
     @Before
     public void setUp() throws Exception {
-        //IdlingPolicies.setMasterPolicyTimeout(15, TimeUnit.SECONDS);
         Intents.init();
 
         mIdlingResource = mActivityRule.getActivity().getIdlingResource();
