@@ -7,6 +7,8 @@
 package cmput301f17t13.com.catisadog.mocks;
 
 
+import android.net.Uri;
+
 import com.google.firebase.auth.FirebaseUser;
 
 import org.junit.Test;
@@ -29,6 +31,9 @@ public class MockAuthentication {
         FirebaseUser mockUser = Mockito.mock(FirebaseUser.class);
         Mockito.when(mockUser.getEmail()).thenReturn("mockuser@ualberta.ca");
         Mockito.when(mockUser.getUid()).thenReturn("mockUserId");
+        Mockito.when(mockUser.getDisplayName()).thenReturn("Mock User");
+        Mockito.when(mockUser.getPhotoUrl()).thenReturn(Uri.EMPTY);
+
         CurrentUser.signIn(mockUser);
     }
 
@@ -36,6 +41,7 @@ public class MockAuthentication {
     public void verifyMockAuthentication() {
         signIn();
         assertEquals(CurrentUser.getInstance().getUserId(), "mockUserId");
-        assertEquals(CurrentUser.getInstance().getUsername(), "mockuser@ualberta.ca");
+        assertEquals(CurrentUser.getInstance().getEmail(), "mockuser@ualberta.ca");
+        assertEquals(CurrentUser.getInstance().getDisplayName(), "Mock User");
     }
 }
