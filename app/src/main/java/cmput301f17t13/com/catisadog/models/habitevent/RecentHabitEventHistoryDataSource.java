@@ -68,6 +68,8 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
             HabitEvent habitEvent = model.getHabitEvent();
             recentHabitEventMap.put((Long) dataSnapshot.getPriority(), habitEvent);
         }
+
+        datasetChanged();
     }
 
     @Override
@@ -78,11 +80,14 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
             HabitEvent habitEvent = model.getHabitEvent();
             recentHabitEventMap.put((Long) dataSnapshot.getPriority(), habitEvent);
         }
+
+        datasetChanged();
     }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
         recentHabitEventMap.remove((Long) dataSnapshot.getPriority());
+        datasetChanged();
     }
 
     @Override
