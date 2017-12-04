@@ -7,6 +7,9 @@
 package cmput301f17t13.com.catisadog.utils.data;
 
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -40,5 +43,9 @@ public class FirebaseUtil {
      */
     public static String terminalKey(String key) {
         return key + terminalCharacter;
+    }
+
+    public static DatabaseReference getFollowRequestRef() {
+        return FirebaseDatabase.getInstance().getReference("followrequests");
     }
 }
