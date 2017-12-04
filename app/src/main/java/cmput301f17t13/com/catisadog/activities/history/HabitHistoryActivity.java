@@ -155,7 +155,8 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         map.setLatLngBoundsForCameraTarget(null);
-        map.setMinZoomPreference(6.0f);
+        map.setMinZoomPreference(2.0f);
+        map.setMaxZoomPreference(15.0f);
     }
 
     public void updateListView() {
@@ -186,6 +187,8 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
             HabitEvent event = habitEvents.get(i);
             double lat = event.getLatitude();
             double lng = event.getLongitude();
+            if(lat == 0 || lng == 0) continue;
+
             LatLng pos = new LatLng(lat, lng);
             Marker marker = map.addMarker(new MarkerOptions()
                 .position(pos)

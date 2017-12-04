@@ -57,6 +57,7 @@
         <activity
             android:name=".activities.summary.AddHabitEventActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:label="Add Habit Event"
             android:parentActivityName=".activities.summary.HabitSummaryActivity" />
         <activity
