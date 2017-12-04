@@ -91,13 +91,15 @@ public class HabitEventHistoryDataSource extends DataSource<Pair<Habit, HabitEve
     private class EventListener implements ValueEventListener {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+            recentEvents.clear();
+
             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                 HabitEventDataModel model = snapshot.getValue(HabitEventDataModel.class);
 
                 if (model != null) {
                     HabitEvent habitEvent = model.getHabitEvent();
                     if (habitEvent != null) {
-                        completedToday.add(habitEvent.getHabitKey());
+                        recentEvents.add(habitEvent);
                     }
                 }
             }
@@ -111,7 +113,7 @@ public class HabitEventHistoryDataSource extends DataSource<Pair<Habit, HabitEve
     }
 
     private void merge() {
-        todoHabits.clear();
+        /*todoHabits.clear();
         for(Habit h : dueHabits) {
             if (h.isTodo(DateTime.now())) {
                 if (completedToday.contains(h.getKey())) {
@@ -119,7 +121,7 @@ public class HabitEventHistoryDataSource extends DataSource<Pair<Habit, HabitEve
                 }
                 todoHabits.add(h);
             }
-        }
+        }*/
     }
 
     private void datasetChanged() {
