@@ -60,6 +60,10 @@ public class HabitEvent implements Serializable {
     }
 
     public void setComment(String comment) {
+        if(comment.length() > 20) {
+            comment = comment.substring(0, 19);
+        }
+
         this.comment = comment;
     }
 

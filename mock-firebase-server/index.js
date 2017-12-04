@@ -1,6 +1,6 @@
 var FirebaseServer = require('firebase-server');
 
-new FirebaseServer(5000, 'test.firebaseio.com', {
+var server = new FirebaseServer(5000, 'test.firebaseio.com', {
 	"habits": {
 		"mockUserId": {
 			"1": {
@@ -55,5 +55,12 @@ new FirebaseServer(5000, 'test.firebaseio.com', {
 			"photoUrl" : "https://lh3.googleusercontent.com/-Rd6tMqpUCAY/AAAAAAAAAAI/AAAAAAAAAAo/QE2dEXLgx9s/s96-c/photo.jpg",
 			"userId" : "nathanId"
 		}
+	}
+});
+
+server.setRules({
+	"rules": {
+    ".read": "auth != null",
+    ".write": false,
 	}
 });

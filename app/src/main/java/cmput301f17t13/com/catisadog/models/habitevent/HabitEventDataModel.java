@@ -33,6 +33,7 @@ public class HabitEventDataModel {
 
     // Indexes
     public String complete;
+    public String habitStamp;
 
     public HabitEventDataModel() {}
 
@@ -48,11 +49,16 @@ public class HabitEventDataModel {
 
         // Create indexes
         this.complete = completeKey(userId, event.getEventDate(), habitKey);
+        this.habitStamp = habitStampKey(habitKey, event.getEventDate());
     }
 
     public static String completeKey(String userId, DateTime date, String key) {
         String strDate = FirebaseUtil.dateToString(date);
         return String.format(Locale.CANADA, "%s_%s_%s", userId, strDate, key);
+    }
+
+    public static String habitStampKey(String habitKey, DateTime date) {
+        return String.format(Locale.CANADA, "%s_%d", habitKey, date.getMillis());
     }
 
     /**
