@@ -1,7 +1,7 @@
 package cmput301f17t13.com.catisadog.activities.history;
 
 import android.Manifest;
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -40,6 +40,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.TreeMap;
@@ -52,6 +53,7 @@ import cmput301f17t13.com.catisadog.fragments.history.FilterDialogFragment.Filte
 import cmput301f17t13.com.catisadog.models.followrequest.SocialDataSource;
 import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
+import cmput301f17t13.com.catisadog.models.habit.HabitRepository;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSource;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSourceByComment;
@@ -61,8 +63,10 @@ import cmput301f17t13.com.catisadog.models.habitevent.NearbyHabitEventDataSource
 import cmput301f17t13.com.catisadog.models.habitevent.RecentHabitEventHistoryDataSource;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.models.user.User;
+import cmput301f17t13.com.catisadog.models.user.UserRepository;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
+import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 import static cmput301f17t13.com.catisadog.fragments.history.FilterDialogFragment.FilterType.MY_RECENT_EVENTS;
@@ -71,6 +75,8 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         Observer, OnMapReadyCallback, FilterDialogResultListener {
 
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 1111;
+    private static final String BUNDLE_FILTER_TYPE = "filterType";
+    private static final String BUNDLE_FILTER_DATA = "filterData";
 
     private GoogleMap map;
     private ListView habitsListView;
@@ -90,6 +96,9 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     private ArrayList<HabitEvent> habitEvents;
     private ArrayList<User> following;
     private ListUpdater listUpdater;
+
+    private FilterDialogFragment.FilterType filterType;
+    private String filterData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +122,11 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         updateHabitKeyHabitMap();
 
         habitsListView = (ListView) findViewById(R.id.list);
-        filterResult(MY_RECENT_EVENTS, null);
+
+        if(filterType == null) {
+            filterType = MY_RECENT_EVENTS;
+        }
+        filterResult(filterType, filterData);
 
         // Get the SupportMapFragment and request notification
         // when the map is ready to be used.
@@ -141,6 +154,25 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(BUNDLE_FILTER_TYPE, filterType);
+        outState.putString(BUNDLE_FILTER_DATA, filterData);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        filterType = (FilterDialogFragment.FilterType) savedInstanceState.getSerializable(BUNDLE_FILTER_TYPE);
+        filterData = savedInstanceState.getString(BUNDLE_FILTER_DATA);
+
+        if(filterType == null) {
+            filterType = MY_RECENT_EVENTS;
+        }
+        filterResult(filterType, filterData);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         habitHistoryAdapter = new HabitHistoryAdapter(this, habitEvents);
@@ -155,8 +187,8 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         map.setLatLngBoundsForCameraTarget(null);
-        map.setMinZoomPreference(2.0f);
-        map.setMaxZoomPreference(15.0f);
+        map.setMinZoomPreference(3.0f);
+        map.setMaxZoomPreference(17.0f);
     }
 
     public void updateListView() {
@@ -183,11 +215,14 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
 
         map.clear();
         LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+        int n = 0;
+
         for(int i = 0; i < habitEvents.size(); ++i) {
             HabitEvent event = habitEvents.get(i);
             double lat = event.getLatitude();
             double lng = event.getLongitude();
             if(lat == 0 || lng == 0) continue;
+            n++;
 
             LatLng pos = new LatLng(lat, lng);
             Marker marker = map.addMarker(new MarkerOptions()
@@ -197,7 +232,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
             boundsBuilder.include(marker.getPosition());
         }
         
-        if(habitEvents.size() > 0) {
+        if(n > 0) {
             LatLngBounds bounds = boundsBuilder.build();
             int width = getResources().getDisplayMetrics().widthPixels;
             int height = getResources().getDisplayMetrics().heightPixels;
@@ -211,11 +246,15 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     @Override
     public void filterResult(FilterDialogFragment.FilterType filterType,
                              String filterData) {
+        this.filterType = filterType;
+        this.filterData = filterData;
         if (eventDataSource != null) {
             eventDataSource.deleteObserver(this);
         }
 
         String userId = CurrentUser.getInstance().getUserId();
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
 
         switch(filterType) {
             case NEAR_LOCATION:
@@ -225,11 +264,14 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
                 }
                 idList.add(userId);
                 filterByNearby(idList);
+                actionBar.setSubtitle("Filter: Within 5 km");
                 return;
             case MY_RECENT_EVENTS:
+                actionBar.setSubtitle("Filter: My recent events");
                 eventDataSource = new HabitEventDataSource(userId);
                 break;
             case FRIENDS_RECENT_EVENTS:
+                actionBar.setSubtitle("Filter: Friends' recent events");
                 ArrayList<String> followingIds = new ArrayList<>();
                 for(User followingUser : following) {
                     followingIds.add(followingUser.getUserId());
@@ -238,9 +280,11 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
                 eventDataSource = new RecentHabitEventHistoryDataSource(followingIds);
                 break;
             case SEARCH_BY_HABIT:
+                actionBar.setSubtitle("Filter: habit");
                 eventDataSource = new HabitEventDataSourceForHabit(userId, filterData);
                 break;
             case SEARCH_BY_COMMENT:
+                actionBar.setSubtitle("Filter by Comment: '" + filterData + '\'');
                 eventDataSource = new HabitEventDataSourceByComment(userId, filterData);
                 break;
         }
@@ -249,25 +293,6 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         eventDataSource.addObserver(this);
         habitHistoryAdapter = new HabitHistoryAdapter(this, habitEvents);
         habitsListView.setAdapter(habitHistoryAdapter);
-//        ActionBar actionBar = getActionBar();
-//        switch (filterType) {
-//            case nearLocation:
-//                actionBar.setSubtitle("Filter: Within 5 km");
-//                break;
-//            case searchByHabit:
-//                String title = habitKeyHabitMap.get(filterData).getTitle();
-//                actionBar.setSubtitle("Filter: '" + title + "' habit");
-//                break;
-//            case searchByComment:
-//                actionBar.setSubtitle("Filter: '" + filterData + '\'');
-//                break;
-//            case myRecentEvents:
-//                actionBar.setSubtitle("Filter: My recent events");
-//                break;
-//            case friendsRecentEvents:
-//                actionBar.setSubtitle("Filter: Friends' recent events");
-//                break;
-//        }
     }
 
     private class ListUpdater implements Observer {
@@ -295,20 +320,30 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_my_habit_events, parent, false);
             }
 
-            TextView titleView = (TextView) convertView.findViewById(R.id.myHabitEventListItemTitle);
-            TextView reasonView = (TextView) convertView.findViewById(R.id.myHabitEventListItemReason);
+            final TextView titleView = (TextView) convertView.findViewById(R.id.myHabitEventListItemTitle);
+            final TextView reasonView = (TextView) convertView.findViewById(R.id.myHabitEventListItemReason);
             TextView startDateView = (TextView) convertView.findViewById(R.id.myHabitEventListItemStartDate);
-
-            String habitTitle;
-            try {
-                habitTitle = habitKeyHabitMap.get(habitEvent.getHabitKey())
-                        .getTitle();
-            } catch (Exception e) {
-                habitTitle = "Habit";
-            }
-
-            titleView.setText(habitTitle);
-            reasonView.setText(habitEvent.getComment());
+            HabitRepository hr = new HabitRepository(habitEvent.getUserId());
+            hr.get(habitEvent.getHabitKey(), new OnResultListener<Habit>() {
+                @Override
+                public void onResult(Habit habit) {
+                    titleView.setText(habit.getTitle());
+                    if(!Objects.equals(habit.getUserId(), CurrentUser.getInstance().getUserId())) {
+                        UserRepository ur = new UserRepository();
+                        ur.get(habit.getUserId(), new OnResultListener<User>() {
+                            @Override
+                            public void onResult(User user) {
+                                if(habitEvent.getComment() != null && habitEvent.getComment().length() > 0)
+                                    reasonView.setText(user.getDisplayName() + " - " + habitEvent.getComment());
+                                else
+                                    reasonView.setText(user.getDisplayName());
+                            }
+                        });
+                    } else {
+                        reasonView.setText(habitEvent.getComment());
+                    }
+                }
+            });
             startDateView.setText(habitEvent.getEventDate().toString("d MMM"));
 
             View.OnClickListener addHabitEventButtonListener = new View.OnClickListener() {
@@ -333,7 +368,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
                     alert.setTitle("Confirmation");
                     alert.setMessage("Are you sure you would like to delete the habit event?");
 
-                    alert.setPositiveButton("Delete habit event", new Dialog.OnClickListener() {
+                    alert.setPositiveButton("Delete", new Dialog.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             habitEventRepository.delete(habitEvent.getKey());

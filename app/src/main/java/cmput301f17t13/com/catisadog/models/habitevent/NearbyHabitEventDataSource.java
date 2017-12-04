@@ -46,7 +46,6 @@ public class NearbyHabitEventDataSource extends DataSource<HabitEvent> {
     private ArrayList<HabitEvent> nearbyEvents;
 
     public NearbyHabitEventDataSource(GeoLocation loc, final ArrayList<String> users) {
-
         nearbyEvents = new ArrayList<>();
         DatabaseReference geofire_ref = FirebaseDatabase.getInstance().getReference("events_geofire");
 
@@ -56,7 +55,7 @@ public class NearbyHabitEventDataSource extends DataSource<HabitEvent> {
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                String[] parts = key.split("_");
+                String[] parts = key.split("@");
                 String userId = parts[0];
                 String eventId = parts[1];
                 if(users.contains(userId)) {
@@ -68,6 +67,7 @@ public class NearbyHabitEventDataSource extends DataSource<HabitEvent> {
                             if (model != null) {
                                 HabitEvent habitEvent = model.getHabitEvent();
                                 nearbyEvents.add(habitEvent);
+                                datasetChanged();
                             }
                         }
 
@@ -90,7 +90,7 @@ public class NearbyHabitEventDataSource extends DataSource<HabitEvent> {
 
             @Override
             public void onGeoQueryReady() {
-                datasetChanged();
+
             }
 
             @Override

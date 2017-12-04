@@ -47,20 +47,20 @@ public class HabitEventRepository implements Repository<HabitEvent> {
 
         // Reverse Chronological Order
         newEvent.setValue(eventModel, -1 * habitEvent.getEventDate().getMillis(), null);
-        geoFire.setLocation(userId+'_'+newEvent.getKey(), new GeoLocation(habitEvent.getLatitude(), habitEvent.getLongitude()));
+        geoFire.setLocation(userId+'@'+newEvent.getKey(), new GeoLocation(habitEvent.getLatitude(), habitEvent.getLongitude()));
     }
 
     @Override
     public void update(String key, HabitEvent habitEvent) {
         HabitEventDataModel eventModel = new HabitEventDataModel(habitEvent);
         mHabitEventsRef.child(key).getRef().setValue(eventModel, null);
-        geoFire.setLocation(userId+'_'+eventModel.getKey(), new GeoLocation(habitEvent.getLatitude(), habitEvent.getLongitude()));
+        geoFire.setLocation(userId+'@'+habitEvent.getKey(), new GeoLocation(habitEvent.getLatitude(), habitEvent.getLongitude()));
     }
 
     @Override
     public void delete(String key) {
         mHabitEventsRef.child(key).getRef().removeValue(null);
-        geoFire.removeLocation(userId+'_'+key);
+        geoFire.removeLocation(userId+'@'+key);
     }
 
     @Override
