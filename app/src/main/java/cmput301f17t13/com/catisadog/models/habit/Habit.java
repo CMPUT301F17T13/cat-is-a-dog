@@ -79,6 +79,10 @@ public class Habit implements Schedulable, Serializable {
         return title;
     }
     public void setTitle(String title) {
+        if (title.length() > 20) {
+            title = title.substring(0, 19);
+        }
+
         this.title = title;
     }
 
@@ -86,6 +90,10 @@ public class Habit implements Schedulable, Serializable {
         return reason;
     }
     public void setReason(String reason) {
+        if (reason.length() > 30) {
+            reason = reason.substring(0, 29);
+        }
+
         this.reason = reason;
     }
 
