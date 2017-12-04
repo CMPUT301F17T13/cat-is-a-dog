@@ -68,6 +68,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements
     private FusedLocationProviderClient mFusedLocationClient;
 
     private TextView comment;
+    private TextView creationDate;
     private ImageView mapOpacityOverlay;
     private ImageView imageOpacityOverlay;
     private ImageView mapDelete;
@@ -102,6 +103,7 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         comment = (TextView) findViewById(R.id.editTextComment);
+        creationDate = (TextView) findViewById(R.id.creationDate);
         mapOpacityOverlay = (ImageView) findViewById(R.id.mapOpacityOverlay);
         imageOpacityOverlay = (ImageView) findViewById(R.id.imageOpacityOverlay);
         mapDelete = (ImageView) findViewById(R.id.mapDelete);
@@ -162,6 +164,8 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         if(habitEvent.getComment() != null && !Objects.equals(habitEvent.getComment(), "")) {
             comment.setText(habitEvent.getComment());
         }
+
+        creationDate.setText("Created: "+ habitEvent.getEventDate().toString("EEEE MMMM d, YYYY"));
     }
 
     /**
