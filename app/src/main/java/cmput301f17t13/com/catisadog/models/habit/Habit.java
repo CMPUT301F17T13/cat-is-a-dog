@@ -20,6 +20,7 @@ import java.util.Set;
 
 import cmput301f17t13.com.catisadog.models.HabitStatus;
 import cmput301f17t13.com.catisadog.models.Schedulable;
+import cmput301f17t13.com.catisadog.utils.date.DateUtil;
 
 /**
  * Object representing a habit
@@ -144,7 +145,7 @@ public class Habit implements Schedulable, Serializable {
      */
     @Override
     public boolean isTodo(DateTime date) {
-        int dayOfWeek = (date.toGregorianCalendar().get(Calendar.DAY_OF_WEEK) + 5) % 7 + 1;
+        int dayOfWeek = DateUtil.GetDayOfWeek(date);
         return schedule.contains(dayOfWeek) && date.getMillis() >= startDate.getMillis();
     }
 
