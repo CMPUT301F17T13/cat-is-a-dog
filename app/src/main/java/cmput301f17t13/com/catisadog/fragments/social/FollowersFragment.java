@@ -31,7 +31,7 @@ import cmput301f17t13.com.catisadog.models.user.UserDataSource;
 import cmput301f17t13.com.catisadog.utils.DownloadImageTask;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A Fragment to show a list of my followers.
  */
 public class FollowersFragment extends Fragment
     implements Observer {
@@ -54,15 +54,18 @@ public class FollowersFragment extends Fragment
 
         userId = CurrentUser.getInstance().getUserId();
 
+        // Get follow requests where I am the followee and the request has been accepted
         followersDataSource = new FollowRequestDataSource(null, userId);
         followersDataSource.setOnlyShowAccepted(true);
         followersDataSource.addObserver(this);
         followers = followersDataSource.getSource();
 
+        // Get follow requests that I have sent
         followRequestDataSource = new FollowRequestDataSource(userId, null);
         followRequestDataSource.addObserver(this);
         followRequests = followRequestDataSource.getSource();
 
+        // Get all users
         userDataSource = new UserDataSource(userId);
         userDataSource.addObserver(this);
         users = userDataSource.getSource();

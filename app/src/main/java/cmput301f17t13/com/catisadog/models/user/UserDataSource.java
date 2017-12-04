@@ -46,7 +46,7 @@ public class UserDataSource extends DataSource<User>
 
         for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
             User user = snapshot.getValue(User.class);
-//            if (user.getUserId().equals(currentUserId)) continue;
+            if (user.getUserId().equals(currentUserId)) continue;
             mOtherUsersArray.add(user);
         }
 

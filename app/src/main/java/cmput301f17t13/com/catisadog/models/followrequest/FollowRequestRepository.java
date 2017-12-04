@@ -9,6 +9,10 @@ import com.google.firebase.database.ValueEventListener;
 import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
+/**
+ * Follow Request Repository. Use this to create, read, update, and delete
+ * a FollowRequest in the Firebase store.
+ */
 public class FollowRequestRepository implements Repository<FollowRequest> {
 
     private DatabaseReference mFollowRequestRef;
@@ -17,6 +21,10 @@ public class FollowRequestRepository implements Repository<FollowRequest> {
         mFollowRequestRef = FirebaseDatabase.getInstance().getReference("followrequests/");
     }
 
+    /**
+     * Add a new FollowRequest to Firebase.
+     * @param followRequest
+     */
     @Override
     public void add(FollowRequest followRequest) {
         DatabaseReference newRef = mFollowRequestRef.push();
@@ -25,16 +33,30 @@ public class FollowRequestRepository implements Repository<FollowRequest> {
         newRef.setValue(followRequest);
     }
 
+    /**
+     * Update a FollowRequest in Firebase.
+     * @param key
+     * @param followRequest
+     */
     @Override
     public void update(String key, FollowRequest followRequest) {
         mFollowRequestRef.child(key).setValue(followRequest);
     }
 
+    /**
+     * Delete a FollowRequest in Firebase.
+     * @param key
+     */
     @Override
     public void delete(String key) {
         mFollowRequestRef.child(key).removeValue();
     }
 
+    /**
+     * Get a FollowRequest from Firebase.
+     * @param key
+     * @param resultListener
+     */
     @Override
     public void get(String key, final OnResultListener<FollowRequest> resultListener) {
         mFollowRequestRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {
