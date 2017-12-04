@@ -19,38 +19,40 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.TreeMap;
 
 import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.models.habit.HabitDataModel;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
 
-public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent> {
+public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
+    implements ChildEventListener {
 
-    public static final String SourceType = "recentHabitEventsDataSource";
+    public static final String SourceType = "RecentHabitEventsDataSource";
 
-    private String userId;
-
-    private LinkedHashMap<String, HabitEvent> recentHabitEventSet;
+    private TreeMap<Long, HabitEvent> recentHabitEventMap;
     private ArrayList<HabitEvent> recentEvents;
 
-    public RecentHabitEventHistoryDataSource(String userId) {
-        this.userId = userId;
-
+    public RecentHabitEventHistoryDataSource(List<String> idList) {
         recentEvents = new ArrayList<>();
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -7);
         long millis = cal.getTimeInMillis();
-        Query eventsQuery = FirebaseDatabase.getInstance().getReference("events/" + userId)
-                .orderByChild("eventDate").startAt(millis).endAt(DateTime.now().getMillis());
-        eventsQuery.addChildEventListener(new EventListener());
 
+        for (String id : idList) {
+            Query eventsQuery = FirebaseDatabase.getInstance().getReference("events/" + id)
+                    .orderByChild("eventDate").startAt(millis).endAt(DateTime.now().getMillis());
+            eventsQuery.addChildEventListener(this);
+        }
     }
 
     @Override
@@ -58,48 +60,42 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent> {
         return recentEvents;
     }
 
-    private class EventListener implements ChildEventListener {
-        @Override
-        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            HabitEventDataModel model = dataSnapshot.getValue(HabitEventDataModel.class);
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        HabitEventDataModel model = dataSnapshot.getValue(HabitEventDataModel.class);
 
-            if (model != null) {
-                HabitEvent habitEvent = model.getHabitEvent();
-                recentHabitEventSet.put(habitEvent.getKey(), habitEvent);
-            }
+        if (model != null) {
+            HabitEvent habitEvent = model.getHabitEvent();
+            recentHabitEventMap.put((Long) dataSnapshot.getPriority(), habitEvent);
         }
-
-        @Override
-        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            HabitEventDataModel model = dataSnapshot.getValue(HabitEventDataModel.class);
-
-            if (model != null) {
-                HabitEvent habitEvent = model.getHabitEvent();
-                recentHabitEventSet.put(habitEvent.getKey(), habitEvent);
-            }
-        }
-
-        @Override
-        public void onChildRemoved(DataSnapshot dataSnapshot) {
-            HabitEventDataModel model = dataSnapshot.getValue(HabitEventDataModel.class);
-
-            if (model != null) {
-                HabitEvent habitEvent = model.getHabitEvent();
-                recentHabitEventSet.remove(habitEvent.getKey());
-            }
-        }
-
-        @Override
-        public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
-
-        @Override
-        public void onCancelled(DatabaseError databaseError) { }
     }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        HabitEventDataModel model = dataSnapshot.getValue(HabitEventDataModel.class);
+
+        if (model != null) {
+            HabitEvent habitEvent = model.getHabitEvent();
+            recentHabitEventMap.put((Long) dataSnapshot.getPriority(), habitEvent);
+        }
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+        recentHabitEventMap.remove((Long) dataSnapshot.getPriority());
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) { }
 
     @Override
     protected void datasetChanged() {
         recentEvents.clear();
-        recentEvents.addAll(recentHabitEventSet.values());
+        recentEvents.addAll(recentHabitEventMap.values());
+
         setChanged();
         notifyObservers();
     }
