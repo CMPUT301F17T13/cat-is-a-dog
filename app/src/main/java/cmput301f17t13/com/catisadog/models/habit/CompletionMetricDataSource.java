@@ -35,12 +35,12 @@ public class CompletionMetricDataSource extends DataSource<Double>
 
     public CompletionMetricDataSource(Habit habit) {
         this.habit = habit;
-        completionRates = new double[7];
-        completionLatch = new CountDownLatch(7);
+        completionRates = new double[4];
+        completionLatch = new CountDownLatch(4);
         completionResultArray = new ArrayList<>();
 
         if(habit.getSchedule().size() > 0) {
-            for(Week week : DateUtil.GetNPastWeeks(DateTime.now(), 7)) {
+            for(Week week : DateUtil.GetNPastWeeks(DateTime.now(), 4)) {
                 String startKey = HabitEventDataModel.habitStampKey(habit.getKey(), week.getStartOfWeek());
                 String endKey = HabitEventDataModel.habitStampKey(habit.getKey(), week.getEndOfWeek());
 
@@ -97,7 +97,7 @@ public class CompletionMetricDataSource extends DataSource<Double>
     private void recreateDataset() {
         completionResultArray.clear();
 
-        for(int i = 6; i >= 0; i--) {
+        for(int i = 3; i >= 0; i--) {
             completionResultArray.add(completionRates[i]);
         }
 

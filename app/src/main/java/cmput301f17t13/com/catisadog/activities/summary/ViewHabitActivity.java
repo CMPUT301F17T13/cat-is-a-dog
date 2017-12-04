@@ -136,22 +136,22 @@ public class ViewHabitActivity extends AppCompatActivity
     private void createCompletionGraph() {
 
         int startedWeeksAgo = DateUtil.WeekDifference(habit.getStartDate(), DateTime.now()) + 1;
-        if (startedWeeksAgo > 6) startedWeeksAgo = 6;
+        if (startedWeeksAgo > 3) startedWeeksAgo = 3;
 
         Double runningTotal = 0.00;
-        Double[] runningAverages = new Double[7];
+        Double[] runningAverages = new Double[4];
         for (int i = -1 * startedWeeksAgo; i <= 0; i++) {
-            runningTotal += completionMetrics.get(6+i);
-            runningAverages[6+i] = runningTotal/(startedWeeksAgo + i + 1);
+            runningTotal += completionMetrics.get(3+i);
+            runningAverages[3+i] = runningTotal/(startedWeeksAgo + i + 1);
         }
 
         ArrayList<DataPoint> dataPoints = new ArrayList<>();
         for (int i = -1 * startedWeeksAgo; i <= 0; i++) {
-            if(runningAverages[6+i] == null) runningAverages[6+i] = 0.00;
-            dataPoints.add(new DataPoint(i, runningAverages[6+i]));
+            if(runningAverages[3+i] == null) runningAverages[3+i] = 0.00;
+            dataPoints.add(new DataPoint(i, runningAverages[3+i]));
         }
 
-        habit.setCompletionRate(runningAverages[6]);
+        habit.setCompletionRate(runningAverages[3]);
         habitRepository.update(habit.getKey(), habit);
 
         GraphView graph = (GraphView) findViewById(R.id.graph);
@@ -160,7 +160,7 @@ public class ViewHabitActivity extends AppCompatActivity
         series.setTitle("Completion Metrics");
         series.setColor(Color.RED);
 
-        graph.getViewport().setMinX(-6);
+        graph.getViewport().setMinX(-3);
         graph.getViewport().setMaxX(0);
         graph.getViewport().setMinY(0);
         graph.getViewport().setMaxY(100);
@@ -168,9 +168,9 @@ public class ViewHabitActivity extends AppCompatActivity
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setXAxisBoundsManual(true);
 
-        String[] xLabels = new String[7];
-        ArrayList<Week> pastNWeeks = DateUtil.GetNPastWeeks(DateTime.now(), 7);
-        for (int i = 0; i < 7; i++) {
+        String[] xLabels = new String[4];
+        ArrayList<Week> pastNWeeks = DateUtil.GetNPastWeeks(DateTime.now(), 4);
+        for (int i = 0; i < 4; i++) {
             xLabels[i] = pastNWeeks.get(i).getStartOfWeek().toString("MMM d");
         }
 
@@ -179,13 +179,13 @@ public class ViewHabitActivity extends AppCompatActivity
         staticLabelsFormatter.setVerticalLabels(new String[] {"0%","20%","40%","60%","80%","100%"});
         staticLabelsFormatter.setHorizontalLabels(xLabels);
 
-        graph.setTitle("Events completed over last 7 weeks");
+        graph.setTitle("Events completed over last 4 weeks");
         int bgColor = (15 & 0xff) << 24 | (0xD3 & 0xff) << 16 | (0x2F & 0xff) << 8 | (0x2F & 0xff);
         graph.getViewport().setBackgroundColor(bgColor);
 
         graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
         graph.getGridLabelRenderer().setHighlightZeroLines(false);
-        graph.getGridLabelRenderer().setNumHorizontalLabels(7);
+        graph.getGridLabelRenderer().setNumHorizontalLabels(4);
         graph.getGridLabelRenderer().setNumVerticalLabels(6);
 
         graph.addSeries(series);
@@ -198,7 +198,6 @@ public class ViewHabitActivity extends AppCompatActivity
         DataSource<Double> metricSource = new CompletionMetricDataSource(habit);
         completionMetrics = metricSource.getSource();
         metricSource.addObserver(this);
-        //return new double[] { 95.0,90.1,70.5,50.2,35.1, 35.1, 30 };
     }
 
     @Override
