@@ -33,8 +33,8 @@ public class HabitEventDataSource extends DataSource<HabitEvent>
     private ArrayList<HabitEvent> mHabitEventArray;
 
     public HabitEventDataSource(String userId) {
-        Query habitEventQuery = FirebaseDatabase.getInstance().getReference("events/" + userId)
-                .orderByPriority();
+        Query habitEventQuery = FirebaseDatabase.getInstance()
+                .getReference("events/" + userId).orderByPriority();
 
         habitEventQuery.addValueEventListener(this);
 
