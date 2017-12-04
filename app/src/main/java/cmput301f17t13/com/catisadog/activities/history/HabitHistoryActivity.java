@@ -1,6 +1,7 @@
 package cmput301f17t13.com.catisadog.activities.history;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -39,6 +40,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.TreeMap;
 
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.activities.summary.AddHabitEventActivity;
@@ -74,6 +76,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     public ArrayList<Habit> habits;
     public ArrayList<HabitEvent> habitEvents;
     private Repository<HabitEvent> habitEventRepository;
+    private TreeMap<String, Habit> habitKeyHabitMap = new TreeMap<>();
 
     private Location location;
 
@@ -89,6 +92,8 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         habitDataSource = new HabitDataSource(userId);
         habits = habitDataSource.getSource();
         habitDataSource.addObserver(this);
+
+        updateHabitKeyHabitMap();
 
         habitsListView = (ListView) findViewById(R.id.list);
         filterResult(MY_RECENT_EVENTS, null);
@@ -114,6 +119,8 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
                 filterDialog.show(getFragmentManager(), "filter");
             }
         });
+
+//        getActionBar().setSubtitle("Filter: My recent events");
     }
 
     @Override
@@ -137,6 +144,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     public void updateListView() {
         if (habitHistoryAdapter != null) {
             habitHistoryAdapter.notifyDataSetChanged();
+            updateHabitKeyHabitMap();
         }
     }
 
@@ -208,6 +216,25 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         eventDataSource.addObserver(this);
         habitHistoryAdapter = new HabitHistoryAdapter(this, habitEvents);
         habitsListView.setAdapter(habitHistoryAdapter);
+//        ActionBar actionBar = getActionBar();
+//        switch (filterType) {
+//            case nearLocation:
+//                actionBar.setSubtitle("Filter: Within 5 km");
+//                break;
+//            case searchByHabit:
+//                String title = habitKeyHabitMap.get(filterData).getTitle();
+//                actionBar.setSubtitle("Filter: '" + title + "' habit");
+//                break;
+//            case searchByComment:
+//                actionBar.setSubtitle("Filter: '" + filterData + '\'');
+//                break;
+//            case myRecentEvents:
+//                actionBar.setSubtitle("Filter: My recent events");
+//                break;
+//            case friendsRecentEvents:
+//                actionBar.setSubtitle("Filter: Friends' recent events");
+//                break;
+//        }
     }
 
     /**
@@ -231,7 +258,16 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
             TextView titleView = (TextView) convertView.findViewById(R.id.myHabitEventListItemTitle);
             TextView reasonView = (TextView) convertView.findViewById(R.id.myHabitEventListItemReason);
             TextView startDateView = (TextView) convertView.findViewById(R.id.myHabitEventListItemStartDate);
-            titleView.setText("Habit " + habitEvent.getHabitKey() + " #"+(position+1));
+
+            String habitTitle;
+            try {
+                habitTitle = habitKeyHabitMap.get(habitEvent.getHabitKey())
+                        .getTitle();
+            } catch (Exception e) {
+                habitTitle = "Habit";
+            }
+
+            titleView.setText(habitTitle);
             reasonView.setText(habitEvent.getComment());
             startDateView.setText(habitEvent.getEventDate().toString("d MMM"));
 
@@ -282,7 +318,6 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
             return convertView;
         }
     }
-
     /**
      * Filter by within 5km
      */
@@ -314,5 +349,12 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
                         }
                     }
                 });
+    }
+
+    private void updateHabitKeyHabitMap() {
+        habitKeyHabitMap.clear();
+        for (Habit habit : habits) {
+            habitKeyHabitMap.put(habit.getKey(), habit);
+        }
     }
 }
