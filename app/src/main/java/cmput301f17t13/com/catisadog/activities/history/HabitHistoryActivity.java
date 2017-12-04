@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -34,6 +35,10 @@ import java.util.Observer;
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.activities.summary.AddHabitEventActivity;
 import cmput301f17t13.com.catisadog.activities.BaseDrawerActivity;
+import cmput301f17t13.com.catisadog.fragments.history.FilterDialogFragment;
+import cmput301f17t13.com.catisadog.fragments.history.FilterDialogFragment.FilterDialogResultListener;
+import cmput301f17t13.com.catisadog.models.habit.Habit;
+import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSource;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventRepository;
@@ -43,14 +48,15 @@ import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 public class HabitHistoryActivity extends BaseDrawerActivity implements
-        Observer,
-        OnMapReadyCallback {
+        Observer, OnMapReadyCallback, FilterDialogResultListener {
 
     private GoogleMap map;
     private ListView habitsListView;
     private HabitHistoryActivity.HabitHistoryAdapter habitsAdapter;
 
+    public DataSource<Habit> habitDataSource;
     public DataSource<HabitEvent> eventDataSource;
+    public ArrayList<Habit> habits;
     public ArrayList<HabitEvent> habitEvents;
     private Repository<HabitEvent> habitEventRepository;
 
@@ -67,6 +73,10 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         eventDataSource.addObserver(this);
         habitEventRepository = new HabitEventRepository(userId);
 
+        habitDataSource = new HabitDataSource(userId);
+        habits = habitDataSource.getSource();
+        habitDataSource.addObserver(this);
+
         habitsListView = (ListView) findViewById(R.id.list);
 
         // Get the SupportMapFragment and request notification
@@ -74,6 +84,21 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        final FilterDialogResultListener resultListener = this;
+        final ImageButton filterButton =
+                (ImageButton) findViewById(R.id.searchButton);
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle habitsBundle = new Bundle();
+                habitsBundle.putSerializable("habits", habits);
+                FilterDialogFragment filterDialog = new FilterDialogFragment();
+                filterDialog.setArguments(habitsBundle);
+                filterDialog.setResultListener(resultListener);
+                filterDialog.show(getFragmentManager(), "filter");
+            }
+        });
     }
 
     @Override
@@ -138,6 +163,12 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
             map.moveCamera(cu);
         }
+    }
+
+    @Override
+    public void filterResult(FilterDialogFragment.FilterType filterType,
+                             String filterData) {
+        int i = 0;
     }
 
     /**
