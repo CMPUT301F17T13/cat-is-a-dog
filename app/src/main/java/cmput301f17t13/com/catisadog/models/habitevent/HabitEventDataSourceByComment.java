@@ -8,31 +8,28 @@ package cmput301f17t13.com.catisadog.models.habitevent;
 
 import android.util.Log;
 
-import cmput301f17t13.com.catisadog.models.habit.HabitDataModel;
-import cmput301f17t13.com.catisadog.utils.data.DataSource;
-
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
+
+import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
 
-public class HabitEventDataSource extends DataSource<HabitEvent>
-        implements ValueEventListener {
+public class HabitEventDataSourceByComment extends DataSource
+    implements ValueEventListener {
 
-    private static final String TAG = "HabitEventDataSource";
+    private static final String TAG = "HabitEventDSByComment";
 
+    private String partialComment;
     private ArrayList<HabitEvent> mHabitEventArray;
 
-    public HabitEventDataSource(String userId) {
+    public HabitEventDataSourceByComment(String userId, String partialComment) {
+        this.partialComment = partialComment;
+
         Query habitEventQuery = FirebaseDatabase.getInstance().getReference("events/" + userId)
                 .orderByPriority();
 
@@ -58,8 +55,10 @@ public class HabitEventDataSource extends DataSource<HabitEvent>
             HabitEventDataModel model = snapshot.getValue(HabitEventDataModel.class);
 
             if (model != null) {
-                model.setKey(snapshot.getKey());
-                mHabitEventArray.add(model.getHabitEvent());
+                if (model.getComment().contains(partialComment)) {
+                    model.setKey(snapshot.getKey());
+                    mHabitEventArray.add(model.getHabitEvent());
+                }
             }
         }
 
