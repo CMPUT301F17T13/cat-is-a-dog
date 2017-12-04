@@ -78,7 +78,7 @@ public class TodoHabitDataSource extends DataSource<Habit> {
                 }
             }
 
-            datasetChanged();
+            recreateDataset();
         }
 
         @Override
@@ -102,7 +102,7 @@ public class TodoHabitDataSource extends DataSource<Habit> {
                 }
             }
 
-            datasetChanged();
+            recreateDataset();
         }
 
         @Override
@@ -123,9 +123,8 @@ public class TodoHabitDataSource extends DataSource<Habit> {
         }
     }
 
-    private void datasetChanged() {
+    private void recreateDataset() {
         merge();
-        setChanged();
-        notifyObservers();
+        datasetChanged();
     }
 }

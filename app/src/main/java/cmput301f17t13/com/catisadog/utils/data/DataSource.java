@@ -19,4 +19,8 @@ public abstract class DataSource<TEntity> extends Observable {
 
     public abstract ArrayList<TEntity> getSource();
 
+    protected void datasetChanged() {
+        setChanged();
+        notifyObservers();
+    }
 }

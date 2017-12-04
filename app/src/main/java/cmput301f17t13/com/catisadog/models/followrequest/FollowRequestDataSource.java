@@ -88,9 +88,4 @@ public class FollowRequestDataSource extends DataSource<FollowRequest>
         Log.e(TAG, databaseError.getDetails());
     }
 
-    private void datasetChanged() {
-        setChanged();
-        notifyObservers();
-    }
-
 }

@@ -71,7 +71,7 @@ public class CompletionMetricDataSource extends DataSource<Double>
 
         completionLatch.countDown();
         if (completionLatch.getCount() <= 0) {
-            datasetChanged();
+            recreateDataset();
         }
     }
 
@@ -80,14 +80,13 @@ public class CompletionMetricDataSource extends DataSource<Double>
 
     }
 
-    private void datasetChanged() {
+    private void recreateDataset() {
         completionResultArray.clear();
 
         for(int i = 6; i >= 0; i--) {
             completionResultArray.add(completionRates[i]);
         }
 
-        setChanged();
-        notifyObservers();
+        datasetChanged();
     }
 }

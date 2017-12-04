@@ -117,10 +117,11 @@ public class HabitDataSource extends DataSource<Habit>
         Log.w(TAG, "loadHabits:onCancelled", databaseError.toException());
     }
 
-    private void datasetChanged() {
+    @Override
+    protected void datasetChanged() {
         mHabitArray.clear();
         mHabitArray.addAll(mHabits.values());
         setChanged();
-        notifyObservers(getType());
+        notifyObservers(userId);
     }
 }

@@ -57,9 +57,4 @@ public class UserDataSource extends DataSource<User>
     public void onCancelled(DatabaseError databaseError) {
         Log.e(TAG, databaseError.getDetails());
     }
-
-    private void datasetChanged() {
-        setChanged();
-        notifyObservers();
-    }
 }
