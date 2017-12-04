@@ -1,11 +1,13 @@
 package cmput301f17t13.com.catisadog.activities.history;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,17 +31,16 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.activities.summary.AddHabitEventActivity;
-import cmput301f17t13.com.catisadog.activities.summary.EditHabitActivity;
 import cmput301f17t13.com.catisadog.activities.BaseDrawerActivity;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSource;
+import cmput301f17t13.com.catisadog.models.habitevent.HabitEventRepository;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
+import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 public class HabitHistoryActivity extends BaseDrawerActivity implements
         Observer,
@@ -51,6 +52,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
 
     public DataSource<HabitEvent> eventDataSource;
     public ArrayList<HabitEvent> habitEvents;
+    private Repository<HabitEvent> habitEventRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +60,12 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         setContentView(R.layout.activity_habit_history);
         drawToolbar();
 
-        String userId = CurrentUser.getInstance().getUserId();
+        CurrentUser currentUser = CurrentUser.getInstance();
+        String userId = currentUser.getUserId();
         eventDataSource = new HabitEventDataSource(userId);
         habitEvents = eventDataSource.getSource();
         eventDataSource.addObserver(this);
+        habitEventRepository = new HabitEventRepository(userId);
 
         habitsListView = (ListView) findViewById(R.id.list);
 
@@ -173,7 +177,37 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
                 }
             };
 
+            View.OnLongClickListener deleteHabitEventButtonListener = new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View v) {
+                    Log.d("Event", "Delete habit event");
+
+                    AlertDialog.Builder alert = new AlertDialog.Builder(parent.getContext());
+                    alert.setTitle("Confirmation");
+                    alert.setMessage("Are you sure you would like to delete the habit event?");
+
+                    alert.setPositiveButton("Delete habit event", new Dialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            habitEventRepository.delete(habitEvent.getKey());
+                            dialog.dismiss();
+                        }
+                    });
+                    alert.setNegativeButton("Cancel", new Dialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    alert.show();
+                    return true;
+                }
+            };
+
             convertView.setOnClickListener(addHabitEventButtonListener);
+            convertView.setOnLongClickListener(deleteHabitEventButtonListener);
 
             return convertView;
         }

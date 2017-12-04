@@ -137,6 +137,10 @@ public class AddHabitEventActivity extends AppCompatActivity implements
         Log.d(TAG, "Adding HabitEvent to Habit with key: " + habitKey);
     }
 
+    /**
+     * Displays the habitEvent's details onto the edit page
+     * @param habitEvent the habit event to be edited
+     */
     public void restoreHabitEvent(HabitEvent habitEvent) {
         editingHabitEventKey = habitEvent.getKey();
         habitKey = habitEvent.getHabitKey();

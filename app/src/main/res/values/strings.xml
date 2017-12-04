@@ -25,4 +25,9 @@
     <!-- Strings related to Firebase -->
     <string name="default_android_client_id">972295417158-mjh01sal01ov8vfpej6fmi99vjcuf3qp.apps.googleusercontent.com</string>
     <!--<string name="default_web_client_id">972295417158-u469fho46b7q2jo373abuu3jdv1arfi4.apps.googleusercontent.com</string>-->
+
+    <!--Strings related to Social Action Button-->
+    <string name="social_action_follow">Follow</string>
+    <string name="social_action_following">Following</string>
+    <string name="social_action_req_sent">Req Sent</string>
 </resources>

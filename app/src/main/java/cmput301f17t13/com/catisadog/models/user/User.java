@@ -1,5 +1,8 @@
 package cmput301f17t13.com.catisadog.models.user;
 
+/**
+ * A User.
+ */
 public class User {
 
     private String userId;

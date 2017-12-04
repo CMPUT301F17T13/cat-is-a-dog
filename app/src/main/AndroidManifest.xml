@@ -45,7 +45,9 @@
         <activity
             android:name=".activities.summary.HabitSummaryActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.summary.EditHabitActivity" />
+        <activity
+            android:name=".activities.summary.EditHabitActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".activities.summary.ViewHabitActivity"
             android:label="View Habit"

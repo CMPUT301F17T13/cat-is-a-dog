@@ -37,7 +37,7 @@ public class SearchUsersFragment extends Fragment
     implements Observer {
 
     private ArrayList<User> users;
-    private ArrayList<FollowRequest> following; // users I follow
+    private ArrayList<FollowRequest> following; // users I have sent follow requests to
     private UserDataSource userDataSource;
     private FollowRequestDataSource followRequestDataSource;
     private String userId;
@@ -80,7 +80,7 @@ public class SearchUsersFragment extends Fragment
     private class UsersAdapter extends ArrayAdapter<User> {
 
         FollowRequestRepository followRequestRepository;
-        ArrayList<FollowRequest> following; // users I follow
+        ArrayList<FollowRequest> following; // users I have sent follow requests to
 
         public UsersAdapter(Context context, ArrayList<User> users, ArrayList<FollowRequest> following) {
             super(context, 0, users);
@@ -92,13 +92,13 @@ public class SearchUsersFragment extends Fragment
             for (FollowRequest followRequest : following) {
                 if (followRequest.getFollowee().equals(userId)) {
                     if (followRequest.getAccepted()) {
-                        return "Following";
+                        return getString(R.string.social_action_following);
                     } else {
-                        return "Req Sent";
+                        return getString(R.string.social_action_req_sent);
                     }
                 }
             }
-            return "Follow";
+            return getString(R.string.social_action_follow);
         }
 
         @NonNull
@@ -115,6 +115,9 @@ public class SearchUsersFragment extends Fragment
             ImageView photoView = (ImageView) convertView.findViewById(R.id.userPhoto);
             final Button socialActionButton = (Button) convertView.findViewById(R.id.socialActionButton);
             socialActionButton.setText(getActionButtonTextForUser(user.getUserId()));
+            if (!socialActionButton.getText().equals(getString(R.string.social_action_follow))) {
+                socialActionButton.setEnabled(false);
+            }
 
             displayNameView.setText(user.getDisplayName());
             emailView.setText(user.getEmail());
@@ -124,7 +127,7 @@ public class SearchUsersFragment extends Fragment
             socialActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (socialActionButton.getText().equals("Follow")) {
+                    if (socialActionButton.getText().equals(getString(R.string.social_action_follow))) {
                         FollowRequest followRequest = new FollowRequest(userId, user.getUserId(), new DateTime());
                         followRequestRepository.add(followRequest);
                     }

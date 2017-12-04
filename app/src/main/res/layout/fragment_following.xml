@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     tools:context="cmput301f17t13.com.catisadog.fragments.social.FollowingFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ListView
+        android:id="@+id/followingListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_marginTop="?attr/actionBarSize" />
 
 </FrameLayout>
