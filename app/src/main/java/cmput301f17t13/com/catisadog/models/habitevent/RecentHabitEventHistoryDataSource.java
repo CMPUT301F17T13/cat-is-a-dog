@@ -20,6 +20,7 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,6 +44,7 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
 
     public RecentHabitEventHistoryDataSource(List<String> idList) {
         recentEvents = new ArrayList<>();
+        recentHabitEventMap = new TreeMap<>();
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -7);
@@ -100,6 +102,13 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
     protected void datasetChanged() {
         recentEvents.clear();
         recentEvents.addAll(recentHabitEventMap.values());
+
+        Collections.sort(recentEvents, new Comparator<HabitEvent>() {
+            @Override
+            public int compare(HabitEvent one, HabitEvent two) {
+                return two.getEventDate().compareTo(one.getEventDate().toInstant());
+            }
+        });
 
         setChanged();
         notifyObservers();

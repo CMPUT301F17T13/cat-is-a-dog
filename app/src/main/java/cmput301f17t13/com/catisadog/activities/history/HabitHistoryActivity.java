@@ -37,13 +37,17 @@ import cmput301f17t13.com.catisadog.activities.summary.AddHabitEventActivity;
 import cmput301f17t13.com.catisadog.activities.BaseDrawerActivity;
 import cmput301f17t13.com.catisadog.fragments.history.FilterDialogFragment;
 import cmput301f17t13.com.catisadog.fragments.history.FilterDialogFragment.FilterDialogResultListener;
+import cmput301f17t13.com.catisadog.models.followrequest.SocialDataSource;
 import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSource;
+import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSourceByComment;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSourceForHabit;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventRepository;
+import cmput301f17t13.com.catisadog.models.habitevent.RecentHabitEventHistoryDataSource;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
+import cmput301f17t13.com.catisadog.models.user.User;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
@@ -57,11 +61,15 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     private ListView habitsListView;
     private HabitHistoryAdapter habitHistoryAdapter;
 
-    public DataSource<Habit> habitDataSource;
-    public DataSource<HabitEvent> eventDataSource;
-    public ArrayList<Habit> habits;
-    public ArrayList<HabitEvent> habitEvents;
+    private DataSource<Habit> habitDataSource;
+    private DataSource<HabitEvent> eventDataSource;
+    private DataSource<User> followingDataSource;
     private Repository<HabitEvent> habitEventRepository;
+
+    private ArrayList<Habit> habits;
+    private ArrayList<HabitEvent> habitEvents;
+    private ArrayList<User> following;
+    private ListUpdater listUpdater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,12 +77,18 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         setContentView(R.layout.activity_habit_history);
         drawToolbar();
 
+        listUpdater = new ListUpdater();
+
         String userId = CurrentUser.getInstance().getUserId();
         habitEventRepository = new HabitEventRepository(userId);
 
         habitDataSource = new HabitDataSource(userId);
         habits = habitDataSource.getSource();
-        habitDataSource.addObserver(this);
+        habitDataSource.addObserver(listUpdater);
+
+        followingDataSource = new SocialDataSource(userId, SocialDataSource.UserType.FOLLOWING);
+        following = followingDataSource.getSource();
+        followingDataSource.addObserver(listUpdater);
 
         habitsListView = (ListView) findViewById(R.id.list);
         filterResult(MY_RECENT_EVENTS, null);
@@ -136,7 +150,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
                 public void run() {
                     update(observable, o);
                 }
-            }, 1000);
+            }, 100);
             return;
         }
 
@@ -176,16 +190,29 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
 
         switch(filterType) {
             case NEAR_LOCATION:
+                ArrayList<String> idList = new ArrayList<>();
+                for(User follwingUser : following) {
+                    idList.add(follwingUser.getUserId());
+                }
+                idList.add(userId);
+
                 break;
             case MY_RECENT_EVENTS:
                 eventDataSource = new HabitEventDataSource(userId);
                 break;
             case FRIENDS_RECENT_EVENTS:
+                ArrayList<String> followingIds = new ArrayList<>();
+                for(User follwingUser : following) {
+                    followingIds.add(follwingUser.getUserId());
+                }
+
+                eventDataSource = new RecentHabitEventHistoryDataSource(followingIds);
                 break;
             case SEARCH_BY_HABIT:
                 eventDataSource = new HabitEventDataSourceForHabit(userId, filterData);
                 break;
             case SEARCH_BY_COMMENT:
+                eventDataSource = new HabitEventDataSourceByComment(userId, filterData);
                 break;
         }
 
@@ -193,6 +220,13 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         eventDataSource.addObserver(this);
         habitHistoryAdapter = new HabitHistoryAdapter(this, habitEvents);
         habitsListView.setAdapter(habitHistoryAdapter);
+    }
+
+    private class ListUpdater implements Observer {
+        @Override
+        public void update(Observable observable, Object o) {
+            updateListView();
+        }
     }
 
     /**

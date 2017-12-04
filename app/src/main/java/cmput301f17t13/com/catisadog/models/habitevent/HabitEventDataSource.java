@@ -34,7 +34,7 @@ public class HabitEventDataSource extends DataSource<HabitEvent>
 
     public HabitEventDataSource(String userId) {
         Query habitEventQuery = FirebaseDatabase.getInstance()
-                .getReference("events/" + userId).orderByPriority();
+                .getReference("events/" + userId).orderByChild("eventDate");
 
         habitEventQuery.addValueEventListener(this);
 
@@ -63,6 +63,7 @@ public class HabitEventDataSource extends DataSource<HabitEvent>
             }
         }
 
+        Collections.reverse(mHabitEventArray);
         datasetChanged();
     }
 

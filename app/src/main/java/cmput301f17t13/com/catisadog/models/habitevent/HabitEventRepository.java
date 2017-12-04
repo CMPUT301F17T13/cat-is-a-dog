@@ -46,8 +46,7 @@ public class HabitEventRepository implements Repository<HabitEvent> {
         eventModel.setKey(newEvent.getKey());
 
         // Reverse Chronological Order
-        newEvent.setPriority(-1 * habitEvent.getEventDate().getMillis(), null);
-        newEvent.setValue(eventModel, null);
+        newEvent.setValue(eventModel, -1 * habitEvent.getEventDate().getMillis(), null);
         geoFire.setLocation(userId+'/'+newEvent.getKey(), new GeoLocation(habitEvent.getLatitude(), habitEvent.getLongitude()));
     }
 
