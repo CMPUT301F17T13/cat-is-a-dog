@@ -17,11 +17,11 @@ import cmput301f17t13.com.catisadog.models.habit.Habit;
 
 public class FilterDialogFragment extends DialogFragment implements Observer {
     public enum FilterType {
-        searchByHabit,
-        searchByComment,
-        nearLocation,
-        myRecentEvents,
-        friendsRecentEvents,
+        SEARCH_BY_HABIT,
+        SEARCH_BY_COMMENT,
+        NEAR_LOCATION,
+        MY_RECENT_EVENTS,
+        FRIENDS_RECENT_EVENTS,
     }
 
     private FilterDialogResultListener listener;
@@ -60,14 +60,14 @@ public class FilterDialogFragment extends DialogFragment implements Observer {
                             createCommentFilterDialog().show();
                             break;
                         case 2: // Near location
-                            listener.filterResult(FilterType.nearLocation, "");
+                            listener.filterResult(FilterType.NEAR_LOCATION, "");
                             break;
                         case 3:
-                            listener.filterResult(FilterType.myRecentEvents, "");
+                            listener.filterResult(FilterType.MY_RECENT_EVENTS, "");
                             break;
                         case 4: // Friends' recent events
                             listener.filterResult(
-                                    FilterType.friendsRecentEvents, "");
+                                    FilterType.FRIENDS_RECENT_EVENTS, "");
                             break;
                         default:
                             break;
@@ -88,7 +88,7 @@ public class FilterDialogFragment extends DialogFragment implements Observer {
         builder.setTitle("Filter habit events")
             .setItems(habitOptions, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    listener.filterResult(FilterType.searchByComment,
+                    listener.filterResult(FilterType.SEARCH_BY_HABIT,
                                           habits.get(which).getKey());
                 }
             });
@@ -107,7 +107,7 @@ public class FilterDialogFragment extends DialogFragment implements Observer {
                 .setPositiveButton("Search",
                         new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        listener.filterResult(FilterType.searchByHabit,
+                        listener.filterResult(FilterType.SEARCH_BY_COMMENT,
                                 input.getText().toString());
                     }
                 })
@@ -121,6 +121,6 @@ public class FilterDialogFragment extends DialogFragment implements Observer {
     }
 
     public interface FilterDialogResultListener {
-        public void filterResult(FilterType filterType, String filterData);
+        void filterResult(FilterType filterType, String filterData);
     }
 }
