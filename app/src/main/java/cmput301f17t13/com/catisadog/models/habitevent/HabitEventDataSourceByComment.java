@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
 
-public class HabitEventDataSourceByComment extends DataSource
+public class HabitEventDataSourceByComment extends DataSource<HabitEvent>
     implements ValueEventListener {
 
     private static final String TAG = "HabitEventDSByComment";
