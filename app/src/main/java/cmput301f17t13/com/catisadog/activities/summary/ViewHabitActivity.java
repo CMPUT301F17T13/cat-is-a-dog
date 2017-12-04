@@ -60,6 +60,7 @@ import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 import cmput301f17t13.com.catisadog.utils.date.DateUtil;
+import cmput301f17t13.com.catisadog.utils.date.Week;
 
 /**
  * A screen for viewing habit details
@@ -167,10 +168,16 @@ public class ViewHabitActivity extends AppCompatActivity
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setXAxisBoundsManual(true);
 
+        String[] xLabels = new String[7];
+        ArrayList<Week> pastNWeeks = DateUtil.GetNPastWeeks(DateTime.now(), 7);
+        for (int i = 0; i < 7; i++) {
+            xLabels[i] = pastNWeeks.get(i).getStartOfWeek().toString("MMM d");
+        }
+
         // use static labels for horizontal and vertical labels
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
         staticLabelsFormatter.setVerticalLabels(new String[] {"0%","20%","40%","60%","80%","100%"});
-        staticLabelsFormatter.setHorizontalLabels(new String[] {"-6","-5","-4","-3","-2","-1","0"});
+        staticLabelsFormatter.setHorizontalLabels(xLabels);
 
         graph.setTitle("Events completed over last 7 weeks");
         int bgColor = (15 & 0xff) << 24 | (0xD3 & 0xff) << 16 | (0x2F & 0xff) << 8 | (0x2F & 0xff);
