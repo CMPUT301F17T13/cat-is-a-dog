@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -38,6 +39,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.TreeMap;
@@ -55,6 +57,7 @@ import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSource;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSourceByComment;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSourceForHabit;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventRepository;
+import cmput301f17t13.com.catisadog.models.habitevent.NearbyHabitEventDataSource;
 import cmput301f17t13.com.catisadog.models.habitevent.RecentHabitEventHistoryDataSource;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.models.user.User;
@@ -214,19 +217,19 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         switch(filterType) {
             case NEAR_LOCATION:
                 ArrayList<String> idList = new ArrayList<>();
-                for(User follwingUser : following) {
-                    idList.add(follwingUser.getUserId());
+                for(User followingUser : following) {
+                    idList.add(followingUser.getUserId());
                 }
                 idList.add(userId);
-
-                break;
+                filterByNearby(idList);
+                return;
             case MY_RECENT_EVENTS:
                 eventDataSource = new HabitEventDataSource(userId);
                 break;
             case FRIENDS_RECENT_EVENTS:
                 ArrayList<String> followingIds = new ArrayList<>();
-                for(User follwingUser : following) {
-                    followingIds.add(follwingUser.getUserId());
+                for(User followingUser : following) {
+                    followingIds.add(followingUser.getUserId());
                 }
 
                 eventDataSource = new RecentHabitEventHistoryDataSource(followingIds);
@@ -355,7 +358,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     /**
      * Filter by within 5km
      */
-    private void filterByNearby() {
+    private void filterByNearby(final ArrayList<String> followingIds) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -375,6 +378,12 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
                             // Logic to handle location object
                             HabitHistoryActivity.this.location = location;
                             LatLng loc = new LatLng(location.getLatitude(), location.getLongitude());
+
+                            eventDataSource = new NearbyHabitEventDataSource(new GeoLocation(loc.latitude, loc.longitude), followingIds);
+                            eventDataSource.addObserver(HabitHistoryActivity.this);
+                            habitEvents = eventDataSource.getSource();
+                            habitHistoryAdapter = new HabitHistoryAdapter(HabitHistoryActivity.this, habitEvents);
+                            habitsListView.setAdapter(habitHistoryAdapter);
 
                             // TODO: update the data source here with the list of friends
                         } else {

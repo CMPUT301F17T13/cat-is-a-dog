@@ -39,7 +39,7 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
 
     public static final String SourceType = "RecentHabitEventsDataSource";
 
-    private TreeMap<Long, HabitEvent> recentHabitEventMap;
+    private TreeMap<String, HabitEvent> recentHabitEventMap;
     private ArrayList<HabitEvent> recentEvents;
 
     public RecentHabitEventHistoryDataSource(List<String> idList) {
@@ -68,7 +68,7 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
 
         if (model != null) {
             HabitEvent habitEvent = model.getHabitEvent();
-            recentHabitEventMap.put((Long) dataSnapshot.getPriority(), habitEvent);
+            recentHabitEventMap.put(habitEvent.getKey(), habitEvent);
         }
 
         datasetChanged();
@@ -80,7 +80,7 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
 
         if (model != null) {
             HabitEvent habitEvent = model.getHabitEvent();
-            recentHabitEventMap.put((Long) dataSnapshot.getPriority(), habitEvent);
+            recentHabitEventMap.put(habitEvent.getKey(), habitEvent);
         }
 
         datasetChanged();
@@ -88,7 +88,7 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
-        recentHabitEventMap.remove((Long) dataSnapshot.getPriority());
+        recentHabitEventMap.remove(dataSnapshot.getKey());
         datasetChanged();
     }
 

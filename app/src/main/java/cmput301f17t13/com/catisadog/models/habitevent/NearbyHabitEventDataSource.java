@@ -35,6 +35,7 @@ import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.models.habit.HabitDataModel;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
+import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 public class NearbyHabitEventDataSource extends DataSource<HabitEvent> {
 
@@ -47,8 +48,7 @@ public class NearbyHabitEventDataSource extends DataSource<HabitEvent> {
     public NearbyHabitEventDataSource(GeoLocation loc, final ArrayList<String> users) {
 
         nearbyEvents = new ArrayList<>();
-
-        DatabaseReference geofire_ref = FirebaseDatabase.getInstance().getReference("events_geofire/");
+        DatabaseReference geofire_ref = FirebaseDatabase.getInstance().getReference("events_geofire");
 
         GeoFire geoFire = new GeoFire(geofire_ref);
         GeoQuery geoQuery = geoFire.queryAtLocation(loc, 5);
@@ -56,7 +56,7 @@ public class NearbyHabitEventDataSource extends DataSource<HabitEvent> {
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                String[] parts = key.split("/");
+                String[] parts = key.split("_");
                 String userId = parts[0];
                 String eventId = parts[1];
                 if(users.contains(userId)) {
