@@ -121,14 +121,12 @@ public class FollowingHabitsListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getGroupId(int groupPosition) {
-        return groupPosition; //following.get(groupPosition).getUserId().hashCode();
+        return groupPosition;
     }
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        //String userKey = following.get(groupPosition).getUserId();
-
-        return childPosition; //habitMap.get(userKey).get(childPosition).getKey().hashCode();
+        return childPosition;
     }
 
     @Override

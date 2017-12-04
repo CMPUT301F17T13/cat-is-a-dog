@@ -8,13 +8,8 @@ package cmput301f17t13.com.catisadog.models.habitevent;
 
 import android.util.Log;
 
-import cmput301f17t13.com.catisadog.models.habit.HabitDataModel;
-import cmput301f17t13.com.catisadog.utils.data.DataSource;
-
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -22,19 +17,21 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
+
+import cmput301f17t13.com.catisadog.models.habit.Habit;
+import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
 
-public class HabitEventDataSource extends DataSource<HabitEvent>
-        implements ValueEventListener {
+public class HabitEventDataSourceForHabit extends DataSource<HabitEvent>
+    implements ValueEventListener {
 
-    private static final String TAG = "HabitEventDataSource";
+    private static final String TAG = "HabitEventDSForHabit";
 
     private ArrayList<HabitEvent> mHabitEventArray;
 
-    public HabitEventDataSource(String userId) {
+    public HabitEventDataSourceForHabit(String userId, String habitKey) {
         Query habitEventQuery = FirebaseDatabase.getInstance().getReference("events/" + userId)
-                .orderByPriority();
+                .orderByChild("habitKey").equalTo(habitKey);
 
         habitEventQuery.addValueEventListener(this);
 
@@ -62,6 +59,13 @@ public class HabitEventDataSource extends DataSource<HabitEvent>
                 mHabitEventArray.add(model.getHabitEvent());
             }
         }
+
+        Collections.sort(mHabitEventArray, new Comparator<HabitEvent>() {
+            @Override
+            public int compare(HabitEvent one, HabitEvent two) {
+                return two.getEventDate().compareTo(two.getEventDate().toInstant());
+            }
+        });
 
         datasetChanged();
     }
