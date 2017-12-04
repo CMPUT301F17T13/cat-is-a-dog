@@ -1,6 +1,21 @@
 var FirebaseServer = require('firebase-server');
 
 var server = new FirebaseServer(5000, 'test.firebaseio.com', {
+	"events": {
+		"mockUserId": {
+			"1": {
+				"comment": "Did it",
+				"complete": "yes",
+				"eventDate": 1512199000000,
+				"habitKey":"1",
+				"habitStamp":"sample_stamp",
+				"key":"1",
+				"latitude":1,
+				"longitude":1,
+				"user":"mockUserId"
+			}
+		}
+	},
 	"habits": {
 		"mockUserId": {
 			"1": {
