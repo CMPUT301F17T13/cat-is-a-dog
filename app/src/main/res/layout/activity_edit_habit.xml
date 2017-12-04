@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=
-        "cmput301f17t13.com.catisadog.activities.summary.EditHabitActivity">
+    tools:context="cmput301f17t13.com.catisadog.activities.summary.EditHabitActivity">
+
     <EditText
         android:id="@+id/editHabitTitle"
         android:layout_width="0dp"
