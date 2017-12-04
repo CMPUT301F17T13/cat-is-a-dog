@@ -144,8 +144,8 @@ public class Habit implements Schedulable, Serializable {
      */
     @Override
     public boolean isTodo(DateTime date) {
-        int dayOfWeek = date.toGregorianCalendar().get(Calendar.DAY_OF_WEEK);
-        return schedule.contains(dayOfWeek) && date.getMillis() > startDate.getMillis();
+        int dayOfWeek = (date.toGregorianCalendar().get(Calendar.DAY_OF_WEEK) + 5) % 7 + 1;
+        return schedule.contains(dayOfWeek) && date.getMillis() >= startDate.getMillis();
     }
 
     /**
