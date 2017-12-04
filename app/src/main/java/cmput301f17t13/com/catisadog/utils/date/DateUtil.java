@@ -6,7 +6,9 @@ import org.joda.time.Duration;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 
 public class DateUtil {
     public static ArrayList<Week>
@@ -34,5 +36,9 @@ public class DateUtil {
         Duration d = new Duration(startDate.toInstant(), endDate.toInstant());
 
         return (int)(d.getStandardDays() / 7);
+    }
+
+    public static int GetDayOfWeek(DateTime dateTime) {
+        return (dateTime.toGregorianCalendar().get(Calendar.DAY_OF_WEEK) + 5) % 7 + 1;
     }
 }

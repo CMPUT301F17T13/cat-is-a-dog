@@ -14,10 +14,12 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
+import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataModel;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.date.DateUtil;
@@ -33,19 +35,19 @@ public class CompletionMetricDataSource extends DataSource<Double>
 
     public CompletionMetricDataSource(Habit habit) {
         this.habit = habit;
-        completionRates = new double[7];
-        completionLatch = new CountDownLatch(7);
+        completionRates = new double[4];
+        completionLatch = new CountDownLatch(4);
         completionResultArray = new ArrayList<>();
 
         if(habit.getSchedule().size() > 0) {
-            for(Week week : DateUtil.GetNPastWeeks(DateTime.now(), 7)) {
-                long weekStartMillis = week.getStartOfWeek().getMillis();
-                long weekEndMillis = week.getEndOfWeek().getMillis();
+            for(Week week : DateUtil.GetNPastWeeks(DateTime.now(), 4)) {
+                String startKey = HabitEventDataModel.habitStampKey(habit.getKey(), week.getStartOfWeek());
+                String endKey = HabitEventDataModel.habitStampKey(habit.getKey(), week.getEndOfWeek());
 
                 Query eventCountQuery = FirebaseDatabase.getInstance().getReference("events/" + habit.getUserId())
-                        .orderByChild("eventDate").startAt(weekStartMillis).endAt(weekEndMillis);
+                        .orderByChild("habitStamp").startAt(startKey).endAt(endKey);
 
-                eventCountQuery.addValueEventListener(this);
+                eventCountQuery.addListenerForSingleValueEvent(this);
             }
         }
     }
@@ -66,7 +68,19 @@ public class CompletionMetricDataSource extends DataSource<Double>
                     (Long) dataSnapshot.getChildren().iterator().next().child("eventDate").getValue();
 
             int weeksAgo = DateUtil.WeekDifference(new DateTime(eventTimestamp), DateTime.now());
-            completionRates[weeksAgo] = (double) completions / (double) dueCount * 100;
+
+            if (weeksAgo == 0) {
+                int neededCompletions = 0;
+                int dayOfWeek = DateUtil.GetDayOfWeek(DateTime.now());
+                for (int day = dayOfWeek; day >= 1; day--) {
+                    if (habit.getSchedule().contains(day)) neededCompletions++;
+                }
+
+                completionRates[weeksAgo] = (double) completions / (double) neededCompletions * 100;
+            }
+            else {
+                completionRates[weeksAgo] = (double) completions / (double) dueCount * 100;
+            }
         }
 
         completionLatch.countDown();
@@ -83,7 +97,7 @@ public class CompletionMetricDataSource extends DataSource<Double>
     private void recreateDataset() {
         completionResultArray.clear();
 
-        for(int i = 6; i >= 0; i--) {
+        for(int i = 3; i >= 0; i--) {
             completionResultArray.add(completionRates[i]);
         }
 

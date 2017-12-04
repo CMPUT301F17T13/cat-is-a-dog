@@ -20,6 +20,7 @@ import java.util.Set;
 
 import cmput301f17t13.com.catisadog.models.HabitStatus;
 import cmput301f17t13.com.catisadog.models.Schedulable;
+import cmput301f17t13.com.catisadog.utils.date.DateUtil;
 
 /**
  * Object representing a habit
@@ -78,6 +79,10 @@ public class Habit implements Schedulable, Serializable {
         return title;
     }
     public void setTitle(String title) {
+        if (title.length() > 20) {
+            title = title.substring(0, 19);
+        }
+
         this.title = title;
     }
 
@@ -85,6 +90,10 @@ public class Habit implements Schedulable, Serializable {
         return reason;
     }
     public void setReason(String reason) {
+        if (reason.length() > 30) {
+            reason = reason.substring(0, 29);
+        }
+
         this.reason = reason;
     }
 
@@ -144,8 +153,8 @@ public class Habit implements Schedulable, Serializable {
      */
     @Override
     public boolean isTodo(DateTime date) {
-        int dayOfWeek = date.toGregorianCalendar().get(Calendar.DAY_OF_WEEK);
-        return schedule.contains(dayOfWeek) && date.getMillis() > startDate.getMillis();
+        int dayOfWeek = DateUtil.GetDayOfWeek(date);
+        return schedule.contains(dayOfWeek) && date.getMillis() >= startDate.getMillis();
     }
 
     /**
