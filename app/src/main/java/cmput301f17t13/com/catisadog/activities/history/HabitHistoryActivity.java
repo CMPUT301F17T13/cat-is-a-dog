@@ -49,11 +49,14 @@ import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSource;
+import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataSourceForHabit;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventRepository;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
+
+import static cmput301f17t13.com.catisadog.fragments.history.FilterDialogFragment.FilterType.MY_RECENT_EVENTS;
 
 public class HabitHistoryActivity extends BaseDrawerActivity implements
         Observer, OnMapReadyCallback, FilterDialogResultListener {
@@ -62,7 +65,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
 
     private GoogleMap map;
     private ListView habitsListView;
-    private HabitHistoryActivity.HabitHistoryAdapter habitsAdapter;
+    private HabitHistoryAdapter habitHistoryAdapter;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -80,11 +83,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         setContentView(R.layout.activity_habit_history);
         drawToolbar();
 
-        CurrentUser currentUser = CurrentUser.getInstance();
-        String userId = currentUser.getUserId();
-        eventDataSource = new HabitEventDataSource(userId);
-        habitEvents = eventDataSource.getSource();
-        eventDataSource.addObserver(this);
+        String userId = CurrentUser.getInstance().getUserId();
         habitEventRepository = new HabitEventRepository(userId);
 
         habitDataSource = new HabitDataSource(userId);
@@ -92,6 +91,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         habitDataSource.addObserver(this);
 
         habitsListView = (ListView) findViewById(R.id.list);
+        filterResult(MY_RECENT_EVENTS, null);
 
         // Get the SupportMapFragment and request notification
         // when the map is ready to be used.
@@ -119,8 +119,8 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     @Override
     public void onStart() {
         super.onStart();
-        habitsAdapter = new HabitHistoryActivity.HabitHistoryAdapter(this, habitEvents);
-        habitsListView.setAdapter(habitsAdapter);
+        habitHistoryAdapter = new HabitHistoryAdapter(this, habitEvents);
+        habitsListView.setAdapter(habitHistoryAdapter);
     }
 
     /**
@@ -135,8 +135,8 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     }
 
     public void updateListView() {
-        if (habitsAdapter != null) {
-            habitsAdapter.notifyDataSetChanged();
+        if (habitHistoryAdapter != null) {
+            habitHistoryAdapter.notifyDataSetChanged();
         }
     }
 
@@ -183,7 +183,31 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     @Override
     public void filterResult(FilterDialogFragment.FilterType filterType,
                              String filterData) {
-        int i = 0;
+        if (eventDataSource != null) {
+            eventDataSource.deleteObserver(this);
+        }
+
+        String userId = CurrentUser.getInstance().getUserId();
+
+        switch(filterType) {
+            case NEAR_LOCATION:
+                break;
+            case MY_RECENT_EVENTS:
+                eventDataSource = new HabitEventDataSource(userId);
+                break;
+            case FRIENDS_RECENT_EVENTS:
+                break;
+            case SEARCH_BY_HABIT:
+                eventDataSource = new HabitEventDataSourceForHabit(userId, filterData);
+                break;
+            case SEARCH_BY_COMMENT:
+                break;
+        }
+
+        habitEvents = eventDataSource.getSource();
+        eventDataSource.addObserver(this);
+        habitHistoryAdapter = new HabitHistoryAdapter(this, habitEvents);
+        habitsListView.setAdapter(habitHistoryAdapter);
     }
 
     /**
@@ -191,8 +215,8 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
      * view.
      */
     private class HabitHistoryAdapter extends ArrayAdapter<HabitEvent> {
-        public HabitHistoryAdapter(Context context, ArrayList<HabitEvent> habits) {
-            super(context, 0, habits);
+        public HabitHistoryAdapter(Context context, ArrayList<HabitEvent> habitEvents) {
+            super(context, 0, habitEvents);
         }
 
         @NonNull
