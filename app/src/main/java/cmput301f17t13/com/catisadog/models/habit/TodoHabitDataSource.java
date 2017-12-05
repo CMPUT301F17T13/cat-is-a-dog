@@ -35,24 +35,37 @@ public class TodoHabitDataSource extends DataSource<Habit> {
     private ArrayList<Habit> dueHabits;
     private ArrayList<Habit> todoHabits;
 
+    private DueListener dueListener;
+    private EventListener eventListener;
+    private Query todoQuery;
+    private Query eventRef;
+
     public TodoHabitDataSource(String userId) {
         this.userId = userId;
 
         todoHabits = new ArrayList<>();
         dueHabits = new ArrayList<>();
         completedToday = new HashSet<>();
+    }
+
+    @Override
+    public void open() {
+        dueHabits.clear();
+        completedToday.clear();
 
         int dayOfWeek = DateTime.now().getDayOfWeek() - 1;
-        Query todoQuery = FirebaseDatabase.getInstance().getReference("habits/" + userId)
+        todoQuery = FirebaseDatabase.getInstance().getReference("habits/" + userId)
                 .orderByChild("schedule/" + Integer.toString(dayOfWeek)).equalTo(true);
 
-        todoQuery.addValueEventListener(new DueListener());
+        dueListener = new DueListener();
+        todoQuery.addValueEventListener(dueListener);
 
         String nowKey = String.format(Locale.CANADA, "%s_%s", userId, FirebaseUtil.dateToString(DateTime.now()));
-        Query eventRef = FirebaseDatabase.getInstance().getReference("events/" + userId)
+        eventRef = FirebaseDatabase.getInstance().getReference("events/" + userId)
                 .orderByChild("complete").startAt(nowKey).endAt(FirebaseUtil.terminalKey(nowKey));
 
-        eventRef.addValueEventListener(new EventListener());
+        eventListener = new EventListener();
+        eventRef.addValueEventListener(eventListener);
     }
 
     @Override
@@ -83,7 +96,7 @@ public class TodoHabitDataSource extends DataSource<Habit> {
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-
+            close();
         }
     }
 
@@ -107,7 +120,7 @@ public class TodoHabitDataSource extends DataSource<Habit> {
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-
+            close();
         }
     }
 
@@ -126,5 +139,11 @@ public class TodoHabitDataSource extends DataSource<Habit> {
     private void recreateDataset() {
         merge();
         datasetChanged();
+    }
+
+    @Override
+    public void close() {
+        todoQuery.removeEventListener(dueListener);
+        eventRef.removeEventListener(eventListener);
     }
 }

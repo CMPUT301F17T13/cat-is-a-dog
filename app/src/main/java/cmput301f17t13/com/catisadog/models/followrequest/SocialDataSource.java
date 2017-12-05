@@ -32,15 +32,19 @@ public class SocialDataSource extends DataSource<User>
     private UserType userType;
     private ArrayList<User> otherUsers;
     private Repository<User> userRepository;
+    private Query otherUserQuery;
 
     public SocialDataSource(String userId, UserType type) {
         this.userId = userId;
         this.userType = type;
         otherUsers = new ArrayList<>();
         userRepository = new UserRepository();
+    }
 
-        Query otherUserQuery;
-        if (type == UserType.FOLLOWING) {
+    @Override
+    public void open() {
+        otherUsers.clear();
+        if (userType == UserType.FOLLOWING) {
             otherUserQuery = FirebaseUtil.getFollowRequestRef()
                     .orderByChild("follower").equalTo(userId);
         }
@@ -74,7 +78,7 @@ public class SocialDataSource extends DataSource<User>
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
-
+        close();
     }
 
     @Override
@@ -90,5 +94,10 @@ public class SocialDataSource extends DataSource<User>
 
         setChanged();
         notifyObservers(user);
+    }
+
+    @Override
+    public void close() {
+        otherUserQuery.removeEventListener(this);
     }
 }

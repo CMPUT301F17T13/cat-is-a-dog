@@ -67,6 +67,19 @@ public class FollowRequestsFragment extends Fragment
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        userDataSource.open();
+        followRequestDataSource.open();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        userDataSource.close();
+        followRequestDataSource.close();
+    }
 
     @Override
     public void update(Observable observable, Object o) {

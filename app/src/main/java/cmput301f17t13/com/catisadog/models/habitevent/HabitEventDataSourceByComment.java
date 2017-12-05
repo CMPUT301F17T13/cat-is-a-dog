@@ -24,18 +24,25 @@ public class HabitEventDataSourceByComment extends DataSource<HabitEvent>
 
     private static final String TAG = "HabitEventDSByComment";
 
+    private String userId;
     private String partialComment;
     private ArrayList<HabitEvent> mHabitEventArray;
+    private Query habitEventQuery;
 
     public HabitEventDataSourceByComment(String userId, String partialComment) {
+        this.userId = userId;
         this.partialComment = partialComment;
 
-        Query habitEventQuery = FirebaseDatabase.getInstance().getReference("events/" + userId)
+        mHabitEventArray = new ArrayList<>();
+    }
+
+    @Override
+    public void open() {
+        mHabitEventArray.clear();
+        habitEventQuery = FirebaseDatabase.getInstance().getReference("events/" + userId)
                 .orderByPriority();
 
         habitEventQuery.addValueEventListener(this);
-
-        mHabitEventArray = new ArrayList<>();
     }
 
     /**
@@ -68,5 +75,11 @@ public class HabitEventDataSourceByComment extends DataSource<HabitEvent>
     @Override
     public void onCancelled(DatabaseError databaseError) {
         Log.e(TAG, databaseError.getDetails());
+        close();
+    }
+
+    @Override
+    public void close() {
+        habitEventQuery.removeEventListener(this);
     }
 }

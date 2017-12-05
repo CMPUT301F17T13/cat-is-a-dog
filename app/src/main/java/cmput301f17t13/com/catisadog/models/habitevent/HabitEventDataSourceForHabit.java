@@ -27,15 +27,25 @@ public class HabitEventDataSourceForHabit extends DataSource<HabitEvent>
 
     private static final String TAG = "HabitEventDSForHabit";
 
+    private String userId;
+    private String habitKey;
+
     private ArrayList<HabitEvent> mHabitEventArray;
+    private Query habitEventQuery;
 
     public HabitEventDataSourceForHabit(String userId, String habitKey) {
-        Query habitEventQuery = FirebaseDatabase.getInstance().getReference("events/" + userId)
+        this.userId = userId;
+        this.habitKey = habitKey;
+        mHabitEventArray = new ArrayList<>();
+    }
+
+    @Override
+    public void open() {
+        mHabitEventArray.clear();
+        habitEventQuery = FirebaseDatabase.getInstance().getReference("events/" + userId)
                 .orderByChild("habitKey").equalTo(habitKey);
 
         habitEventQuery.addValueEventListener(this);
-
-        mHabitEventArray = new ArrayList<>();
     }
 
     /**
@@ -63,7 +73,7 @@ public class HabitEventDataSourceForHabit extends DataSource<HabitEvent>
         Collections.sort(mHabitEventArray, new Comparator<HabitEvent>() {
             @Override
             public int compare(HabitEvent one, HabitEvent two) {
-                return two.getEventDate().compareTo(two.getEventDate().toInstant());
+                return two.getEventDate().compareTo(one.getEventDate().toInstant());
             }
         });
 
@@ -73,5 +83,11 @@ public class HabitEventDataSourceForHabit extends DataSource<HabitEvent>
     @Override
     public void onCancelled(DatabaseError databaseError) {
         Log.e(TAG, databaseError.getDetails());
+        close();
+    }
+
+    @Override
+    public void close() {
+        habitEventQuery.removeEventListener(this);
     }
 }

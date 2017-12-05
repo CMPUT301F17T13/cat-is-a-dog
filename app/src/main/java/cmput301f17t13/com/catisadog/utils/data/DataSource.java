@@ -7,6 +7,7 @@
 package cmput301f17t13.com.catisadog.utils.data;
 
 import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -17,7 +18,11 @@ import java.util.Observable;
  */
 public abstract class DataSource<TEntity> extends Observable {
 
+    public abstract void open();
+
     public abstract ArrayList<TEntity> getSource();
+
+    public abstract void close();
 
     protected void datasetChanged() {
         setChanged();

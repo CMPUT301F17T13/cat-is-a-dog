@@ -30,17 +30,19 @@ import java.util.Observer;
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 import cmput301f17t13.com.catisadog.activities.summary.ViewHabitActivity;
+import cmput301f17t13.com.catisadog.models.habit.CompletionMetricDataSource;
 import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
+import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 
 /**
  * A screen to view all the current user's habitEvents
  */
 
 public class MyHabitsFragment extends Fragment
-        implements Observer {
+        implements Observer, OnResultListener<Habit> {
 
     private ArrayList<Habit> habits;
     private DataSource<Habit> habitDataSource;
@@ -48,10 +50,12 @@ public class MyHabitsFragment extends Fragment
 
     private ListView habitsListView;
     private MyHabitsAdapter habitsAdapter;
+    private ArrayList<DataSource> completionSources;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        completionSources = new ArrayList<>();
     }
 
     /**
@@ -64,7 +68,7 @@ public class MyHabitsFragment extends Fragment
 
         userId = CurrentUser.getInstance().getUserId();
 
-        habitDataSource = new HabitDataSource(userId);
+        habitDataSource = new HabitDataSource(userId, this);
         habitDataSource.addObserver(this);
         habits = habitDataSource.getSource();
 
@@ -83,12 +87,37 @@ public class MyHabitsFragment extends Fragment
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        habitDataSource.open();
+        for (DataSource source : completionSources) {
+            source.open();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        habitDataSource.close();
+        for (DataSource source : completionSources) {
+            source.close();
+        }
+    }
+
     /**
      * Update the list view
      */
     @Override
     public void update(Observable observable, Object o) {
         habitsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onResult(Habit habit) {
+        DataSource completionSource = new CompletionMetricDataSource(habit);
+        completionSource.open();
+        completionSources.add(completionSource);
     }
 
     /**

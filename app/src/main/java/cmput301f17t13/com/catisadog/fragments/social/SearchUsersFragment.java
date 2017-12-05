@@ -67,6 +67,19 @@ public class SearchUsersFragment extends Fragment
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        userDataSource.open();
+        followRequestDataSource.open();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        userDataSource.close();
+        followRequestDataSource.close();
+    }
 
     @Override
     public void update(Observable observable, Object o) {
@@ -128,7 +141,7 @@ public class SearchUsersFragment extends Fragment
                 @Override
                 public void onClick(View view) {
                     if (socialActionButton.getText().equals(getString(R.string.social_action_follow))) {
-                        FollowRequest followRequest = new FollowRequest(userId, user.getUserId(), new DateTime());
+                        FollowRequest followRequest = new FollowRequest(userId, user.getUserId(), DateTime.now().getMillis());
                         followRequestRepository.add(followRequest);
                     }
                 }

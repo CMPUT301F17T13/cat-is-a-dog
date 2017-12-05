@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -20,6 +21,9 @@ public class FollowRequestDataSource extends DataSource<FollowRequest>
 
     private static final String TAG = "FollowRequestDataSource";
 
+    private String follower;
+    private String followee;
+    private Query followRequestQuery;
     private ArrayList<FollowRequest> mFollowRequestArray;
     private boolean onlyShowUnaccepted;
     private boolean onlyShowAccepted;
@@ -32,7 +36,14 @@ public class FollowRequestDataSource extends DataSource<FollowRequest>
      * @param followee
      */
     public FollowRequestDataSource(String follower, String followee) {
-        Query followRequestQuery = FirebaseDatabase.getInstance().getReference("followrequests/");
+        this.follower = follower;
+        this.followee = followee;
+        mFollowRequestArray = new ArrayList<>();
+    }
+
+    @Override
+    public void open() {
+        followRequestQuery = FirebaseDatabase.getInstance().getReference("followrequests/");
 
         if (follower != null && !follower.isEmpty()) {
             followRequestQuery = followRequestQuery.orderByChild("follower").equalTo(follower);
@@ -42,8 +53,6 @@ public class FollowRequestDataSource extends DataSource<FollowRequest>
         }
 
         followRequestQuery.addValueEventListener(this);
-
-        mFollowRequestArray = new ArrayList<>();
     }
 
     /**
@@ -74,7 +83,14 @@ public class FollowRequestDataSource extends DataSource<FollowRequest>
         mFollowRequestArray.clear();
 
         for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-            FollowRequest request = snapshot.getValue(FollowRequest.class);
+            FollowRequest request;
+            try {
+                request = snapshot.getValue(FollowRequest.class);
+            }
+            catch (DatabaseException e) {
+                return;
+            }
+
             if (onlyShowUnaccepted && request.getAccepted()) continue;
             if (onlyShowAccepted && !request.getAccepted()) continue;
             mFollowRequestArray.add(request);
@@ -86,6 +102,11 @@ public class FollowRequestDataSource extends DataSource<FollowRequest>
     @Override
     public void onCancelled(DatabaseError databaseError) {
         Log.e(TAG, databaseError.getDetails());
+        close();
     }
 
+    @Override
+    public void close() {
+        followRequestQuery.removeEventListener(this);
+    }
 }

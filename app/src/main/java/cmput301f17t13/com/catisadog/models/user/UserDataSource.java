@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -23,14 +24,19 @@ public class UserDataSource extends DataSource<User>
 
     private String currentUserId;
     private ArrayList<User> mOtherUsersArray;
+    private Query otherUsersQuery;
 
     public UserDataSource(String currentUserId) {
         this.currentUserId = currentUserId;
 
-        Query otherUsersQuery = FirebaseDatabase.getInstance().getReference("users/");
-        otherUsersQuery.addValueEventListener(this);
-
         mOtherUsersArray = new ArrayList<>();
+    }
+
+    @Override
+    public void open() {
+        mOtherUsersArray.clear();
+        otherUsersQuery = FirebaseDatabase.getInstance().getReference("users");
+        otherUsersQuery.addValueEventListener(this);
     }
 
     /**
@@ -56,5 +62,11 @@ public class UserDataSource extends DataSource<User>
     @Override
     public void onCancelled(DatabaseError databaseError) {
         Log.e(TAG, databaseError.getDetails());
+        close();
+    }
+
+    @Override
+    public void close() {
+        otherUsersQuery.removeEventListener(this);
     }
 }

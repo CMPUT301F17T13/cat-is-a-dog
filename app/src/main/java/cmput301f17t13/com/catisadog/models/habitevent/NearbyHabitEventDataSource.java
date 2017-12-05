@@ -37,66 +37,30 @@ import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
-public class NearbyHabitEventDataSource extends DataSource<HabitEvent> {
+public class NearbyHabitEventDataSource extends DataSource<HabitEvent>
+    implements GeoQueryEventListener {
 
     public static final String SourceType = "recentHabitEventsDataSource";
-    private DatabaseReference mGeoFireRef;
-    private GeoFire geoFire;
+    private ArrayList<String> users;
+    private GeoQuery geoQuery;
+    private GeoLocation loc;
 
     private ArrayList<HabitEvent> nearbyEvents;
 
-    public NearbyHabitEventDataSource(GeoLocation loc, final ArrayList<String> users) {
+    public NearbyHabitEventDataSource(GeoLocation loc, ArrayList<String> users) {
+        this.loc = loc;
+        this.users = users;
         nearbyEvents = new ArrayList<>();
+    }
+
+    @Override
+    public void open() {
+        nearbyEvents.clear();
         DatabaseReference geofire_ref = FirebaseDatabase.getInstance().getReference("events_geofire");
 
         GeoFire geoFire = new GeoFire(geofire_ref);
-        GeoQuery geoQuery = geoFire.queryAtLocation(loc, 5);
-
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(String key, GeoLocation location) {
-                String[] parts = key.split("@");
-                String userId = parts[0];
-                String eventId = parts[1];
-                if(users.contains(userId)) {
-                    FirebaseDatabase.getInstance().getReference("events/"+userId+"/"+eventId).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            HabitEventDataModel model = dataSnapshot.getValue(HabitEventDataModel.class);
-
-                            if (model != null) {
-                                HabitEvent habitEvent = model.getHabitEvent();
-                                nearbyEvents.add(habitEvent);
-                                datasetChanged();
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onKeyExited(String key) {
-
-            }
-
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
-            }
-
-            @Override
-            public void onGeoQueryReady() {
-
-            }
-
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
-            }
-        });
+        geoQuery = geoFire.queryAtLocation(loc, 5);
+        geoQuery.addGeoQueryEventListener(this);
     }
 
     @Override
@@ -105,8 +69,55 @@ public class NearbyHabitEventDataSource extends DataSource<HabitEvent> {
     }
 
     @Override
-    protected void datasetChanged() {
-        setChanged();
-        notifyObservers();
+    public void onKeyEntered(String key, GeoLocation location) {
+        String[] parts = key.split("@");
+        String userId = parts[0];
+        String eventId = parts[1];
+        if(users.contains(userId)) {
+            FirebaseDatabase.getInstance().getReference("events/"+userId+"/"+eventId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    HabitEventDataModel model = dataSnapshot.getValue(HabitEventDataModel.class);
+
+                    if (model != null) {
+                        HabitEvent habitEvent = model.getHabitEvent();
+                        nearbyEvents.add(habitEvent);
+                        datasetChanged();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onKeyExited(String key) {
+
+    }
+
+    @Override
+    public void onKeyMoved(String key, GeoLocation location) {
+
+    }
+
+    @Override
+    public void onGeoQueryReady() {
+
+    }
+
+    @Override
+    public void onGeoQueryError(DatabaseError error) {
+
+    }
+
+    @Override
+    public void close() {
+        if (geoQuery != null) {
+            geoQuery.removeGeoQueryEventListener(this);
+        }
     }
 }

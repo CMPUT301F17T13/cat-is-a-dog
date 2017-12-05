@@ -13,11 +13,13 @@ import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
 import org.hamcrest.Matcher;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import cmput301f17t13.com.catisadog.activities.summary.AddHabitEventActivity;
 import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 import cmput301f17t13.com.catisadog.activities.summary.ViewHabitActivity;
 import cmput301f17t13.com.catisadog.mocks.MockAuthentication;
@@ -43,6 +45,7 @@ public class HabitSummaryTest {
 
     @Before
     public void setUp() throws Exception {
+        Intents.init();
         MockAuthentication.signIn();
         mActivityRule.launchActivity(null);
     }
@@ -58,18 +61,16 @@ public class HabitSummaryTest {
 
     @Test
     public void viewHabit() throws Exception {
-        Intents.init();
         onData(anything())
                 .inAdapterView(withId(R.id.myHabitsListView))
                 .atPosition(0)
                 .perform(click());
 
         intended(hasComponent(ViewHabitActivity.class.getName()));
-        Intents.release();
     }
 
     @Test
-    public void todoHabit() throws Exception {
+    public void showTodoHabit() throws Exception {
         changeTab("Todo");
 
         onData(anything())
@@ -77,6 +78,35 @@ public class HabitSummaryTest {
                 .atPosition(0)
                 .onChildView(withId(R.id.todoHabitListItemTitle))
                 .check(matches(withText("Test Habit")));
+    }
+
+    @Test
+    public void addEvent() throws Exception {
+        changeTab("Todo");
+
+        onData(anything())
+                .inAdapterView(withId(R.id.todoHabitsListView))
+                .atPosition(0)
+                .onChildView(withId(R.id.todoHabitAddEvent))
+                .perform(click());
+
+        intended(hasComponent(AddHabitEventActivity.class.getName()));
+    }
+
+    @Test
+    public void showFollowing() {
+        changeTab("Following");
+
+        onData(anything())
+                .inAdapterView(withId(R.id.following_habits_list))
+                .atPosition(0)
+                .onChildView(withId(R.id.userDisplayName))
+                .check(matches(withText("Kevin")));
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        Intents.release();
     }
 
     private void changeTab(String tabTitle) {

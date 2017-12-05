@@ -149,8 +149,6 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
                 filterDialog.show(getFragmentManager(), "filter");
             }
         });
-
-//        getActionBar().setSubtitle("Filter: My recent events");
     }
 
     @Override
@@ -177,6 +175,22 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         super.onStart();
         habitHistoryAdapter = new HabitHistoryAdapter(this, habitEvents);
         habitsListView.setAdapter(habitHistoryAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        habitDataSource.open();
+        eventDataSource.open();
+        followingDataSource.open();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        habitDataSource.close();
+        eventDataSource.close();
+        followingDataSource.close();
     }
 
     /**
@@ -250,6 +264,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         this.filterData = filterData;
         if (eventDataSource != null) {
             eventDataSource.deleteObserver(this);
+            eventDataSource.close();
         }
 
         String userId = CurrentUser.getInstance().getUserId();
@@ -291,6 +306,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
 
         habitEvents = eventDataSource.getSource();
         eventDataSource.addObserver(this);
+        eventDataSource.open();
         habitHistoryAdapter = new HabitHistoryAdapter(this, habitEvents);
         habitsListView.setAdapter(habitHistoryAdapter);
     }
@@ -393,6 +409,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
             return convertView;
         }
     }
+
     /**
      * Filter by within 5km
      */
@@ -419,6 +436,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
 
                             eventDataSource = new NearbyHabitEventDataSource(new GeoLocation(loc.latitude, loc.longitude), followingIds);
                             eventDataSource.addObserver(HabitHistoryActivity.this);
+                            eventDataSource.open();
                             habitEvents = eventDataSource.getSource();
                             habitHistoryAdapter = new HabitHistoryAdapter(HabitHistoryActivity.this, habitEvents);
                             habitsListView.setAdapter(habitHistoryAdapter);

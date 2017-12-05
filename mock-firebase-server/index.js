@@ -26,6 +26,16 @@ var server = new FirebaseServer(5000, 'test.firebaseio.com', {
 				"userId": "mockUserId",
 				"key": "1"
 			}
+		},
+		"kevinId": {
+			"k1": {
+				"reason": "Kevin's Reason",
+				"schedule": [true,false,false,false,false,false,true],
+				"startDate": 1512198200000,
+				"title": "Kevin's Habit",
+				"userId": "kevinId",
+				"key": "k1"
+			}
 		}
 	},
 	"followrequests": {
@@ -75,7 +85,7 @@ var server = new FirebaseServer(5000, 'test.firebaseio.com', {
 
 server.setRules({
 	"rules": {
-    ".read": "auth != null",
+    ".read": true,
     ".write": false,
 	}
 });

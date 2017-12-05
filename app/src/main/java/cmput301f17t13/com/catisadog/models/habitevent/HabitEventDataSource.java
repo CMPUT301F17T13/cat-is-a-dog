@@ -30,15 +30,22 @@ public class HabitEventDataSource extends DataSource<HabitEvent>
 
     private static final String TAG = "HabitEventDataSource";
 
+    private String userId;
     private ArrayList<HabitEvent> mHabitEventArray;
+    private Query habitEventQuery;
 
     public HabitEventDataSource(String userId) {
-        Query habitEventQuery = FirebaseDatabase.getInstance()
+        this.userId = userId;
+        mHabitEventArray = new ArrayList<>();
+    }
+
+    @Override
+    public void open() {
+        mHabitEventArray.clear();
+        habitEventQuery = FirebaseDatabase.getInstance()
                 .getReference("events/" + userId).orderByChild("eventDate");
 
         habitEventQuery.addValueEventListener(this);
-
-        mHabitEventArray = new ArrayList<>();
     }
 
     /**
@@ -70,5 +77,11 @@ public class HabitEventDataSource extends DataSource<HabitEvent>
     @Override
     public void onCancelled(DatabaseError databaseError) {
         Log.e(TAG, databaseError.getDetails());
+        close();
+    }
+
+    @Override
+    public void close() {
+        habitEventQuery.removeEventListener(this);
     }
 }

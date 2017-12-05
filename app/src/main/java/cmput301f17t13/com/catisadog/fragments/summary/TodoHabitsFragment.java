@@ -78,6 +78,17 @@ public class TodoHabitsFragment extends Fragment
         habitsListView.setAdapter(todoHabitsAdapter);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        todoDataSource.open();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        todoDataSource.close();
+    }
 
     @Override
     public void update(Observable observable, Object o) {

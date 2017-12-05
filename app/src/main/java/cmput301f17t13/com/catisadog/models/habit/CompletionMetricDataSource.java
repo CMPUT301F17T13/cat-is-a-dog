@@ -22,6 +22,7 @@ import java.util.concurrent.CountDownLatch;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataModel;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
+import cmput301f17t13.com.catisadog.utils.data.Repository;
 import cmput301f17t13.com.catisadog.utils.date.DateUtil;
 import cmput301f17t13.com.catisadog.utils.date.Week;
 
@@ -32,12 +33,21 @@ public class CompletionMetricDataSource extends DataSource<Double>
     private double[] completionRates;
     private ArrayList<Double> completionResultArray;
     private CountDownLatch completionLatch;
+    private ArrayList<Query> queryRegister;
+    private Repository<Habit> habitRepository;
 
     public CompletionMetricDataSource(Habit habit) {
         this.habit = habit;
+        completionResultArray = new ArrayList<>();
+        queryRegister = new ArrayList<>();
+        habitRepository = new HabitRepository(habit.getUserId());
+    }
+
+    @Override
+    public void open() {
+        completionResultArray.clear();
         completionRates = new double[4];
         completionLatch = new CountDownLatch(4);
-        completionResultArray = new ArrayList<>();
 
         if(habit.getSchedule().size() > 0) {
             for(Week week : DateUtil.GetNPastWeeks(DateTime.now(), 4)) {
@@ -47,7 +57,8 @@ public class CompletionMetricDataSource extends DataSource<Double>
                 Query eventCountQuery = FirebaseDatabase.getInstance().getReference("events/" + habit.getUserId())
                         .orderByChild("habitStamp").startAt(startKey).endAt(endKey);
 
-                eventCountQuery.addListenerForSingleValueEvent(this);
+                eventCountQuery.addValueEventListener(this);
+                queryRegister.add(eventCountQuery);
             }
         }
     }
@@ -91,7 +102,7 @@ public class CompletionMetricDataSource extends DataSource<Double>
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
-
+        close();
     }
 
     private void recreateDataset() {
@@ -101,6 +112,30 @@ public class CompletionMetricDataSource extends DataSource<Double>
             completionResultArray.add(completionRates[i]);
         }
 
+        Double cumulativeCompletionRate = 0.0;
+        int weeksOld = DateUtil.WeekDifference(habit.getStartDate(), DateTime.now());
+        int weeksCounted = Math.min(3, weeksOld + 1);
+
+        for (int i = 0; i < weeksCounted; i++) {
+            cumulativeCompletionRate += completionRates[i];
+        }
+
+        cumulativeCompletionRate = cumulativeCompletionRate / weeksCounted;
+        publishCompletionRate(cumulativeCompletionRate);
+
         datasetChanged();
+    }
+
+    private void publishCompletionRate(Double completionRate) {
+        habit.setCompletionRate(completionRate);
+        habitRepository.update(habit.getKey(), habit);
+    }
+
+    @Override
+    public void close() {
+        for (Query q : queryRegister) {
+            q.removeEventListener(this);
+        }
+        queryRegister.clear();
     }
 }

@@ -55,11 +55,14 @@ public class FollowingHabitsFragment extends Fragment
     private LinkedHashMap<String, ArrayList<Habit>> followingHabitMap = new LinkedHashMap<>();
     private BaseExpandableListAdapter followingHabitsAdapter;
 
+    private ArrayList<DataSource> registeredSources;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         following.add(CurrentUser.getInstance());
+        registeredSources = new ArrayList<>();
     }
 
     @Nullable
@@ -88,12 +91,32 @@ public class FollowingHabitsFragment extends Fragment
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        followingDataSource.open();
+        for (DataSource source : registeredSources) {
+            source.open();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        followingDataSource.close();
+        for (DataSource source : registeredSources) {
+            source.close();
+        }
+    }
+
+    @Override
     public void update(Observable observable, Object o) {
         if (observable instanceof SocialDataSource) {
             User newFollowing = (User) o;
             DataSource<Habit> followingHabitSource = new HabitDataSource(newFollowing.getUserId());
             ArrayList<Habit> followingHabits = followingHabitSource.getSource();
             followingHabitSource.addObserver(this);
+            followingHabitSource.open();
+            registeredSources.add(followingHabitSource);
             followingHabitMap.put(newFollowing.getUserId(), followingHabits);
         }
         else {
@@ -111,16 +134,4 @@ public class FollowingHabitsFragment extends Fragment
 
         followingHabitsAdapter.notifyDataSetChanged();
     }
-
-    /**
-     * Navigate to the View Habit Activity when the user presses a habit
-     * @param v the button view
-     *
-     * @see cmput301f17t13.com.catisadog.activities.summary.ViewHabitActivity
-     */
-
-    public void viewHabit(View v) {
-
-    }
-
 }

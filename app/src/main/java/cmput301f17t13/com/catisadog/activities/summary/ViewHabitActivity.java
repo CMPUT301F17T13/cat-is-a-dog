@@ -45,6 +45,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
@@ -78,6 +79,7 @@ public class ViewHabitActivity extends AppCompatActivity
     private Habit habit;
     private Repository<Habit> habitRepository;
     private ArrayList<Double> completionMetrics;
+    private DataSource<Double> metricSource;
 
     private Group mHabitViewGroup;
     private ProgressBar mLoadingBar;
@@ -130,12 +132,20 @@ public class ViewHabitActivity extends AppCompatActivity
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (metricSource != null) {
+            metricSource.open();
+        }
+    }
+
     /**
      * Creates the completion metrics graph for the habit
      */
     private void createCompletionGraph() {
 
-        int startedWeeksAgo = DateUtil.WeekDifference(habit.getStartDate(), DateTime.now()) + 1;
+        int startedWeeksAgo = DateUtil.WeekDifference(habit.getStartDate(), DateTime.now());
         if (startedWeeksAgo > 3) startedWeeksAgo = 3;
 
         Double runningTotal = 0.00;
@@ -151,10 +161,16 @@ public class ViewHabitActivity extends AppCompatActivity
             dataPoints.add(new DataPoint(i, runningAverages[3+i]));
         }
 
-        habit.setCompletionRate(runningAverages[3]);
-        habitRepository.update(habit.getKey(), habit);
+        if(dataPoints.size() == 1) {
+            dataPoints.add(new DataPoint(-1, 0.0));
+            Collections.reverse(dataPoints);
+        }
+
+        //habit.setCompletionRate(runningAverages[3]);
+        //habitRepository.update(habit.getKey(), habit);
 
         GraphView graph = (GraphView) findViewById(R.id.graph);
+        graph.removeAllSeries();
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoints.toArray(new DataPoint[dataPoints.size()]));
 
         series.setTitle("Completion Metrics");
@@ -195,9 +211,22 @@ public class ViewHabitActivity extends AppCompatActivity
      * Fetches the completion data for the habit
      */
     private void getCompletionData() {
-        DataSource<Double> metricSource = new CompletionMetricDataSource(habit);
+        if (metricSource != null) {
+            metricSource.close();
+        }
+
+        metricSource = new CompletionMetricDataSource(habit);
         completionMetrics = metricSource.getSource();
         metricSource.addObserver(this);
+        metricSource.open();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (metricSource != null) {
+            metricSource.close();
+        }
     }
 
     @Override

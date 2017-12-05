@@ -41,10 +41,20 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
 
     private TreeMap<String, HabitEvent> recentHabitEventMap;
     private ArrayList<HabitEvent> recentEvents;
+    private ArrayList<Query> activeQueries;
+    private List<String> idList;
 
     public RecentHabitEventHistoryDataSource(List<String> idList) {
+        this.idList = idList;
         recentEvents = new ArrayList<>();
         recentHabitEventMap = new TreeMap<>();
+        activeQueries = new ArrayList<>();
+    }
+
+    @Override
+    public void open() {
+        recentEvents.clear();
+        recentHabitEventMap.clear();
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -7);
@@ -54,6 +64,7 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
             Query eventsQuery = FirebaseDatabase.getInstance().getReference("events/" + id)
                     .orderByChild("eventDate").startAt(millis).endAt(DateTime.now().getMillis());
             eventsQuery.addChildEventListener(this);
+            activeQueries.add(eventsQuery);
         }
     }
 
@@ -112,5 +123,13 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
 
         setChanged();
         notifyObservers();
+    }
+
+    @Override
+    public void close() {
+        for (Query q : activeQueries) {
+            q.removeEventListener(this);
+        }
+        activeQueries.clear();
     }
 }

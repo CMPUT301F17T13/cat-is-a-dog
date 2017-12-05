@@ -12,15 +12,15 @@ public class FollowRequest {
     private String follower;
     private String followee;
     private Boolean accepted;
-    private long request_timestamp;
+    private long requestTimestamp;
 
     public FollowRequest() {} // For Firebase use only
 
-    public FollowRequest(String follower, String followee, DateTime createTime) {
+    public FollowRequest(String follower, String followee, long createTime) {
         this.follower = follower;
         this.followee = followee;
         this.accepted = false;
-        this.request_timestamp = createTime.getMillis();
+        this.requestTimestamp = createTime;
     }
 
     public String getFollower() {
@@ -31,8 +31,8 @@ public class FollowRequest {
         return followee;
     }
 
-    public DateTime getRequestTimestamp() {
-        return new DateTime(this.request_timestamp);
+    public long getRequestTimestamp() {
+        return requestTimestamp;
     }
 
     public Boolean getAccepted() {

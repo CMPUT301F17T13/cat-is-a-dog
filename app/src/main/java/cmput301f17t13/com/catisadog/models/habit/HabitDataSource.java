@@ -22,6 +22,7 @@ import java.util.Observable;
 import java.util.concurrent.CountDownLatch;
 
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
+import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 
 /**
  * Firebase datasource implementation for a user's habitEvents
@@ -31,27 +32,33 @@ public class HabitDataSource extends DataSource<Habit>
 
     private static final String TAG = "HabitDataSource";
 
-    DatabaseReference mHabitsRef;
-    String userId;
+    private DatabaseReference mHabitsRef;
+    private String userId;
 
     private LinkedHashMap<String, Habit> mHabits;
     private ArrayList<Habit> mHabitArray;
+    private OnResultListener<Habit> newHabitListener;
 
     public HabitDataSource(String userId) {
         this.userId = userId;
 
         mHabits = new LinkedHashMap<>();
         mHabitArray = new ArrayList<>();
-
-        setReference();
     }
 
-    protected void setReference() {
+    public HabitDataSource(String userId, OnResultListener<Habit> newHabitListener) {
+        this(userId);
+        this.newHabitListener = newHabitListener;
+    }
+
+    @Override
+    public void open() {
+        mHabits.clear();
         mHabitsRef = FirebaseDatabase.getInstance().getReference("habits/" + userId);
         mHabitsRef.addChildEventListener(this);
     }
 
-    protected boolean isValid(Habit habit) {
+    private boolean isValid(Habit habit) {
         return true;
     }
 
@@ -78,6 +85,9 @@ public class HabitDataSource extends DataSource<Habit>
             Habit habit = model.getHabit();
             if (isValid(habit)) {
                 mHabits.put(dataSnapshot.getKey(), habit);
+                if (newHabitListener != null) {
+                    newHabitListener.onResult(habit);
+                }
                 datasetChanged();
             }
         }
@@ -115,6 +125,7 @@ public class HabitDataSource extends DataSource<Habit>
     @Override
     public void onCancelled(DatabaseError databaseError) {
         Log.w(TAG, "loadHabits:onCancelled", databaseError.toException());
+        close();
     }
 
     @Override
@@ -123,5 +134,12 @@ public class HabitDataSource extends DataSource<Habit>
         mHabitArray.addAll(mHabits.values());
         setChanged();
         notifyObservers(userId);
+    }
+
+    @Override
+    public void close() {
+        if (mHabitsRef != null) {
+            mHabitsRef.removeEventListener(this);
+        }
     }
 }
