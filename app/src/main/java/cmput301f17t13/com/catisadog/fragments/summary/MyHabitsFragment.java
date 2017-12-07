@@ -28,21 +28,20 @@ import java.util.Observable;
 import java.util.Observer;
 
 import cmput301f17t13.com.catisadog.R;
-import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 import cmput301f17t13.com.catisadog.activities.summary.ViewHabitActivity;
 import cmput301f17t13.com.catisadog.models.habit.CompletionMetricDataSource;
 import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
 import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
-import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
+import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 /**
  * A screen to view all the current user's habitEvents
  */
 
 public class MyHabitsFragment extends Fragment
-        implements Observer, OnResultListener<Habit> {
+        implements Observer, Repository.OnResultListener<Habit> {
 
     private ArrayList<Habit> habits;
     private DataSource<Habit> habitDataSource;

@@ -39,7 +39,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Observable;
 import java.util.Observer;
@@ -66,7 +65,6 @@ import cmput301f17t13.com.catisadog.models.user.User;
 import cmput301f17t13.com.catisadog.models.user.UserRepository;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
-import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 import static cmput301f17t13.com.catisadog.fragments.history.FilterDialogFragment.FilterType.MY_RECENT_EVENTS;
@@ -340,13 +338,13 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
             final TextView reasonView = (TextView) convertView.findViewById(R.id.myHabitEventListItemReason);
             TextView startDateView = (TextView) convertView.findViewById(R.id.myHabitEventListItemStartDate);
             HabitRepository hr = new HabitRepository(habitEvent.getUserId());
-            hr.get(habitEvent.getHabitKey(), new OnResultListener<Habit>() {
+            hr.get(habitEvent.getHabitKey(), new Repository.OnResultListener<Habit>() {
                 @Override
                 public void onResult(Habit habit) {
                     titleView.setText(habit.getTitle());
                     if(!Objects.equals(habit.getUserId(), CurrentUser.getInstance().getUserId())) {
                         UserRepository ur = new UserRepository();
-                        ur.get(habit.getUserId(), new OnResultListener<User>() {
+                        ur.get(habit.getUserId(), new Repository.OnResultListener<User>() {
                             @Override
                             public void onResult(User user) {
                                 if(habitEvent.getComment() != null && habitEvent.getComment().length() > 0)

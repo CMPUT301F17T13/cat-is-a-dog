@@ -14,12 +14,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.joda.time.DateTime;
-
-import java.util.Locale;
-
-import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
-import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 

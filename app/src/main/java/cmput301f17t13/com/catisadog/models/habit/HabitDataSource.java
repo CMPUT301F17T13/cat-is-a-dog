@@ -13,16 +13,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.Observable;
-import java.util.concurrent.CountDownLatch;
 
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
-import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
+import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 /**
  * Firebase datasource implementation for a user's habitEvents
@@ -37,7 +33,7 @@ public class HabitDataSource extends DataSource<Habit>
 
     private LinkedHashMap<String, Habit> mHabits;
     private ArrayList<Habit> mHabitArray;
-    private OnResultListener<Habit> newHabitListener;
+    private Repository.OnResultListener<Habit> newHabitListener;
 
     public HabitDataSource(String userId) {
         this.userId = userId;
@@ -46,7 +42,7 @@ public class HabitDataSource extends DataSource<Habit>
         mHabitArray = new ArrayList<>();
     }
 
-    public HabitDataSource(String userId, OnResultListener<Habit> newHabitListener) {
+    public HabitDataSource(String userId, Repository.OnResultListener<Habit> newHabitListener) {
         this(userId);
         this.newHabitListener = newHabitListener;
     }

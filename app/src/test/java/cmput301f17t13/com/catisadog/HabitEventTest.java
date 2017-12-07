@@ -12,9 +12,7 @@ import java.util.HashSet;
 
 import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.models.habitevent.HabitEvent;
-import cmput301f17t13.com.catisadog.models.HabitStatus;
 import cmput301f17t13.com.catisadog.models.user.User;
-import cmput301f17t13.com.catisadog.utils.LocationHelper;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
