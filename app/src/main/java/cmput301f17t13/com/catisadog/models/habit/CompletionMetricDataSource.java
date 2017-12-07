@@ -26,6 +26,9 @@ import cmput301f17t13.com.catisadog.utils.data.Repository;
 import cmput301f17t13.com.catisadog.utils.date.DateUtil;
 import cmput301f17t13.com.catisadog.utils.date.Week;
 
+/**
+ * Data source for the percent completion of a habit
+ */
 public class CompletionMetricDataSource extends DataSource<Double>
         implements ValueEventListener {
 
@@ -36,6 +39,10 @@ public class CompletionMetricDataSource extends DataSource<Double>
     private ArrayList<Query> queryRegister;
     private Repository<Habit> habitRepository;
 
+    /**
+     * Constructs the data source
+     * @param habit the habit to fetch completion data for
+     */
     public CompletionMetricDataSource(Habit habit) {
         this.habit = habit;
         completionResultArray = new ArrayList<>();
@@ -43,6 +50,9 @@ public class CompletionMetricDataSource extends DataSource<Double>
         habitRepository = new HabitRepository(habit.getUserId());
     }
 
+    /**
+     * Creates one query per week up to 4 weeks in the past
+     */
     @Override
     public void open() {
         completionResultArray.clear();
@@ -68,6 +78,7 @@ public class CompletionMetricDataSource extends DataSource<Double>
         return completionResultArray;
     }
 
+    /** Accumulate the data and output an array of doubles of completions per week */
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         long completions = dataSnapshot.getChildrenCount();
@@ -110,6 +121,10 @@ public class CompletionMetricDataSource extends DataSource<Double>
         close();
     }
 
+    /**
+     * Calculate the total completion rate
+     * and update the habit with that completion rate
+     */
     private void recreateDataset() {
         completionResultArray.clear();
 
@@ -137,6 +152,9 @@ public class CompletionMetricDataSource extends DataSource<Double>
         habitRepository.update(habit.getKey(), habit);
     }
 
+    /**
+     * Clean up queries
+     */
     @Override
     public void close() {
         for (Query q : queryRegister) {

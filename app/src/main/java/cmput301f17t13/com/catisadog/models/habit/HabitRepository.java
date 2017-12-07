@@ -14,15 +14,25 @@ import com.google.firebase.database.ValueEventListener;
 
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
-
+/**
+ * Class for basic CRUD operations on {@link Habit}s
+ */
 public class HabitRepository implements Repository<Habit> {
 
     private DatabaseReference mHabitsRef;
 
+    /**
+     * Constructs repository for a particular user
+     * @param userId the user id
+     */
     public HabitRepository(String userId) {
         this.mHabitsRef = FirebaseDatabase.getInstance().getReference("habits/" + userId);
     }
 
+    /**
+     * Add a habit to the database
+     * @param habit the habit object
+     */
     @Override
     public void add(Habit habit) {
         HabitDataModel habitModel = new HabitDataModel(habit);
@@ -32,17 +42,31 @@ public class HabitRepository implements Repository<Habit> {
         newRef.setValue(habitModel,null);
     }
 
+    /**
+     * Update a habit object
+     * @param key the habit key
+     * @param habit the habit object
+     */
     @Override
     public void update(String key, Habit habit) {
         HabitDataModel habitModel = new HabitDataModel(habit);
         mHabitsRef.child(key).getRef().setValue(habitModel, null);
     }
 
+    /**
+     * Delete a habit object from the database
+     * @param key the habit key
+     */
     @Override
     public void delete(String key) {
         mHabitsRef.child(key).removeValue(null);
     }
 
+    /**
+     * Get a habit object from the database
+     * @param key the habit key
+     * @param resultListener result callback
+     */
     @Override
     public void get(String key, final OnResultListener<Habit> resultListener) {
         mHabitsRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {

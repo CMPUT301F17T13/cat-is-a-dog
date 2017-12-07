@@ -25,6 +25,9 @@ import cmput301f17t13.com.catisadog.models.habitevent.HabitEventDataModel;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
 
+/**
+ * A data source for habits that are due today
+ */
 public class TodoHabitDataSource extends DataSource<Habit> {
 
     public static final String SourceType = "todoDataSource";
@@ -40,6 +43,10 @@ public class TodoHabitDataSource extends DataSource<Habit> {
     private Query todoQuery;
     private Query eventRef;
 
+    /**
+     * Initialize data source for particular user
+     * @param userId the user id
+     */
     public TodoHabitDataSource(String userId) {
         this.userId = userId;
 
@@ -48,6 +55,11 @@ public class TodoHabitDataSource extends DataSource<Habit> {
         completedToday = new HashSet<>();
     }
 
+    /**
+     * Composed of two queries:
+     * DueHabits holds habits that are due today
+     * completedToday holds ids of habits that have already been completed today
+     */
     @Override
     public void open() {
         dueHabits.clear();
@@ -73,6 +85,9 @@ public class TodoHabitDataSource extends DataSource<Habit> {
         return todoHabits;
     }
 
+    /**
+     * Listens for habits due today
+     */
     private class DueListener implements ValueEventListener {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -100,6 +115,9 @@ public class TodoHabitDataSource extends DataSource<Habit> {
         }
     }
 
+    /**
+     * Listens for events completed today
+     */
     private class EventListener implements ValueEventListener {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -124,6 +142,10 @@ public class TodoHabitDataSource extends DataSource<Habit> {
         }
     }
 
+    /**
+     * We merge the due habits and completed today habits accordingly to get the
+     * resulting todohabits
+     */
     private void merge() {
         todoHabits.clear();
         for(Habit h : dueHabits) {
@@ -136,11 +158,17 @@ public class TodoHabitDataSource extends DataSource<Habit> {
         }
     }
 
+    /**
+     * Notify observers
+     */
     private void recreateDataset() {
         merge();
         datasetChanged();
     }
 
+    /**
+     * Close the two active listeners
+     */
     @Override
     public void close() {
         todoQuery.removeEventListener(dueListener);

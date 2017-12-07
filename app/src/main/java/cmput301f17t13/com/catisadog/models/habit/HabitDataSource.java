@@ -21,7 +21,7 @@ import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 /**
- * Firebase datasource implementation for a user's habitEvents
+ * Firebase datasource implementation for a user's {@link Habit}s
  */
 public class HabitDataSource extends DataSource<Habit>
     implements ChildEventListener {
