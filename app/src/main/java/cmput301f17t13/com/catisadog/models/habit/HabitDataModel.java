@@ -20,8 +20,7 @@ import cmput301f17t13.com.catisadog.models.HabitStatus;
 import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
 
 /**
- * Represents the Firebase data model for the Habit class
- *
+ * Represents the Firebase data model for the {@link Habit} class
  * @see Habit
  */
 @IgnoreExtraProperties
@@ -33,7 +32,9 @@ public class HabitDataModel {
     private String title;
     private String reason;
 
+    // Start date store as milliseconds since epoch
     private long startDate;
+    // List of booleans matching index (day) to if it repeats
     private List<Boolean> schedule;
 
     private Double completionRate;

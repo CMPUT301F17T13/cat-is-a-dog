@@ -61,6 +61,8 @@ public class Habit implements Schedulable, Serializable {
         setSchedule(schedule);
     }
 
+    /** Getters and setters */
+
     public String getKey() {
         return key;
     }
