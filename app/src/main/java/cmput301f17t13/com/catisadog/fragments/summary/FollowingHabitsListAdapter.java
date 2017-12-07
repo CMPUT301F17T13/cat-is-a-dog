@@ -154,7 +154,7 @@ public class FollowingHabitsListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getGroupId(int groupPosition) {
-        return groupPosition;
+        return following.get(groupPosition).getUserId().hashCode();
     }
 
     @Override

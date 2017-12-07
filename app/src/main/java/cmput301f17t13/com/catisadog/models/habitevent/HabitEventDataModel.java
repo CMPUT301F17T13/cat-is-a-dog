@@ -19,6 +19,9 @@ import java.util.Locale;
 import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
 
+/**
+ * An intermediate datamodel for storing {@link HabitEvent}s in Firebase
+ */
 @IgnoreExtraProperties
 public class HabitEventDataModel {
 
@@ -29,11 +32,11 @@ public class HabitEventDataModel {
     private String photoUrl;
     private double latitude;
     private double longitude;
-    private long eventDate;
+    private long eventDate; // The event date is stored as a millisecond timestamp
 
-    // Indexes
-    public String complete;
-    public String habitStamp;
+    // Firebase Index Properties
+    public String complete;   // UserId_Date_HabitKey
+    public String habitStamp; // HabitKey_EventTimestamp
 
     public HabitEventDataModel() {}
 

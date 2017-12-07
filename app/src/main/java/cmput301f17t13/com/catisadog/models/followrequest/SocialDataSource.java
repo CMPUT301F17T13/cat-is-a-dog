@@ -19,12 +19,11 @@ import cmput301f17t13.com.catisadog.models.user.User;
 import cmput301f17t13.com.catisadog.models.user.UserRepository;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
-import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 
 public class SocialDataSource extends DataSource<User>
-    implements ValueEventListener, OnResultListener<User> {
+    implements ValueEventListener, Repository.OnResultListener<User> {
 
     public enum UserType { FOLLOWING, FOLLOWER }
 

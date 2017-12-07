@@ -15,7 +15,9 @@ public interface Schedulable {
     /** Sets days of week to repeat on */
     void setSchedule(Set<Integer> days);
 
+    /** Get if the item is due today */
     boolean isTodo(DateTime date);
 
+    /** Get the next due date of the item */
     DateTime nextTodo();
 }

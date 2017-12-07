@@ -18,7 +18,9 @@ import java.util.ArrayList;
 
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
-
+/**
+ * Queries {@link HabitEvent}s owned by a user, sorted in reverse chronological order
+ */
 public class HabitEventDataSourceByComment extends DataSource<HabitEvent>
     implements ValueEventListener {
 
@@ -29,6 +31,11 @@ public class HabitEventDataSourceByComment extends DataSource<HabitEvent>
     private ArrayList<HabitEvent> mHabitEventArray;
     private Query habitEventQuery;
 
+    /**
+     * Constructs the data source
+     * @param userId the user to pull events from
+     * @param partialComment the comment substring to search for
+     */
     public HabitEventDataSourceByComment(String userId, String partialComment) {
         this.userId = userId;
         this.partialComment = partialComment;
@@ -52,8 +59,10 @@ public class HabitEventDataSourceByComment extends DataSource<HabitEvent>
     @Override
     public ArrayList<HabitEvent> getSource() { return mHabitEventArray; }
 
-    // Habit Event updates
-
+    /**
+     * Filter habit events by comment. Matches if the entire substring is found
+     * in the event comment
+     */
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         mHabitEventArray.clear();
@@ -62,7 +71,8 @@ public class HabitEventDataSourceByComment extends DataSource<HabitEvent>
             HabitEventDataModel model = snapshot.getValue(HabitEventDataModel.class);
 
             if (model != null) {
-                if (model.getComment().contains(partialComment)) {
+                // Match lowercase
+                if (model.getComment().toLowerCase().contains(partialComment.toLowerCase())) {
                     model.setKey(snapshot.getKey());
                     mHabitEventArray.add(model.getHabitEvent());
                 }

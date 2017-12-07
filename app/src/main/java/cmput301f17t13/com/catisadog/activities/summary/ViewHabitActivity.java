@@ -28,16 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.support.constraint.Group;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
-import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -53,12 +45,9 @@ import java.util.Set;
 import cmput301f17t13.com.catisadog.R;
 import cmput301f17t13.com.catisadog.models.habit.CompletionMetricDataSource;
 import cmput301f17t13.com.catisadog.models.habit.Habit;
-import cmput301f17t13.com.catisadog.models.habit.HabitDataModel;
-import cmput301f17t13.com.catisadog.models.habit.HabitDataSource;
 import cmput301f17t13.com.catisadog.models.habit.HabitRepository;
 import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
-import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 import cmput301f17t13.com.catisadog.utils.date.DateUtil;
 import cmput301f17t13.com.catisadog.utils.date.Week;
@@ -115,7 +104,7 @@ public class ViewHabitActivity extends AppCompatActivity
         mHabitViewGroup.setVisibility(View.GONE);
         mLoadingBar.setVisibility(View.VISIBLE);
 
-        habitRepository.get(habitKey, new OnResultListener<Habit>() {
+        habitRepository.get(habitKey, new Repository.OnResultListener<Habit>() {
             @Override
             public void onResult(Habit h) {
                 if (h != null) {

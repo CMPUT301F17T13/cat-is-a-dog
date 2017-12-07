@@ -87,7 +87,12 @@ public class CompletionMetricDataSource extends DataSource<Double>
                     if (habit.getSchedule().contains(day)) neededCompletions++;
                 }
 
-                completionRates[weeksAgo] = (double) completions / (double) neededCompletions * 100;
+                if (neededCompletions == 0) {
+                    completionRates[weeksAgo] = 100;
+                }
+                else {
+                    completionRates[weeksAgo] = (double) completions / (double) neededCompletions * 100;
+                }
             }
             else {
                 completionRates[weeksAgo] = (double) completions / (double) dueCount * 100;
@@ -121,6 +126,7 @@ public class CompletionMetricDataSource extends DataSource<Double>
         }
 
         cumulativeCompletionRate = cumulativeCompletionRate / weeksCounted;
+
         publishCompletionRate(cumulativeCompletionRate);
 
         datasetChanged();

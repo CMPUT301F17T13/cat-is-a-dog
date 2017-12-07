@@ -37,6 +37,9 @@ import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
+/**
+ * Queries {@link HabitEvent}s within 5km
+ */
 public class NearbyHabitEventDataSource extends DataSource<HabitEvent>
     implements GeoQueryEventListener {
 
@@ -47,12 +50,20 @@ public class NearbyHabitEventDataSource extends DataSource<HabitEvent>
 
     private ArrayList<HabitEvent> nearbyEvents;
 
+    /**
+     * Initialize datasource on a particular location
+     * @param loc the reference location
+     * @param users list of user ids (following) to query for events
+     */
     public NearbyHabitEventDataSource(GeoLocation loc, ArrayList<String> users) {
         this.loc = loc;
         this.users = users;
         nearbyEvents = new ArrayList<>();
     }
 
+    /**
+     * Set query radius to 5km
+     */
     @Override
     public void open() {
         nearbyEvents.clear();
@@ -68,6 +79,11 @@ public class NearbyHabitEventDataSource extends DataSource<HabitEvent>
         return nearbyEvents;
     }
 
+    /**
+     * Parse location to fetch matching events
+     * @param key the geoindex key
+     * @param location the corresponding location
+     */
     @Override
     public void onKeyEntered(String key, GeoLocation location) {
         String[] parts = key.split("@");

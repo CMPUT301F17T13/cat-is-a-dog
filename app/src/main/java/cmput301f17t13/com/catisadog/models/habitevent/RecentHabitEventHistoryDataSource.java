@@ -34,6 +34,9 @@ import cmput301f17t13.com.catisadog.models.habit.HabitDataModel;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
 
+/**
+ * {@link HabitEvent} data source for all recent events from multiple users
+ */
 public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
     implements ChildEventListener {
 
@@ -44,6 +47,10 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
     private ArrayList<Query> activeQueries;
     private List<String> idList;
 
+    /**
+     * Creates a datasource for habit events from multiple users
+     * @param idList the list of user ids to pull events
+     */
     public RecentHabitEventHistoryDataSource(List<String> idList) {
         this.idList = idList;
         recentEvents = new ArrayList<>();
@@ -51,6 +58,9 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
         activeQueries = new ArrayList<>();
     }
 
+    /**
+     * Creates a query for habit events from each user followed
+     */
     @Override
     public void open() {
         recentEvents.clear();
@@ -109,6 +119,9 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
     @Override
     public void onCancelled(DatabaseError databaseError) { }
 
+    /**
+     * Clear and resort the results
+     */
     @Override
     protected void datasetChanged() {
         recentEvents.clear();
@@ -125,6 +138,9 @@ public class RecentHabitEventHistoryDataSource extends DataSource<HabitEvent>
         notifyObservers();
     }
 
+    /**
+     * Close all active queries
+     */
     @Override
     public void close() {
         for (Query q : activeQueries) {

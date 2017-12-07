@@ -1,20 +1,22 @@
 package cmput301f17t13.com.catisadog.models.user;
 
 /**
- * A User.
+ * Represents a User
  */
 public class User {
 
-    private String userId;
-    private String email;
-    private String displayName;
-    private String photoUrl;
+    private String userId; // The user identifier
+    private String email;  // The user email
+    private String displayName; // The user display name
+    private String photoUrl;    // The photo url
 
     public User() {} // only for Firebase
 
     public User(String userId) {
         this.userId = userId;
     }
+
+    /** Getters and setters */
 
     public String getUserId() {
         return userId;
