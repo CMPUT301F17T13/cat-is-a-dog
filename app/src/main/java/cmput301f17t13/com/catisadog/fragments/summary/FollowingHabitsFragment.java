@@ -121,8 +121,11 @@ public class FollowingHabitsFragment extends Fragment
     }
 
     /**
-     * Update the lists with new firebase data
-     * @param observable
+     * Update the lists with new firebase data. If the updating observable is the {@link SocialDataSource}
+     * that means that we are adding a new user to the list and we must fetch that user's habits.
+     * If otherwise the updating observable is a child {@link Habit} that we add to the appropriate
+     * following user. Once we add the new data we update the list in a streaming fashion.
+     * @param observable either a {@link SocialDataSource} or a {@link HabitDataSource}
      * @param o
      */
     @Override
