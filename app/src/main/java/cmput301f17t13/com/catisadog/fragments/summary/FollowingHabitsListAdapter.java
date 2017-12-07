@@ -25,12 +25,16 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.activities.summary.HabitSummaryActivity;
 import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.models.user.User;
 import cmput301f17t13.com.catisadog.utils.DownloadImageTask;
 
 /**
- * Implementation of an expandable list adapter with linked hash map
+ * Implementation of an expandable list adapter with linked hash map.
+ * This expandable list is used for displaying the list of habits under each of the users you follow
+ * @see FollowingHabitsFragment
+ * @see HabitSummaryActivity
  */
 public class FollowingHabitsListAdapter extends BaseExpandableListAdapter {
 
@@ -51,6 +55,14 @@ public class FollowingHabitsListAdapter extends BaseExpandableListAdapter {
         mInflater = LayoutInflater.from(context);
     }
 
+    /**
+     * Create the main view group. This is where we display the followed user's photo, email and display name
+     * @param groupPosition
+     * @param isExpanded
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, @Nullable View convertView, @NonNull ViewGroup parent) {
         User user = (User) getGroup(groupPosition);
@@ -75,6 +87,15 @@ public class FollowingHabitsListAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
+    /**
+     * Instantiate a child view containing the user you following's habit and their individual completion status
+     * @param groupPosition
+     * @param childPosition
+     * @param isExpanded
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         Habit habit = (Habit) getChild(groupPosition, childPosition);
@@ -95,11 +116,17 @@ public class FollowingHabitsListAdapter extends BaseExpandableListAdapter {
         return convertView;
     }
 
+
     @Override
     public int getGroupCount() {
         return following.size();
     }
 
+    /**
+     * Get the number of habits for each following
+     * @param groupPosition
+     * @return the number of child habits
+     */
     @Override
     public int getChildrenCount(int groupPosition) {
         String userKey = following.get(groupPosition).getUserId();
@@ -113,6 +140,12 @@ public class FollowingHabitsListAdapter extends BaseExpandableListAdapter {
         return following.get(groupPosition);
     }
 
+    /**
+     * Get the habit children for a given child position and user position
+     * @param groupPosition
+     * @param childPosition
+     * @return child habit object
+     */
     @Override
     public Object getChild(int groupPosition, int childPosition) {
         String userKey = following.get(groupPosition).getUserId();

@@ -22,6 +22,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.activities.social.SocialActivity;
 import cmput301f17t13.com.catisadog.models.followrequest.FollowRequest;
 import cmput301f17t13.com.catisadog.models.followrequest.FollowRequestDataSource;
 import cmput301f17t13.com.catisadog.models.followrequest.FollowRequestRepository;
@@ -32,6 +33,7 @@ import cmput301f17t13.com.catisadog.utils.DownloadImageTask;
 
 /**
  * Fragment for searching through users
+ * @see SocialActivity
  */
 public class SearchUsersFragment extends Fragment
     implements Observer {
@@ -45,6 +47,13 @@ public class SearchUsersFragment extends Fragment
     private ListView usersListView;
     private UsersAdapter usersAdapter;
 
+    /**
+     * Instantiate the view and bind the sub-views
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,6 +76,9 @@ public class SearchUsersFragment extends Fragment
         return view;
     }
 
+    /**
+     * Instantiate firebase connections
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -74,6 +86,9 @@ public class SearchUsersFragment extends Fragment
         followRequestDataSource.open();
     }
 
+    /**
+     * When the activity pause, we cleanup firebase
+     */
     @Override
     public void onPause() {
         super.onPause();
@@ -81,6 +96,11 @@ public class SearchUsersFragment extends Fragment
         followRequestDataSource.close();
     }
 
+    /**
+     * Receive updates to the users from firebase
+     * @param observable
+     * @param o
+     */
     @Override
     public void update(Observable observable, Object o) {
         usersAdapter.notifyDataSetChanged();

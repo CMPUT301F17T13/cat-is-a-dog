@@ -19,6 +19,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.activities.social.SocialActivity;
 import cmput301f17t13.com.catisadog.models.followrequest.FollowRequest;
 import cmput301f17t13.com.catisadog.models.followrequest.FollowRequestDataSource;
 import cmput301f17t13.com.catisadog.models.followrequest.FollowRequestRepository;
@@ -29,6 +30,7 @@ import cmput301f17t13.com.catisadog.utils.DownloadImageTask;
 
 /**
  * A Fragment for displaying a list of users who have sent follow requests to me.
+ * @see SocialActivity
  */
 public class FollowRequestsFragment extends Fragment
     implements Observer {

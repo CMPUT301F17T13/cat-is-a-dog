@@ -71,6 +71,16 @@ import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 import static cmput301f17t13.com.catisadog.fragments.history.FilterDialogFragment.FilterType.MY_RECENT_EVENTS;
 
+
+/**
+ * The view in which the user can navigate through their habit history.
+ * The user can filter by the following habit event criteria:
+ * - of their friends' and themselves within 5km of their current location
+ * - with a given comment
+ * - associated with a particular habit
+ * - within the past week
+ * - of their friends' within the past week
+ */
 public class HabitHistoryActivity extends BaseDrawerActivity implements
         Observer, OnMapReadyCallback, FilterDialogResultListener {
 
@@ -100,6 +110,10 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     private FilterDialogFragment.FilterType filterType;
     private String filterData;
 
+    /**
+     * Setup firebase and get ready to display the filtered habit events.
+     * @param savedInstanceState not used
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,6 +165,10 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         });
     }
 
+    /**
+     * Save the current filter when activity is destroyed
+     * @param outState the saved filter type
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -158,6 +176,10 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         outState.putString(BUNDLE_FILTER_DATA, filterData);
     }
 
+    /**
+     * Restore the current filter when activity is re-created
+     * @param savedInstanceState the saved filter type
+     */
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -170,6 +192,9 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         filterResult(filterType, filterData);
     }
 
+    /**
+     * Instantiate the main list
+     */
     @Override
     public void onStart() {
         super.onStart();
@@ -177,6 +202,9 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         habitsListView.setAdapter(habitHistoryAdapter);
     }
 
+    /**
+     * Instantiate firebase when we resume the activity
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -185,6 +213,9 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         followingDataSource.open();
     }
 
+    /**
+     * Shutdown firebase when the activity is paused to prevent lag
+     */
     @Override
     protected void onPause() {
         super.onPause();
@@ -205,6 +236,9 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         map.setMaxZoomPreference(17.0f);
     }
 
+    /**
+     * Update the list view after a filter has changed or new data is made available
+     */
     public void updateListView() {
         if (habitHistoryAdapter != null) {
             habitHistoryAdapter.notifyDataSetChanged();
@@ -212,6 +246,10 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
         }
     }
 
+    /**
+     * Update everything after a filter has changed or new data is made available.
+     * Here we position the markers on the map and set the bounding viewbox/zoomlevel
+     */
     @Override
     public void update(final Observable observable, final Object o) {
         updateListView();
@@ -256,7 +294,10 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
             map.moveCamera(cu);
         }
     }
-
+    /**
+     * Update the filter type. To update the filter we simply update the HabitEvent data-source
+     * and update the subtitle
+     */
     @Override
     public void filterResult(FilterDialogFragment.FilterType filterType,
                              String filterData) {
@@ -319,7 +360,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     }
 
     /**
-     * An adapter for converting habit objects into to-do habitEvents to be displayed in a list
+     * An adapter for converting habit-event objects into to-do habitEvents to be displayed in a list
      * view.
      */
     private class HabitHistoryAdapter extends ArrayAdapter<HabitEvent> {
@@ -411,7 +452,7 @@ public class HabitHistoryActivity extends BaseDrawerActivity implements
     }
 
     /**
-     * Filter by within 5km
+     * Filter by habit events within 5km
      */
     private void filterByNearby(final ArrayList<String> followingIds) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&

@@ -39,6 +39,7 @@ import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 
 /**
  * A screen to view all the current user's habitEvents
+ * @see HabitSummaryActivity
  */
 
 public class MyHabitsFragment extends Fragment

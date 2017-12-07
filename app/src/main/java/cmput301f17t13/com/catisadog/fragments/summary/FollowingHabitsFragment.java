@@ -43,7 +43,6 @@ import cmput301f17t13.com.catisadog.utils.data.Repository;
 /**
  * A screen for showing habitEvents for all users the current user is following
  * Child Fragment of HabitSummaryActivity
- *
  * @see HabitSummaryActivity
  */
 
@@ -65,6 +64,13 @@ public class FollowingHabitsFragment extends Fragment
         registeredSources = new ArrayList<>();
     }
 
+    /**
+     * Instantiate our data sources with firebase and our list adapters / view bindings
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -90,6 +96,9 @@ public class FollowingHabitsFragment extends Fragment
         return view;
     }
 
+    /**
+     * Setup the firebase connections
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -99,6 +108,9 @@ public class FollowingHabitsFragment extends Fragment
         }
     }
 
+    /**
+     * Cleanup the firebase connections
+     */
     @Override
     public void onPause() {
         super.onPause();
@@ -108,6 +120,11 @@ public class FollowingHabitsFragment extends Fragment
         }
     }
 
+    /**
+     * Update the lists with new firebase data
+     * @param observable
+     * @param o
+     */
     @Override
     public void update(Observable observable, Object o) {
         if (observable instanceof SocialDataSource) {
