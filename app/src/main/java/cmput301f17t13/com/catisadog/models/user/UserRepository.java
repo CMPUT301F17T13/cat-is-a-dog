@@ -13,9 +13,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
+/**
+ * Class for inserting, updating, deleting and fetching users
+ */
 public class UserRepository implements Repository<User> {
 
     private DatabaseReference usersRef;
@@ -24,22 +26,41 @@ public class UserRepository implements Repository<User> {
         usersRef = FirebaseDatabase.getInstance().getReference("users");
     }
 
+    /**
+     * Add a new user if their id does not yet exists
+     * Otherwise updates the user
+     * @param user the user object
+     */
     @Override
     public void add(User user) {
         String userId = user.getUserId();
         usersRef.child(userId).setValue(user);
     }
 
+    /**
+     * Updates the specified key with the given user
+     * @param key the user if
+     * @param user the user object
+     */
     @Override
     public void update(String key, User user) {
         usersRef.child(key).setValue(user);
     }
 
+    /**
+     * Delete the user at the given user if from the database
+     * @param key the user id to delete
+     */
     @Override
     public void delete(String key) {
         usersRef.child(key).removeValue();
     }
 
+    /**
+     * Get one user from the database
+     * @param key the user id
+     * @param resultListener result callback
+     */
     @Override
     public void get(String key, final OnResultListener<User> resultListener) {
         usersRef.child(key).addListenerForSingleValueEvent(new ValueEventListener() {

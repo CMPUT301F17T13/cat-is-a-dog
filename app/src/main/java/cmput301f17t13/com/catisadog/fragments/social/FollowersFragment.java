@@ -22,6 +22,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import cmput301f17t13.com.catisadog.R;
+import cmput301f17t13.com.catisadog.activities.social.SocialActivity;
 import cmput301f17t13.com.catisadog.models.followrequest.FollowRequest;
 import cmput301f17t13.com.catisadog.models.followrequest.FollowRequestDataSource;
 import cmput301f17t13.com.catisadog.models.followrequest.FollowRequestRepository;
@@ -32,6 +33,7 @@ import cmput301f17t13.com.catisadog.utils.DownloadImageTask;
 
 /**
  * A Fragment to show a list of my followers.
+ * @see SocialActivity
  */
 public class FollowersFragment extends Fragment
     implements Observer {
@@ -129,6 +131,12 @@ public class FollowersFragment extends Fragment
             return getString(R.string.social_action_follow);
         }
 
+        /**
+         * Find the User object that we have fetched given a UserId
+         * @param userId
+         * @return User object
+         * @see User
+         */
         private User getUserForUserId(String userId) {
             for (User user : users) {
                 if (user.getUserId().equals(userId)) {
@@ -138,6 +146,13 @@ public class FollowersFragment extends Fragment
             return null;
         }
 
+        /**
+         * Instantiates the list view for that people that follow you
+         * @param position
+         * @param convertView
+         * @param parent
+         * @return
+         */
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

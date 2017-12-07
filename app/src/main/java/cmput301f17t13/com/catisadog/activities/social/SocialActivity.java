@@ -12,10 +12,21 @@ import cmput301f17t13.com.catisadog.fragments.social.FollowingFragment;
 import cmput301f17t13.com.catisadog.fragments.social.SearchUsersFragment;
 import cmput301f17t13.com.catisadog.utils.ViewPagerAdapter;
 
+/**
+ * The main activity containing the social tabs: Following, Followers, Requests, Search
+ * @see FollowersFragment
+ * @see FollowingFragment
+ * @see FollowRequestsFragment
+ * @see SearchUsersFragment
+ */
 public class SocialActivity extends BaseDrawerActivity {
 
     public ViewPagerAdapter adapter;
 
+    /**
+     * Create the tabs and instantiate the social tabs
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

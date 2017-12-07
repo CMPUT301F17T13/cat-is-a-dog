@@ -14,8 +14,13 @@ import java.util.Observable;
 import java.util.Observer;
 
 import cmput301f17t13.com.catisadog.models.habit.Habit;
+import cmput301f17t13.com.catisadog.activities.history.HabitHistoryActivity;
 
-public class FilterDialogFragment extends DialogFragment implements Observer {
+/**
+ * The dialog that pops up to filter the the habit history when you press the filter button
+ * @see HabitHistoryActivity
+ */
+public class FilterDialogFragment extends DialogFragment {
     public enum FilterType {
         SEARCH_BY_HABIT,
         SEARCH_BY_COMMENT,
@@ -31,13 +36,19 @@ public class FilterDialogFragment extends DialogFragment implements Observer {
             "Within 5 km of my location", "My recent events",
             "Friends' recent events" };
 
+    /**
+     *
+     * @param listener the of the parent activity which will receive our selection
+     * @see HabitHistoryActivity
+     */
     public void setResultListener(FilterDialogResultListener listener) {
         this.listener = listener;
     }
 
-    @Override
-    public void update(Observable observable, Object o) {}
-
+    /**
+     * Set the parent activity as the listener of this dialog's result
+     * @param context the context of the parent activity
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -46,6 +57,9 @@ public class FilterDialogFragment extends DialogFragment implements Observer {
         }
     }
 
+    /**
+     * Instantiate the dialog and populate the options plus event handler.
+     */
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -77,6 +91,9 @@ public class FilterDialogFragment extends DialogFragment implements Observer {
         return builder.create();
     }
 
+    /**
+     * Creates the sub-dialogue where you can choose from a list of the current user's active habits
+     */
     private Dialog createHabitFilterDialog(Bundle savedInstanceState) {
         final ArrayList<Habit> habits =
                 (ArrayList<Habit>) savedInstanceState.getSerializable("habits");
@@ -95,6 +112,9 @@ public class FilterDialogFragment extends DialogFragment implements Observer {
         return builder.create();
     }
 
+    /**
+     * Creates the sub-dialogue where you can enter the substring to search for
+     */
     private Dialog createCommentFilterDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final EditText input = new EditText(getActivity());
@@ -120,6 +140,9 @@ public class FilterDialogFragment extends DialogFragment implements Observer {
         return builder.create();
     }
 
+    /**
+     * Interface to implement for objects that wish to listen on the result of this dialog
+     */
     public interface FilterDialogResultListener {
         void filterResult(FilterType filterType, String filterData);
     }

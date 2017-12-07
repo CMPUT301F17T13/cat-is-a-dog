@@ -15,9 +15,14 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import cmput301f17t13.com.catisadog.R;
 
-
+/**
+ * The base application class which sets the defaults for the app
+ */
 public class BaseApplication extends Application {
 
+    /**
+     * Setup the global firebase parameters
+     */
     @Override
     public void onCreate() {
         super.onCreate();

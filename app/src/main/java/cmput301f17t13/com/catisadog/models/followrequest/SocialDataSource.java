@@ -15,16 +15,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import cmput301f17t13.com.catisadog.models.user.CurrentUser;
 import cmput301f17t13.com.catisadog.models.user.User;
 import cmput301f17t13.com.catisadog.models.user.UserRepository;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 import cmput301f17t13.com.catisadog.utils.data.FirebaseUtil;
-import cmput301f17t13.com.catisadog.utils.data.OnResultListener;
 import cmput301f17t13.com.catisadog.utils.data.Repository;
 
 
+/**
+ * This is a data source for the list of {@link User} that the {@link CurrentUser} is following
+ * or the list of {@link User} that are followers of the {@link CurrentUser}. This is achieved by
+ * listening on the {@link FollowRequest} items related to the current user and then fetching the
+ * individual {@link User} objects.
+ */
 public class SocialDataSource extends DataSource<User>
-    implements ValueEventListener, OnResultListener<User> {
+    implements ValueEventListener, Repository.OnResultListener<User> {
 
     public enum UserType { FOLLOWING, FOLLOWER }
 
@@ -41,6 +47,10 @@ public class SocialDataSource extends DataSource<User>
         userRepository = new UserRepository();
     }
 
+    /**
+     * First we listen on the follow requests related to the current user. This is the first step
+     * in our query chain.
+     */
     @Override
     public void open() {
         otherUsers.clear();
@@ -61,6 +71,11 @@ public class SocialDataSource extends DataSource<User>
         return otherUsers;
     }
 
+    /**
+     * Once the {@link FollowRequest} is received we then query Firebase for the the actual
+     * {@link User} object. This is the second step in our query chain.
+     * @param dataSnapshot
+     */
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -81,6 +96,12 @@ public class SocialDataSource extends DataSource<User>
         close();
     }
 
+    /**
+     * Finally we receive the relevant {@link User} which we requested and notify observers.
+     * This is the last step in our query chain.
+     *
+     * @param user the {@link User} we requested
+     */
     @Override
     public void onResult(User user) {
         otherUsers.add(user);

@@ -21,7 +21,9 @@ import java.util.Comparator;
 import cmput301f17t13.com.catisadog.models.habit.Habit;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
-
+/**
+ * Data source for {@link HabitEvent}s associated to a particular habit
+ */
 public class HabitEventDataSourceForHabit extends DataSource<HabitEvent>
     implements ValueEventListener {
 
@@ -33,6 +35,11 @@ public class HabitEventDataSourceForHabit extends DataSource<HabitEvent>
     private ArrayList<HabitEvent> mHabitEventArray;
     private Query habitEventQuery;
 
+    /**
+     * Construct the data source
+     * @param userId the id of the habit owner
+     * @param habitKey the habit key
+     */
     public HabitEventDataSourceForHabit(String userId, String habitKey) {
         this.userId = userId;
         this.habitKey = habitKey;
@@ -55,8 +62,10 @@ public class HabitEventDataSourceForHabit extends DataSource<HabitEvent>
     @Override
     public ArrayList<HabitEvent> getSource() { return mHabitEventArray; }
 
-    // Habit Event updates
-
+    /**
+     * Aggregate and sort the result in reverse chronological order
+     * @param dataSnapshot snapshot of the data
+     */
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         mHabitEventArray.clear();

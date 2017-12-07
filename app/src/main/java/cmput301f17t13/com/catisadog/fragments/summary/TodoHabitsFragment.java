@@ -37,7 +37,8 @@ import cmput301f17t13.com.catisadog.utils.IntentConstants;
 import cmput301f17t13.com.catisadog.utils.data.DataSource;
 
 /**
- * A screen for seeing habitEvents scheduled for today
+ * A screen for seeing habitEvents scheduled for today. This is a child of the main summary activity.
+ * @see HabitSummaryActivity
  */
 
 public class TodoHabitsFragment extends Fragment
@@ -55,6 +56,13 @@ public class TodoHabitsFragment extends Fragment
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Setup the initial data source from firebase
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -90,6 +98,11 @@ public class TodoHabitsFragment extends Fragment
         todoDataSource.close();
     }
 
+    /**
+     * Receive new data from firebase then update the list
+     * @param observable
+     * @param o
+     */
     @Override
     public void update(Observable observable, Object o) {
         if (todoHabitsAdapter != null) {
@@ -100,6 +113,7 @@ public class TodoHabitsFragment extends Fragment
     /**
      * An adapter for converting habit objects into to-do habitEvents to be displayed in a list
      * view.
+     * @see TodoHabitsFragment
      */
     private class TodoHabitsAdapter extends ArrayAdapter<Habit> {
 

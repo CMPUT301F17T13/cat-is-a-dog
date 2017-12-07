@@ -56,6 +56,10 @@ public class CurrentUser extends User {
         }
     }
 
+    /**
+     * Checks if the user is authenticated
+     * @return true if there exists a CurrentUser instance
+     */
     public static boolean isAuthenticated() {
         return instance != null;
     }
