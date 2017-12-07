@@ -46,6 +46,10 @@ public class UserDataSource extends DataSource<User>
     @Override
     public ArrayList<User> getSource() { return mOtherUsersArray; }
 
+    /**
+     * Get all users, except the current user
+     * @param dataSnapshot the root
+     */
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         mOtherUsersArray.clear();
@@ -65,6 +69,9 @@ public class UserDataSource extends DataSource<User>
         close();
     }
 
+    /**
+     * Clean up user query listener
+     */
     @Override
     public void close() {
         otherUsersQuery.removeEventListener(this);

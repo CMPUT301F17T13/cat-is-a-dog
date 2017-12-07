@@ -24,7 +24,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 
-
+/**
+ * Queries {@link HabitEvent}s owned by a user, sorted in reverse chronological order
+ */
 public class HabitEventDataSource extends DataSource<HabitEvent>
         implements ValueEventListener {
 
@@ -34,11 +36,18 @@ public class HabitEventDataSource extends DataSource<HabitEvent>
     private ArrayList<HabitEvent> mHabitEventArray;
     private Query habitEventQuery;
 
+    /**
+     * Constructs the data source
+     * @param userId id of the user to query
+     */
     public HabitEventDataSource(String userId) {
         this.userId = userId;
         mHabitEventArray = new ArrayList<>();
     }
 
+    /**
+     * Open the query
+     */
     @Override
     public void open() {
         mHabitEventArray.clear();
@@ -57,6 +66,10 @@ public class HabitEventDataSource extends DataSource<HabitEvent>
 
     // Habit Event updates
 
+    /**
+     * Aggregates and sorts the query result
+     * @param dataSnapshot the root snapshot of the query
+     */
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         mHabitEventArray.clear();
@@ -80,6 +93,9 @@ public class HabitEventDataSource extends DataSource<HabitEvent>
         close();
     }
 
+    /**
+     * Remove the query listener
+     */
     @Override
     public void close() {
         habitEventQuery.removeEventListener(this);

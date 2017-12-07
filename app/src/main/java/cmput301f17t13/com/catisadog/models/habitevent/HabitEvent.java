@@ -19,14 +19,14 @@ import cmput301f17t13.com.catisadog.models.habit.Habit;
  */
 public class HabitEvent implements Serializable {
 
-    private String key;
-    private String userId;
-    private String habitKey;
-    private String comment;
-    private String photoUrl;
-    private double latitude;
-    private double longitude;
-    private DateTime eventDate;
+    private String key;         // The database key
+    private String userId;      // The owner
+    private String habitKey;    // The parent habit key
+    private String comment;     // The event comment
+    private String photoUrl;    // Url for the photo (currently base64 store of the image)
+    private double latitude;    // The location latitude (default 0)
+    private double longitude;   // The location longitude (default 0)
+    private DateTime eventDate; // The event timestamp
 
     public HabitEvent() {}
 
@@ -48,6 +48,8 @@ public class HabitEvent implements Serializable {
         this.eventDate = new DateTime();
     }
 
+    /** Getters and Setters */
+
     public String getHabitKey() {
         return habitKey;
     }
@@ -59,6 +61,7 @@ public class HabitEvent implements Serializable {
         return comment;
     }
 
+    // Comment cannot be longer than 20 characters in length
     public void setComment(String comment) {
         if(comment.length() > 20) {
             comment = comment.substring(0, 19);
